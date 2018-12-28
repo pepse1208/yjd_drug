@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "药检通平台",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 30
+}

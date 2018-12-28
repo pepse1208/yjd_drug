@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "药检单查询",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 30
+}
