@@ -47,7 +47,10 @@
       // console.log('isShow : ' + this.isShow)
     },
     onShow () {
+      this.drug = this.$root.$mp.query.drug
+      this.isBack = this.$root.$mp.query.isBack
       this.is_upload = this.$root.$mp.query.is_upload
+      this.getList()
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.info = {}
@@ -92,10 +95,7 @@
       createNew () {}
     },
     beforeMount () {
-      this.drug = this.$root.$mp.query.drug
-      this.isBack = this.$root.$mp.query.isBack
-      this.is_upload = this.$root.$mp.query.is_upload
-      this.getList()
+      // this.getList()
     },
     mounted () {},
     onPullDownRefresh () {
