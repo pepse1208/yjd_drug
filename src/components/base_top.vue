@@ -44,7 +44,7 @@
         })
       },
       quit () {
-        wx.navigateTo({
+        wx.reLaunch({
           url: '/pages/login/main?name=catalog'
         })
       }
