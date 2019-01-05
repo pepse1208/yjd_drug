@@ -1,11 +1,11 @@
 {
   "pages": [
     "pages/login/main",
+    "pages/drugsearch/main",
     "pages/catalog/main",
     "pages/choose/main",
     "pages/recv/main",
     "pages/modify/main",
-    "pages/drugsearch/main",
     "pages/drugmanage/main",
     "pages/passwd/main",
     "pages/druglist/main",
