@@ -46,7 +46,40 @@ export default {
       state.initData.push(obj)
     }
   },
-
+  initSearchList (state, data) {
+    console.log(data)
+    state.searchList.length = 0
+    let len = data.length // 数据数量
+    console.log(len)
+    for (let i = 0; i < len; i++) {
+      var item = data[i]
+      var drug = item.drug
+      console.log(drug)
+      // var obj = {}
+      // // let fileLen = item.file.length // 药检单文件 数量
+      // // for (var j = 0; j < fileLen; j++) {
+      var obj = {
+        // name: drug.name, // 品种名称
+        batch: item.batch, // 生产批号
+        // package: drug.package, // 包装规格
+        // all_dosage: drug.all_dosage, // 剂型
+        // drug_material: drug.drug_material, // 材质
+        // reg_number: drug.reg_number, // 批准文号
+        production_enterprise: drug.production_enterprise, // 生产企业
+        enterprise_name: item.enterprise_name, // 供应企业
+        report_date: item.report_date, // 报告日期
+        product_date: item.product_date, // 生产日期
+        drug: item.drug,
+        validity: item.validity // 有效期至
+      }
+      console.log(1)
+    //   // obj.push(subObj)
+    //   // }
+    }
+    console.log(2)
+    state.searchList.push(obj)
+    console.log(state.searchList)
+  },
   /**
    * 这里设置一个统一的方法,大部分用的vuex都是简单的改变一些状态,不需要写过多的mutations
    * 使用方法 例:

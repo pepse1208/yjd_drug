@@ -1,7 +1,7 @@
 <template>
   <div class="drugSearch">
     <drug-head @childSearch="childSearch"></drug-head>
-    <search-list :lists="lists"></search-list>
+    <search-list :lists="lists" :consoleText="consoleText" :bgColor="bgColor"></search-list>
     <p class="text-footer" v-if="!more">
       暂无更多数据
     </p>
@@ -10,6 +10,7 @@
 <script>
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
+  import $store from '../../store/index'
   import {get} from '../../utils.js'
   export default {
     components: {
@@ -46,8 +47,8 @@
         this.loading = true
         var res
         // const res = await get('/api/drugReport/report/all/', {
-        var data = await get({
-          url: '/api/drugReport/wx/reports/',
+        const data = await get({
+          url: '/api/drugReport/report/all/',
           data: {
             drug_name: this.name,
             batch: this.batch,
@@ -59,6 +60,9 @@
         var code = data.statusCode
         if (code >= 200 && code < 300) {
           res = data.data.results
+          $store.commit('initSearchList', res)
+        } else {
+          return
         }
         if (res.length === 0) {
           this.more = false
@@ -69,7 +73,7 @@
           this.more = false
         }
         if (init) {
-          this.lists = res
+          this.lists = $store.state.searchList
           wx.stopPullDownRefresh()
         } else {
           this.lists = this.lists.concat(res)
@@ -77,6 +81,11 @@
 
         wx.hideNavigationBarLoading()
         this.loading = false
+      }
+    },
+    computed: {
+      bgColor () {
+        return 'icon red_bg'
       }
     },
     onPullDownRefresh () {
