@@ -19,10 +19,15 @@
   export default {
     data () {
       return {
+        productionLists: [
+          {title: '药检单管理', url: '/pages/drugmanage/main', isMustLogin: false},
+          {title: '药检单索取记录', url: '/pages/drugsearch/main', isMustLogin: false}
+        ],
         lists: [
-          {title: '查收药检单', url: '/pages/recv/main', isMustLogin: true},
-          {title: '药检单管理', url: '/pages/drugmanage/main', isMustLogin: true},
-          {title: '药检单查询', url: '/pages/drugsearch/main', isMustLogin: false}
+          {title: '查收药检单', url: '/pages/recv/main', isMustLogin: false},
+          {title: '药检单管理', url: '/pages/drugmanage/main', isMustLogin: false},
+          {title: '药检单查询', url: '/pages/drugsearch/main', isMustLogin: false},
+          {title: '药检单索取记录', url: '/pages/drugsearch/main', isMustLogin: false}
         ]
       }
     },
@@ -87,6 +92,12 @@
       },
       jump (url, flag) {
         getStorageOpenid(url, flag)
+      }
+    },
+    mounted () {
+      let type = wx.getStorageSync('type')
+      if (type === '生产企业') {
+        this.lists = this.productionLists
       }
     }
   }
