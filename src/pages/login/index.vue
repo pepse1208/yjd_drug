@@ -154,8 +154,8 @@
       check () {
         this.userName = this.userName.trim()
         this.pwd = this.pwd.trim()
-        // this.userName = '67444758@tianzhu.com'
-        // this.pwd = '67444758'
+        this.userName = '67444758@tianzhu.com'
+        this.pwd = '67444758'
         if (!this.userName) {
           this.tip('请输入用户名')
           return false
