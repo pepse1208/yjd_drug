@@ -2,6 +2,7 @@
   "pages": [
     "pages/login/main",
     "pages/catalog/main",
+    "pages/askfor/main",
     "pages/choose/main",
     "pages/recv/main",
     "pages/modify/main",

@@ -16,12 +16,23 @@
   <img :src="imgUrl" alt="">
   <div @click="look">预览</div>
   <div @click="fingerpriter">指纹认证</div>
+  <div @click="password">密码输入</div>
+  <alert :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
 </div>
 </template>
 <script>
+  import Alert from '@/components/alert'
+
   export default {
+    components: {
+      Alert
+    },
     data () {
       return {
+        tips: '签章密码',
+        placeholder: '输入签章密码',
+        isShow: false,
+        reason: '',
         imgUrl: '',
         urls: [],
         startDate: '2018-05-9',
@@ -37,6 +48,30 @@
       this.pickerStart = today
     },
     methods: {
+      cancelShow (msg) {
+        this.isShow = msg
+        this.reason = ''
+      },
+      alertConfirm (msg) {
+      },
+      password () {
+        this.isShow = true
+        /* let text = '<div class="inputList">' +
+          '<input id="i1" autofocus type="password">' +
+          '<input id="i2" type="password">' +
+          '<input id="i3" type="password">' +
+          '<input id="i4" type="password">' +
+          '<input id="i5" type="password">' +
+          '<input id="i6" type="password">' +
+          '</div>'
+        wx.showModal({
+          title: '',
+          content: '<input id="i1" autofocus type="password">' + text,
+          showCancel: false,
+          success (res) {
+          }
+        }) */
+      },
       getToday () {
         let myDate = new Date()
         let myMonth = myDate.getMonth() + 1
