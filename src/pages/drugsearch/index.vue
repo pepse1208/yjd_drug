@@ -1,7 +1,9 @@
 <template>
   <div class="drugSearch">
     <drug-head @childSearch="childSearch"></drug-head>
-    <search-list :lists="lists" :consoleText="consoleText" :bgColor="bgColor"></search-list>
+    <block v-for="(item, index) in lists" :key="index">
+      <search-list :details="initDetails(item)"></search-list>
+    </block>
     <p class="text-footer" v-if="!more">
       暂无更多数据
     </p>
@@ -10,7 +12,6 @@
 <script>
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
-  import $store from '../../store/index'
   import {get} from '../../utils.js'
   export default {
     components: {
@@ -60,7 +61,6 @@
         var code = data.statusCode
         if (code >= 200 && code < 300) {
           res = data.data.results
-          $store.commit('initSearchList', res)
         } else {
           return
         }
@@ -73,7 +73,7 @@
           this.more = false
         }
         if (init) {
-          this.lists = $store.state.searchList
+          this.lists = res
           wx.stopPullDownRefresh()
         } else {
           this.lists = this.lists.concat(res)
@@ -81,6 +81,37 @@
 
         wx.hideNavigationBarLoading()
         this.loading = false
+      },
+      initDetails (data) {
+        let self = this
+        let state = data.other.status
+        let details = {
+          bgColor: self.initBgColor(state),
+          name: data.drug.name,
+          batch: data.batch,
+          package: data.drug.package,
+          enterprise_name: data.enterprise_name
+        }
+        console.log(details)
+        return details
+      },
+      initBgColor (status) {
+        let bgColor
+        switch (status) {
+          case '未共享':
+            bgColor = 'orange_bg'
+            break
+          case '已共享':
+            bgColor = 'green_bg'
+            break
+          case '以获取':
+            bgColor = 'red_bg'
+            break
+          case '索取中':
+            bgColor = 'gray_bg'
+            break
+        }
+        return bgColor
       }
     },
     computed: {
@@ -104,52 +135,9 @@
     },
     mounted () {
       this.getList(true)
-      // this.lists = [{
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0001',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0002',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0003',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0004',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0005',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0006',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0007',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: '8',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0009',
-      //   enterprise: '杭州神中科技有限公司'
-      // }]
+    },
+    onUnload: function () { // 如果页面被卸载时被执行
+      this.lists.length = 0
     }
   }
 </script>
