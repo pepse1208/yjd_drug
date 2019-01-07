@@ -2,7 +2,7 @@
 <div class="askfor">
   <nav-bar>药检单索取记录</nav-bar>
   <statements :lists="lists"></statements>
-  <div class="list" v-for="(item, index) in dataLists">
+  <div class="list" v-for="(item, index) in dataLists" :key="index">
     <searchlist :details="detailsFun(item)" ></searchlist>
     <span class="button" @click="tipDetail(item)">详情</span>
   </div>

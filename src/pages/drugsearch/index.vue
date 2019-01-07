@@ -1,6 +1,7 @@
 <template>
   <div class="drugSearch">
     <drug-head @childSearch="childSearch"></drug-head>
+    <statements :lists="statements"></statements>
     <block v-for="(item, index) in lists" :key="index">
       <div :class="{'overflow': !item.btnStatus, 'flex flexrow': true}">
         <search-list :details="initDetails(item)"></search-list>
@@ -25,12 +26,14 @@
 <script>
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
+  import Statements from '@/components/statements'
   import $store from '../../store/index'
   import {get} from '../../utils.js'
   export default {
     components: {
       DrugHead,
-      SearchList
+      SearchList,
+      Statements
     },
     data () {
       return {
@@ -42,7 +45,22 @@
         enterprise: '',
         packages: '',
         loading: false,
-        butsStatus: []
+        butsStatus: [],
+        statements: [
+          {
+            text: '已获取',
+            color: 'gray_bg'
+          }, {
+            text: '已共享',
+            color: 'green_bg'
+          }, {
+            text: '索取中',
+            color: 'orange_bg'
+          }, {
+            text: '未共享',
+            color: 'red_bg'
+          }
+        ]
       }
     },
     methods: {
