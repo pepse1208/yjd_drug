@@ -2,6 +2,10 @@
 <div class="askfor">
   <nav-bar>药检单索取记录</nav-bar>
   <statements :lists="lists"></statements>
+  <div class="list" v-for="(item, index) in dataLists">
+    <searchlist :details="detailsFun(item)" ></searchlist>
+    <span class="button" @click="tipDetail(item)">详情</span>
+  </div>
   <vue-tab-bar @fetchIndex="clickIndexNav"  :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton"  :type="type"></vue-tab-bar>
 </div>
 </template>
@@ -10,11 +14,13 @@
   import Statements from '@/components/statements'
   import NavBar from '@/components/base_top'
   import VueTabBar from '@/components/vueTabBar'
+  import Searchlist from '@/components/searchlist'
 
   export default {
     components: {
       NavBar,
       Statements,
+      Searchlist,
       VueTabBar
     },
     data () {
@@ -27,21 +33,30 @@
         needButton: false,
         navList: [],
         dataLists: [],
+        myStatus: {
+          '已拒绝': 'red_bg',
+          '已同意': 'green_bg',
+          '申请中': 'orange_bg',
+          '已申请': 'orange_bg'
+        },
+        details: {
+          bgColor: '',
+          name: '',
+          batch: '',
+          package: '',
+          enterprise_name: ''
+        },
         lists: [
-          {
-            text: '已获取',
-            color: 'gray_bg'
-          },
-          {
-            text: '已共享',
-            color: 'green_bg'
-          },
           {
             text: '索取中',
             color: 'orange_bg'
           },
           {
-            text: '未共享',
+            text: '已同意',
+            color: 'green_bg'
+          },
+          {
+            text: '已拒绝',
             color: 'red_bg'
           }
         ]
@@ -94,6 +109,32 @@
       console.log('加载', this.dataLists)
     },
     methods: {
+      tipDetail (item) { // 弹窗显示详情
+        var name = item.drug.name || '--'
+        var batch = item.batch || '--'
+        var Package = item.drug.package || '--'
+        var allDosage = item.drug.all_dosage || '--'
+        var productionEnterprise = item.drug.production_enterprise || '--'
+        var enterpriseName = item.receiver || '--'
+        wx.showModal({
+          title: '',
+          content: '品种名称：' + name + '\r\n' + '生产批号：' + batch + '\r\n' + '包装规格：' + Package + '\r\n' + '供应企业：' + enterpriseName + '\r\n' + '剂型：' + allDosage + '\r\n' + '生产企业：' + productionEnterprise + '\r\n',
+          showCancel: false,
+          success (res) {
+          }
+        })
+      },
+      detailsFun (item) {
+        let status = item.other.status
+        let details = {
+          bgColor: this.myStatus[status],
+          name: item.drug.name,
+          batch: item.batch,
+          package: item.drug.package,
+          'enterprise_name': item.receiver
+        }
+        return details
+      },
       async getList (_url) {
         var url = '/api/ask/' + this.req + '/report/list'
         if (_url) {
@@ -108,6 +149,7 @@
             this.dataLists = this.dataLists.concat(data.results)
           } else {
             this.dataLists = data.results
+            console.log(data.results)
             wx.stopPullDownRefresh()
             this.more = true
           }
@@ -117,17 +159,45 @@
             this.more = true
           }
           this.next = data.next // 获取下页路径
+          this.details.bgColor = this.dataLists
+          this.details.name = this.dataLists.drug.name
+          this.details.batch = this.dataLists.batch
+          this.details.package = this.dataLists.drug.package
+          this.details.enterprise_name = this.dataLists.receiver
+          console.log(this.dataLists)
+          console.log(this.details)
         })
       },
       clickIndexNav (msg) {
         this.selectNavIndex = msg
         this.req = msg === 0 ? 'send' : 'receive'
         this.getList()
+        this.lists[0].text = msg === 0 ? '索取中' : '待处理'
         console.log('切换', this.dataLists)
       }
     }
   }
 </script>
 <style lang="scss" scoped>
-
+  div.askfor{
+    $unit: 2rpx;
+    padding-bottom: 50*$unit;
+    div.list{
+      display: flex;
+      align-items: center;
+    }
+    span.button{
+      display: inline-block;
+      width: 50*$unit;
+      height: 50*$unit;
+      line-height: 50*$unit;
+      background: #1E9EFF;
+      font-size: 15*$unit;
+      color: #fff;
+      text-align: center;
+      border-radius: 8rpx;
+      box-shadow:0px 7px 16px 0px rgba(121,197,255,0.5);
+      margin-left: 15*$unit;
+    }
+  }
 </style>
