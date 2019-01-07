@@ -5,12 +5,18 @@
   <div class="list" v-for="(item, index) in dataLists" :key="index">
     <searchlist :details="detailsFun(item)" ></searchlist>
     <span class="button" @click="tipDetail(item)">详情</span>
+    <block >
+      <span v-if="item.other.status==='已拒绝'" class="button" @click="toAsk(item)">重新索取</span>
+      <span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>
+    </block>
   </div>
   <vue-tab-bar @fetchIndex="clickIndexNav"  :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton"  :type="type"></vue-tab-bar>
 </div>
 </template>
 <script>
-  import {get} from '../../utils.js'
+  import {get, post} from '../../utils.js'
+  import {throttle} from '../../utils/index.js'
+  import config from '../../config.js'
   import Statements from '@/components/statements'
   import NavBar from '@/components/base_top'
   import VueTabBar from '@/components/vueTabBar'
@@ -31,10 +37,12 @@
         type: '',
         selectNavIndex: 0,
         needButton: false,
+        downloaded: {},
         navList: [],
         dataLists: [],
         myStatus: {
           '已拒绝': 'red_bg',
+          '已结束': 'red_bg',
           '已同意': 'green_bg',
           '申请中': 'orange_bg',
           '已申请': 'orange_bg'
@@ -109,6 +117,67 @@
       console.log('加载', this.dataLists)
     },
     methods: {
+      openPdf (url) {
+        wx.openDocument({
+          filePath: url,
+          success: function (res) {
+            console.log('打开文档成功')
+          }
+        })
+      },
+      downloadPdf: throttle(function (url, id) { // 查看pdf
+        console.log(url, id)
+        var self = this
+        if (self.downloaded[id]) {
+          self.openPdf(self.downloaded[id])
+        } else {
+          var path = url
+          if (!url.includes('https://')) {
+            path = config.host + url
+          }
+          console.log(path)
+          wx.showLoading({title: '加载中'})
+          wx.downloadFile({
+            url: path,
+            success: function (res) {
+              const filePath = res.tempFilePath
+              // 避免发送方修改文件后，没及时更新
+              self.downloaded[id] = filePath
+              wx.hideLoading()
+              self.openPdf(filePath)
+            }
+          })
+        }
+      }, 2000),
+      async askReq (item) { // 重新索取请求
+        let uuid = item.uuid
+        let reportId = item.report_uuid
+        var url = '/api/ask/report/' + reportId + '/'
+        let vm = this
+        await post({
+          url,
+          data: {
+            uuid: uuid
+          }
+        }).then((resp) => {
+          vm.getList()
+        })
+      },
+      toAsk (item) {
+        let vm = this
+        wx.showModal({
+          title: '提示',
+          content: '是否重新索取药检单',
+          success (res) {
+            if (res.confirm) {
+              vm.askReq(item)
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
       tipDetail (item) { // 弹窗显示详情
         var name = item.drug.name || '--'
         var batch = item.batch || '--'
@@ -185,6 +254,7 @@
     div.list{
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
     span.button{
       display: inline-block;
