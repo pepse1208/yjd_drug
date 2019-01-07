@@ -138,7 +138,7 @@
       }
       .btns {
         .btn_com {
-          div {
+          .btn_com {
             width: 100rpx;
             height: 100rpx;
             text-align: center;

@@ -2,7 +2,21 @@
   <div class="drugSearch">
     <drug-head @childSearch="childSearch"></drug-head>
     <block v-for="(item, index) in lists" :key="index">
-      <search-list :details="initDetails(item)"></search-list>
+      <div class="flex flexrow">
+        <search-list :details="initDetails(item)"></search-list>
+        <div class="btns">
+          <div class="flex flexrow" v-if="!isShow">
+            <div class="btn_com" @click="tipDetail(item)">详情</div>
+            <div class="btn_com more_operate" @click="showOperateBtns"></div>
+          </div>
+          <div class="flex flexrow operation" v-if="isShow">
+            <block v-for="(_item, _index) in btnList" :key="_index">
+              <div @click="_item.cb">{{_item.text}}</div>
+            </block>
+            <div class="btn_com back" @click="backCb"></div>
+          </div>
+        </div>
+      </div>
     </block>
     <p class="text-footer" v-if="!more">
       暂无更多数据
@@ -92,7 +106,6 @@
           package: data.drug.package,
           enterprise_name: data.enterprise_name
         }
-        console.log(details)
         return details
       },
       initBgColor (status) {
@@ -112,6 +125,35 @@
             break
         }
         return bgColor
+      },
+      tipDetail (item) { // 弹窗显示详情
+        const drug = item.drug
+        wx.showModal({
+          title: '',
+          content:
+            '品种名称：' + (drug.name || '--') + '\r\n' +
+            '生产批号：' + (item.batch || '--') + '\r\n' +
+            '包装规格：' + (drug.package || '--') + '\r\n' +
+            '剂型：' + (drug.all_dosage || '--') + '\r\n' +
+            '材质：' + (drug.drug_material || '--') + '\r\n' +
+            '批准文号：' + (drug.reg_number || '--') + '\r\n' +
+            '生产企业：' + (drug.production_enterprise || '--') + '\r\n' +
+            (this.isShow ? ('供应企业：' + (item.enterprise_name || '--') + '\r\n') : '') +
+            // '报告编号：' + productDate + '\r\n' +
+            '报告日期：' + (item.report_date || '--') + '\r\n' +
+            '生产日期：' + (item.product_date || '--') + '\r\n' +
+            '有效期至：' + (item.validity || '--'),
+          showCancel: false,
+          success (res) {
+          }
+        })
+      },
+      showOperateBtns () { // 点击 ··· 显示更多操作按钮
+        this.isShow = true
+        console.log('show more btns')
+      },
+      backCb () {
+        this.isShow = false
       }
     },
     computed: {
@@ -142,6 +184,7 @@
   }
 </script>
 <style lang="scss" scope>
+  @import url(../../common/base.scss);
   .drugSearch{
     .loading{
       font-size: 14px;
