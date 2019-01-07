@@ -5,15 +5,14 @@
       <div class="flex flexrow">
         <search-list :details="initDetails(item)"></search-list>
         <div class="btns">
-          <div class="flex flexrow" v-if="!isShow">
-            <div class="btn_com" @click="tipDetail(item)">详情</div>
-            <div class="btn_com more_operate" @click="showOperateBtns"></div>
+          <div class="flex flexrow" v-if="item.btnStatus">
+            <div class="btn_com" @click="tipDetail(item)">详情</div>{{!item.btnStatus}}
+            <div class="btn_com more_operate" @click="showOperateBtns(index)"></div>
           </div>
-          <div class="flex flexrow operation" v-if="isShow">
-            <block v-for="(_item, _index) in btnList" :key="_index">
-              <div @click="_item.cb">{{_item.text}}</div>
-            </block>
-            <div class="btn_com back" @click="backCb"></div>
+          <div class="flex flexrow operation" v-if="!item.btnStatus">
+            <div class="btn_com">查看</div>{{btnStatus}}
+            <div class="btn_com">获取</div>
+            <div class="btn_com back" @click="backCb(index)"></div>
           </div>
         </div>
       </div>
@@ -26,6 +25,7 @@
 <script>
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
+  import $store from '../../store/index'
   import {get} from '../../utils.js'
   export default {
     components: {
@@ -41,7 +41,8 @@
         batch: '',
         enterprise: '',
         packages: '',
-        loading: false
+        loading: false,
+        butsStatus: []
       }
     },
     methods: {
@@ -86,13 +87,14 @@
           })
           this.more = false
         }
+        $store.commit('initSearchList', res)
         if (init) {
-          this.lists = res
+          // this.lists = res
+          this.lists = $store.state.searchDate
           wx.stopPullDownRefresh()
         } else {
-          this.lists = this.lists.concat(res)
+          this.lists = this.lists.concat($store.state.searchDate)
         }
-
         wx.hideNavigationBarLoading()
         this.loading = false
       },
@@ -138,7 +140,7 @@
             '材质：' + (drug.drug_material || '--') + '\r\n' +
             '批准文号：' + (drug.reg_number || '--') + '\r\n' +
             '生产企业：' + (drug.production_enterprise || '--') + '\r\n' +
-            (this.isShow ? ('供应企业：' + (item.enterprise_name || '--') + '\r\n') : '') +
+            '供应企业：' + (item.enterprise_name || '--') + '\r\n' +
             // '报告编号：' + productDate + '\r\n' +
             '报告日期：' + (item.report_date || '--') + '\r\n' +
             '生产日期：' + (item.product_date || '--') + '\r\n' +
@@ -148,17 +150,24 @@
           }
         })
       },
-      showOperateBtns () { // 点击 ··· 显示更多操作按钮
-        this.isShow = true
+      showOperateBtns (index) { // 点击 ··· 显示更多操作按钮
+        // this.lists[index].btnStatus = false
+        this.lists[index].btnStatus = !this.lists[index].btnStatus
         console.log('show more btns')
+        console.log(this.lists)
+        console.log(this.butsStatus)
+        console.log($store.state.searchDate[index].btnStatus)
       },
-      backCb () {
-        this.isShow = false
-      }
-    },
-    computed: {
-      bgColor () {
-        return 'icon red_bg'
+      backCb (index) {
+        console.log(this.butsStatus)
+        this.lists[index].btnStatus = true
+        console.log(this.butsStatus)
+      },
+      btnStaus (data) {
+        let id = data.uuid.replace(/-/ig, '')
+        let flag = $store.state.searchListBtns[id] === true
+        console.log(flag)
+        return flag
       }
     },
     onPullDownRefresh () {
@@ -177,6 +186,7 @@
     },
     mounted () {
       this.getList(true)
+      console.log($store.state.searchListBtns)
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.lists.length = 0
@@ -196,5 +206,30 @@
       }
     }
   }
+  .btn_com {
+  width: 100rpx;
+  height: 100rpx;
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 30rpx;
+  color: white;
+  border: 0;
+  border-radius: 4rpx;
+  background: #1E9EFF;
+  padding: 0;
+}
+.more_operate {
+  background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
+  background-size: 40rpx 8rpx;
+}
+.btn_com ~ .btn_com {
+  margin-left: 30rpx;
+}
+.operation {
+  .back {
+    background: #1E9EFF url(../../images/cancel.png) no-repeat center center;
+    background-size: 30rpx 30rpx;
+  }
+}
 </style>
 

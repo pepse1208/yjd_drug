@@ -8,22 +8,22 @@
     <p class="text-footer" v-if="!more">
       暂无更多数据
     </p>
-    <vue-tab-bar @fetchIndex="clickIndexNav" @handButton="createNew" v-if="isShow && is_upload === 'true'" :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton" :btnText="'添加药检单'" :jumpUrl="'/pages/modify/main?drug=' + this.drug"></vue-tab-bar>
+    <div class="addNew" v-if="is_upload === 'true'" @click="createNew">
+      添加药检单
+    </div>
   </div>
 </template>
 <script>
   import ManageList from '@/components/managelist'
   import NavBar from '@/components/base_top'
   import ListDetails from '@/components/listdetails'
-  import VueTabBar from '@/components/vueTabBar'
   import {get} from '../../utils.js'
 
   export default {
     components: {
       ManageList,
       ListDetails,
-      NavBar,
-      VueTabBar
+      NavBar
     },
     data () {
       return {
@@ -38,7 +38,7 @@
         navList: [],
         isBack: '',
         isShow: false,
-        is_upload: false
+        is_upload: 'false'
       }
     },
     onLoad (options) {
@@ -50,6 +50,7 @@
       this.drug = this.$root.$mp.query.drug
       this.isBack = this.$root.$mp.query.isBack
       this.is_upload = this.$root.$mp.query.is_upload
+      console.log(typeof this.is_upload)
       this.getList()
       console.log(this.is_upload)
     },
@@ -93,7 +94,11 @@
         })
       },
       clickIndexNav () {},
-      createNew () {}
+      createNew () {
+        wx.navigateTo({
+          url: '/pages/modify/main?drug=' + this.drug
+        })
+      }
     },
     beforeMount () {
       // this.getList()
@@ -105,8 +110,6 @@
     },
     onReachBottom () {
       // 上拉加载
-      console.log('加载……', this.next)
-      console.log(!this.next)
       if (!this.next) {
         this.more = false
         return false
@@ -124,6 +127,18 @@
     $unit: 2rpx;
     .list{
       margin-top: -22*$unit;
+    }
+    .addNew {
+      position: fixed;
+      width: 100%;
+      height: 90rpx;
+      text-align: center;
+      line-height: 90rpx;
+      font-size: 32rpx;
+      background: #1E9EFF;
+      color: #fff;
+      bottom: 0;
+      left: 0;
     }
   }
 </style>

@@ -3,8 +3,7 @@
     <article :class="navList.length === 0 ? 'tabBar-box tabBar-box2' : 'tabBar-box'">
       <ul class="tabBar-nav">
         <li class="item" 
-            v-for="(item, index) in navList" 
-            v-if="navList.length > 0 && item.isShow"
+            v-for="(item, index) in navList"
             @click="selectNavItem(index, item.pagePath)"
             :key="index">
           <p class="item-images">
@@ -14,20 +13,13 @@
             {{item.text}}
           </p>
         </li>
-        <li v-if="needButton" style="flex: 1.3;">
-          <div class="submit-box">
-            <button class="submit-box-btn" @click="createNew(jumpUrl)">
-              {{ btnText }}
-            </button>
-          </div>
-        </li>
       </ul>
     </article>
   </section>
 </template>
 <script>
   export default {
-    props: ['selectNavIndex', 'navList', 'btnText', 'needButton', 'jumpUrl', 'type'],
+    props: ['selectNavIndex', 'navList'],
     data () {
       return {}
     },
@@ -38,17 +30,6 @@
         } else {
           this.$emit('fetchIndex', index)
         }
-        if (index === 1) {
-          this.$emit('handButton', false)
-        }
-        if (index === 0) {
-          this.$emit('handButton', true)
-        }
-      },
-      createNew (url) {
-        wx.navigateTo({
-          url
-        })
       }
     }
   }
