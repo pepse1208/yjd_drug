@@ -1,7 +1,9 @@
 <template>
   <div class="drugSearch">
     <drug-head @childSearch="childSearch"></drug-head>
-    <search-list :lists="lists" :bgColor="bgColor" :btnList="btnList"></search-list>
+    <block v-for="(item, index) in lists" :key="index">
+      <search-list :details="initDetails(item)"></search-list>
+    </block>
     <p class="text-footer" v-if="!more">
       暂无更多数据
     </p>
@@ -10,7 +12,6 @@
 <script>
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
-  import $store from '../../store/index'
   import {get} from '../../utils.js'
   export default {
     components: {
@@ -26,16 +27,7 @@
         batch: '',
         enterprise: '',
         packages: '',
-        loading: false,
-        btnList: [
-          {
-            cb: function () { console.log('1') },
-            text: '查看'
-          }, {
-            cb: function () { console.log('2') },
-            text: '获取'
-          }
-        ]
+        loading: false
       }
     },
     methods: {
@@ -69,7 +61,6 @@
         var code = data.statusCode
         if (code >= 200 && code < 300) {
           res = data.data.results
-          $store.commit('initSearchList', res)
         } else {
           return
         }
@@ -82,9 +73,7 @@
           this.more = false
         }
         if (init) {
-          console.log($store.state.searchList)
-          this.lists = $store.state.searchList
-          console.log($store.state.searchList)
+          this.lists = res
           wx.stopPullDownRefresh()
         } else {
           this.lists = this.lists.concat(res)
@@ -92,6 +81,37 @@
 
         wx.hideNavigationBarLoading()
         this.loading = false
+      },
+      initDetails (data) {
+        let self = this
+        let state = data.other.status
+        let details = {
+          bgColor: self.initBgColor(state),
+          name: data.drug.name,
+          batch: data.batch,
+          package: data.drug.package,
+          enterprise_name: data.enterprise_name
+        }
+        console.log(details)
+        return details
+      },
+      initBgColor (status) {
+        let bgColor
+        switch (status) {
+          case '未共享':
+            bgColor = 'orange_bg'
+            break
+          case '已共享':
+            bgColor = 'green_bg'
+            break
+          case '以获取':
+            bgColor = 'red_bg'
+            break
+          case '索取中':
+            bgColor = 'gray_bg'
+            break
+        }
+        return bgColor
       }
     },
     computed: {

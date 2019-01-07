@@ -1,7 +1,7 @@
 <template>
   <div class="details">
     <div class="drug flex flexrow">
-      <span :class="bgColor"></span>
+      <span :class="[details.bgColor, 'icon']"></span>
       <span>{{details.name}}</span>
     </div>
     <div class="batch">
