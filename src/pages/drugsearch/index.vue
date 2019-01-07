@@ -2,15 +2,15 @@
   <div class="drugSearch">
     <drug-head @childSearch="childSearch"></drug-head>
     <block v-for="(item, index) in lists" :key="index">
-      <div class="flex flexrow">
+      <div :class="{'overflow': !item.btnStatus, 'flex flexrow': true}">
         <search-list :details="initDetails(item)"></search-list>
         <div class="btns">
           <div class="flex flexrow" v-if="item.btnStatus">
-            <div class="btn_com" @click="tipDetail(item)">详情</div>{{!item.btnStatus}}
+            <div class="btn_com" @click="tipDetail(item)">详情</div>
             <div class="btn_com more_operate" @click="showOperateBtns(index)"></div>
           </div>
           <div class="flex flexrow operation" v-if="!item.btnStatus">
-            <div class="btn_com">查看</div>{{btnStatus}}
+            <div class="btn_com">查看</div>
             <div class="btn_com">获取</div>
             <div class="btn_com back" @click="backCb(index)"></div>
           </div>
@@ -90,10 +90,10 @@
         $store.commit('initSearchList', res)
         if (init) {
           // this.lists = res
-          this.lists = $store.state.searchDate
+          this.lists = $store.state.searchData
           wx.stopPullDownRefresh()
         } else {
-          this.lists = this.lists.concat($store.state.searchDate)
+          this.lists = this.lists.concat($store.state.searchData)
         }
         wx.hideNavigationBarLoading()
         this.loading = false
@@ -151,42 +151,26 @@
         })
       },
       showOperateBtns (index) { // 点击 ··· 显示更多操作按钮
-        // this.lists[index].btnStatus = false
-        this.lists[index].btnStatus = !this.lists[index].btnStatus
-        console.log('show more btns')
-        console.log(this.lists)
-        console.log(this.butsStatus)
-        console.log($store.state.searchDate[index].btnStatus)
+        this.lists[index].btnStatus = false
       },
       backCb (index) {
-        console.log(this.butsStatus)
         this.lists[index].btnStatus = true
-        console.log(this.butsStatus)
-      },
-      btnStaus (data) {
-        let id = data.uuid.replace(/-/ig, '')
-        let flag = $store.state.searchListBtns[id] === true
-        console.log(flag)
-        return flag
       }
     },
     onPullDownRefresh () {
       // 下拉刷新
-      // console.log('下拉刷新')
       this.getList(true)
     },
     onReachBottom () {
       // 上啦触底
-      // console.log('上啦触底加载')
       if (!this.more) {
         return false
       }
       this.page = this.page + 1
       this.getList()
     },
-    mounted () {
+    beforeMount () {
       this.getList(true)
-      console.log($store.state.searchListBtns)
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.lists.length = 0
