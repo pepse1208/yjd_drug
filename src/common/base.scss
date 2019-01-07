@@ -63,3 +63,22 @@ page {
   text-align: center;
   color: #a5a5a5;
 }
+.btn_com {
+  width: 100rpx;
+  height: 100rpx;
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 30rpx;
+  color: white;
+  border: 0;
+  border-radius: 4rpx;
+  background: #1E9EFF;
+  padding: 0;
+}
+.more_operate {
+  background: #1E9EFF url(../images/ellipsis.png) no-repeat center center;
+  background-size: 40rpx 8rpx;
+}
+.btn_com ~ .btn_com {
+  margin-left: 30rpx;
+}
