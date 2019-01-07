@@ -1,16 +1,18 @@
 <template>
-  <div class="login">
-    <img src="../../images/logo2x.png" alt="">
-    <p class="title">欢迎登录药检通平台！</p>
-    <p>
-      <i class="icon user"></i>
-      <input type="text"  v-model="userName" id="userName" placeholder="请输入用户名(邮箱)">
-    </p>
-    <p>
-      <i class="icon pwd"></i>
-      <input type="password" v-model="pwd" id="pwd" minlength="6" maxlength="12" placeholder="请输入6-12位密码">
-    </p>
-    <span @click="login">登 录</span>
+  <div class="login_bg">
+    <div class="login">
+      <img src="../../images/logo2x.png" alt="">
+      <p class="title">欢迎登录药检通平台！</p>
+      <p>
+        <i class="icon user"></i>
+        <input type="text"  v-model="userName" id="userName" placeholder="请输入用户名(邮箱)">
+      </p>
+      <p>
+        <i class="icon pwd"></i>
+        <input type="password" v-model="pwd" id="pwd" minlength="6" maxlength="12" placeholder="请输入6-12位密码">
+      </p>
+      <span @click="login">登 录</span>
+    </div>
   </div>
 </template>
 <script>
@@ -229,20 +231,32 @@
   }
 </script>
 <style lang="scss" scoped>
+  @import url(../../common/page.scss);
   *{
     box-sizing: border-box;
   }
+  .login_bg{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('http://192.168.1.239:8000/static/images/mobile/login_bg.jpg') center/100% no-repeat;
+  }
   .login{
     $unit: 2rpx;
+    margin-top: -50*$unit;
     display: flex;
     font-size: 16*$unit;
     flex-direction: column;
     align-items: center;
+    background: #fff;
+    width: 313*$unit;
+    height: 320*$unit;
     img{
       width: 232*$unit;
       height: 41*$unit;
-      margin-top: 70*$unit;
-      margin-bottom: 70*$unit;
+      margin-top: 30*$unit;
+      margin-bottom: 40*$unit;
     }
     p.title{
       border: none;
@@ -255,7 +269,7 @@
       box-sizing: border-box;
       font-size: 12*$unit;
       color: #3E3A39;
-      width: 308*$unit;
+      width: 255*$unit;
       height: 40*$unit;
       display: flex;
       align-items: center;
@@ -283,7 +297,7 @@
       }
     }
     span{
-      width: 308*$unit;
+      width: 255*$unit;
       height: 40*$unit;
       font-size: 18*$unit;
       text-align: center;
@@ -291,7 +305,8 @@
       background: #1E9EFF;
       color: #fff;
       border-radius: 8rpx;
-      margin-top: 30*$unit;
+      margin-top: 10*$unit;
+      margin-bottom: 20*$unit;
       display: inline-block;
     }
   }
