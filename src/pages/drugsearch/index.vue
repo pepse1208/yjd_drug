@@ -3,16 +3,18 @@
     <drug-head @childSearch="childSearch"></drug-head>
     <statements :lists="statements"></statements>
     <block v-for="(item, index) in lists" :key="index">
-      <div :class="{'overflow': !item.btnStatus, 'flex flexrow': true}">
+      <div :class="{'overflow': !item.btnStatus, 'flex flexrow borderBottomEEE': true}">
         <search-list :details="initDetails(item)"></search-list>
         <div class="btns">
           <div class="flex flexrow" v-if="item.btnStatus">
             <div class="btn_com" @click="tipDetail(item)">详情</div>
-            <div class="btn_com more_operate" @click="showOperateBtns(index)"></div>
+            <div class="btn_com" v-if="item.other.status === '已获取' && item.other.status !== '索取中'" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
+            <div class="btn_com" @click="askfor(index, item.uuid)" v-if="item.other.status === '未共享' && item.other.status !== '索取中'">索取</div>
+            <div class="btn_com more_operate" @click="showOperateBtns(index)" v-if="item.other.status === '已共享' && item.other.status !== '索取中'"></div>
           </div>
           <div class="flex flexrow operation" v-if="!item.btnStatus">
-            <div class="btn_com">查看</div>
-            <div class="btn_com">获取</div>
+            <div class="btn_com" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
+            <div class="btn_com" @click="gain(index, item.uuid)">获取</div>
             <div class="btn_com back" @click="backCb(index)"></div>
           </div>
         </div>
@@ -27,8 +29,9 @@
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
   import Statements from '@/components/statements'
-  import $store from '../../store/index'
-  import {get} from '../../utils.js'
+  import {get, post} from '../../utils.js'
+  import {throttle} from '../../utils/index.js'
+  import config from '../../config.js'
   export default {
     components: {
       DrugHead,
@@ -38,14 +41,14 @@
     data () {
       return {
         lists: [],
-        page: 1,
         more: true,
         name: '',
         batch: '',
         enterprise: '',
         packages: '',
-        loading: false,
+        next: '',
         butsStatus: [],
+        downloaded: {},
         statements: [
           {
             text: '已获取',
@@ -65,58 +68,58 @@
     },
     methods: {
       childSearch (res) {
-        // console.log(res, 'child')
         this.name = res.name
         this.batch = res.batch
         this.enterprise = res.enterprise
         this.packages = res.packages
         this.getList(true)
       },
-      async getList (init) {
-        if (init) {
-          this.page = 1
-          this.more = true
+      async getList (next) {
+        let url = '/api/drugReport/report/all/'
+        if (next) {
+          url = next
         }
-        wx.showNavigationBarLoading()
-        this.loading = true
-        var res
+        let res
         // const res = await get('/api/drugReport/report/all/', {
         const data = await get({
-          url: '/api/drugReport/report/all/',
+          url,
           data: {
             drug_name: this.name,
             batch: this.batch,
             reg_number: this.packages,
-            enterprise: this.enterprise,
-            page: this.page
+            enterprise: this.enterprise
           }
         })
         var code = data.statusCode
         if (code >= 200 && code < 300) {
           res = data.data.results
         } else {
+          wx.showToast({
+            title: data.data.errmsg
+          })
           return
         }
-        if (res.length === 0) {
-          this.more = false
-        } else if (res.length < 10 && this.page > 1) {
-          wx.showToast({
-            title: '没有了'
-          })
+        if (res.length < 10) {
           this.more = false
         }
-        $store.commit('initSearchList', res)
-        if (init) {
-          // this.lists = res
-          this.lists = $store.state.searchData
-          wx.stopPullDownRefresh()
+        var resp = this.initSearchList(res)
+        if (next) {
+          this.lists = this.lists.concat(resp)
         } else {
-          this.lists = this.lists.concat($store.state.searchData)
+          this.lists = resp
+          wx.stopPullDownRefresh()
         }
-        wx.hideNavigationBarLoading()
-        this.loading = false
+        this.next = data.data.next
       },
-      initDetails (data) {
+      initSearchList (data) { // 初始化列表数据
+        let arr = [].concat(JSON.parse(JSON.stringify(data)))
+        let len = arr.length
+        for (let i = 0; i < len; i++) {
+          arr[i].btnStatus = true
+        }
+        return arr
+      },
+      initDetails (data) { // 初始化部分信息(药品名称、生产批号、包装规格、供应企业)
         let self = this
         let state = data.other.status
         let details = {
@@ -128,20 +131,20 @@
         }
         return details
       },
-      initBgColor (status) {
+      initBgColor (status) { // 初始化icon
         let bgColor
         switch (status) {
           case '未共享':
-            bgColor = 'orange_bg'
+            bgColor = 'red_bg'
             break
           case '已共享':
             bgColor = 'green_bg'
             break
-          case '以获取':
-            bgColor = 'red_bg'
+          case '已获取':
+            bgColor = 'gray_bg'
             break
           case '索取中':
-            bgColor = 'gray_bg'
+            bgColor = 'orange_bg'
             break
         }
         return bgColor
@@ -173,22 +176,84 @@
       },
       backCb (index) {
         this.lists[index].btnStatus = true
+      },
+      openPdf (url) {
+        wx.openDocument({
+          filePath: url,
+          success: function (res) {
+            console.log('打开文档成功')
+          }
+        })
+      },
+      downloadPdf: throttle(function (url, id) { // 查看pdf
+        id = id.replace(/-/ig, '')
+        var self = this
+        if (self.downloaded[id]) {
+          self.openPdf(self.downloaded[id])
+        } else {
+          var path = url
+          if (!url.includes('https://')) {
+            path = config.host + url
+          }
+          wx.showLoading({title: '加载中'})
+          wx.downloadFile({
+            url: path,
+            success: function (res) {
+              const filePath = res.tempFilePath
+              // 避免发送方修改文件后，没及时更新
+              self.downloaded[id] = filePath
+              wx.hideLoading()
+              self.openPdf(filePath)
+            }
+          })
+        }
+      }, 2000),
+      async askfor (index, id) { // 索取
+        const data = await post({
+          url: '/api/ask/report/' + id + '/'
+        })
+        let code = data.statusCode
+        if (code >= 200 && code < 300) {
+          this.lists[index].other.status = '索取中'
+        } else {
+          wx.showToast({
+            title: data.data.errmsg
+          })
+        }
+      },
+      async gain (index, id) {
+        const data = await post({
+          url: '/api/share/get/report/' + id + '/'
+        })
+        let code = data.statusCode
+        if (code >= 200 && code < 300) {
+          this.lists[index].other.status = '已获取'
+          this.lists[index].btnStatus = true
+        } else {
+          wx.showToast({
+            title: data.data.errmsg
+          })
+        }
+        console.log(data)
       }
     },
     onPullDownRefresh () {
       // 下拉刷新
-      this.getList(true)
+      this.getList()
     },
     onReachBottom () {
       // 上啦触底
-      if (!this.more) {
-        return false
+      if (this.next) {
+        this.getList(this.next)
+      } else {
+        wx.showToast({
+          title: '没有了'
+        })
+        this.more = false
       }
-      this.page = this.page + 1
-      this.getList()
     },
     beforeMount () {
-      this.getList(true)
+      this.getList()
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.lists.length = 0
@@ -232,6 +297,9 @@
     background: #1E9EFF url(../../images/cancel.png) no-repeat center center;
     background-size: 30rpx 30rpx;
   }
+}
+.borderBottomEEE:last-child {
+  border: 0;
 }
 </style>
 

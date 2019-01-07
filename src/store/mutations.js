@@ -46,18 +46,6 @@ export default {
       state.initData.push(obj)
     }
   },
-  initSearchList (state, data) {
-    console.log(data)
-    state.searchData = Object.assign({}, data)
-    console.log(state.searchDatata)
-    let len = data.length
-    for (let i = 0; i < len; i++) {
-      state.searchData[i].btnStatus = true
-      // let id = data[i].uuid.replace(/-/ig, '')
-      // arr[id] = true
-    }
-    console.log(state.searchData)
-  },
   /**
    * 这里设置一个统一的方法,大部分用的vuex都是简单的改变一些状态,不需要写过多的mutations
    * 使用方法 例:
