@@ -7,7 +7,8 @@
     <p class="text-footer" v-if="!more">
       暂无更多数据
     </p>
-    <vue-tab-bar @fetchIndex="clickIndexNav" @handButton="createNew" :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton" :btnText="'新建药检单'" :jumpUrl="'/pages/choose/main'" :type="type"></vue-tab-bar>
+    <div class="addNew" @click="addNew" v-if="is_upload"></div>
+    <vue-tab-bar @fetchIndex="clickIndexNav" :selectNavIndex="selectNavIndex" :navList="navList" :type="type"></vue-tab-bar>
   </div>
 </template>
 <script>
@@ -34,7 +35,6 @@
         type: '',
         lists: [],
         selectNavIndex: 0,
-        needButton: true,
         navList: []
       }
     },
@@ -46,19 +46,16 @@
           pagePath: '/pages/index/main',
           iconPath: require('../../images/upload_black.png'),
           selectedIconPath: require('../../images/upload_blue.png'),
-          text: '我的药检单',
-          isShow: (this.type === '生产企业' || this.type === '商业公司')
+          text: '我的药检单'
         },
         {
           pagePath: '/pages/index/main',
           iconPath: require('../../images/recv_black.png'),
           selectedIconPath: require('../../images/recv_blue.png'),
-          text: '药检单云文件柜',
-          isShow: this.type !== '生产企业'
+          text: '药检单云文件柜'
         }
       ]
       if (this.type !== '生产企业' && this.type !== '商业公司') {
-        this.needButton = false
         this.is_upload = false
         this.selectNavIndex = 1
       }
@@ -67,7 +64,6 @@
       this.is_upload = true
       this.lists.length = 0
       this.selectNavIndex = 0
-      this.needButton = true
       /* wx.reLaunch({
         url: config.indexUrl
       }) */
@@ -110,8 +106,10 @@
         }
         this.getList()
       },
-      createNew (msg) {
-        this.needButton = msg
+      addNew () {
+        wx.navigateTo({
+          url: '/pages/choose/main'
+        })
       }
     },
     mounted () {
@@ -145,6 +143,18 @@
   @import url(../../common/base.scss);
   .drugmanage{
     padding-bottom: 120rpx;
-    
+    .addNew {
+      position: fixed;
+      bottom: 146rpx;
+      right: 48rpx;
+      width: 96rpx;
+      height: 96rpx;
+      background: url(../../images/addNew.png);
+      background-size: 96rpx 96rpx;
+      color: #fff;
+      font-size: 40rpx;
+      border-radius: 50%;
+      text-align: center;
+    }
   }
 </style>
