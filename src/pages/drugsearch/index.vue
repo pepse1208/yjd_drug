@@ -1,7 +1,7 @@
 <template>
   <div class="drugSearch">
     <drug-head @childSearch="childSearch"></drug-head>
-    <search-list :lists="lists" :consoleText="consoleText" :bgColor="bgColor"></search-list>
+    <search-list :lists="lists" :bgColor="bgColor" :btnList="btnList"></search-list>
     <p class="text-footer" v-if="!more">
       暂无更多数据
     </p>
@@ -26,7 +26,16 @@
         batch: '',
         enterprise: '',
         packages: '',
-        loading: false
+        loading: false,
+        btnList: [
+          {
+            cb: function () { console.log('1') },
+            text: '查看'
+          }, {
+            cb: function () { console.log('2') },
+            text: '获取'
+          }
+        ]
       }
     },
     methods: {
@@ -73,7 +82,9 @@
           this.more = false
         }
         if (init) {
+          console.log($store.state.searchList)
           this.lists = $store.state.searchList
+          console.log($store.state.searchList)
           wx.stopPullDownRefresh()
         } else {
           this.lists = this.lists.concat(res)
@@ -104,52 +115,9 @@
     },
     mounted () {
       this.getList(true)
-      // this.lists = [{
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0001',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0002',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0003',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0004',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0005',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0006',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0007',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: '8',
-      //   enterprise: '杭州神中科技有限公司'
-      // }, {
-      //   name: '六味地黄丸',
-      //   package: '(每粒装0.25g)*/10/盒',
-      //   batch: 'yky0009',
-      //   enterprise: '杭州神中科技有限公司'
-      // }]
+    },
+    onUnload: function () { // 如果页面被卸载时被执行
+      this.lists.length = 0
     }
   }
 </script>
