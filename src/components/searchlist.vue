@@ -1,20 +1,20 @@
 <template>
   <div class="details">
-    <div class="drug flex flexrow">
+    <div class="drug">
       <span :class="[details.bgColor, 'icon']"></span>
-      <span>{{details.name}}</span>
+      <span class="txt">{{details.name}}</span>
     </div>
     <div class="batch">
       <span>生产批号：</span>
-      <span>{{details.batch}}</span>
+      <span class="txt">{{details.batch}}</span>
     </div>
     <div class="package">
       <span>包装规格：</span>
-      <span>{{details.package}}</span>
+      <span class="txt">{{details.package}}</span>
     </div>
     <div class="enterprise">
       <span>供应企业：</span>
-      <span>{{details.enterprise_name}}</span>
+      <span class="txt">{{details.enterprise_name}}</span>
     </div>
   </div>
 </template>
@@ -45,8 +45,9 @@
       font-size: 32rpx;
       color: #3E3A39;
       font-weight: bold;
-      justify-content: flex-start;
       .icon {
+        display: inline-block;
+        margin-bottom: 4rpx;
         width: 16rpx;
         height: 16rpx;
         border-radius: 50%;
@@ -57,10 +58,12 @@
       color: #3E3A39;
     }
   }
-  .details.overflow {
-    width: 300rpx;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .overflow {
+    .details {
+      width: 300rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 </style>
