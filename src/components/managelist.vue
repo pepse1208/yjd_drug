@@ -3,7 +3,7 @@
     <div class="item" :class="{ isflex: item.batch}" @click="item.package && jumpDetail({drug: item.drug, id: item.id})"  :key="index" v-for="(item, index) in lists">
       <div class="intro">
         <p class="title flex flexrow">
-          <span class="bold sub_title" v-if="item.name">品种名称：</span>
+          <!-- <span class="bold sub_title" v-if="item.name">品种名称：</span> -->
           <span class="sub_title" v-if="item.batch">生产批号：</span>
           <span class="ellipsis1" :class="{bold: item.name}">{{item.name || item.batch}}</span>
         </p>

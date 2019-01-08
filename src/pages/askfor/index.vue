@@ -2,7 +2,7 @@
 <div class="askfor">
   <nav-bar>药检单索取记录</nav-bar>
   <statements  :lists="lists"></statements>
-  <div class="list" :class="{overflow4: isOpen && druglistId === item.uuid && item.other.status==='申请中'}" v-for="(item, index) in dataLists">
+  <div class="list" :class="{overflow4: isOpen && druglistId === item.uuid && item.other.status==='申请中'}" v-for="(item, index) in dataLists" :key="index">
     <searchlist :details="detailsFun(item)" ></searchlist>
     <div class="btnList">
       <span class="button" @click="tipDetail(item)">详情</span>

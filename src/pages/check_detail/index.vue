@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="shadow">
     <base-top>查收页面</base-top>
+    <statements :lists="statements"></statements>
     <div class="_container">
       <div :class="status === '对方已取消' ? 'info info_no_border' : 'info'">
         <div class="supply_enterprise">
@@ -71,6 +72,7 @@
 <script>
   import BaseTop from '@/components/base_top'
   import AlertInput from '@/components/alert'
+  import Statements from '@/components/statements'
   import {get, post} from '../../utils.js'
   import {throttle} from '../../utils/index.js'
   import config from '../../config.js'
@@ -95,12 +97,25 @@
         drugIndex: '',
         subIndex: '',
         type: '',
-        reason: ''
+        reason: '',
+        statements: [
+          {
+            text: '已接收',
+            color: 'green_bg'
+          }, {
+            text: '已删除',
+            color: 'orange_bg'
+          }, {
+            text: '已退回',
+            color: 'red_bg'
+          }
+        ]
       }
     },
     components: {
       BaseTop,
-      AlertInput
+      AlertInput,
+      Statements
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.druglist.length = 0
@@ -368,12 +383,15 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+  ._container {
+    border-top: 0;
+  }
   // 接收的信息
   .info {
     width: 100%;
     height: 140rpx;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1rpx solid #eee;
     padding: 30rpx 0;
     box-sizing: border-box;
     .supply_enterprise {
@@ -398,7 +416,7 @@
     border: 0;
   }
   .big_item {
-    border-bottom: 1px solid rgba(199,199,199,1);
+    border-bottom: 1rpx solid #eee;
   }
   .big_item:last-child {
     border-bottom: 0;
@@ -526,12 +544,13 @@
   .open_icon {
     width: 34rpx;
     height: 20rpx;
-    background: url(../../images/open_icon2x.png);
+    background: url(../../images/open_icon2x.png) no-repeat;
     background-size: 34rpx 20rpx;
   }
   .close_icon {
     width: 20rpx;
     height: 34rpx;
-    background: url(../../images/close_icon.png);
+    background: url(../../images/close_icon.png) no-repeat;
+    background-size: 20rpx 34rpx;
   }
 </style>
