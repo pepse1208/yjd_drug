@@ -66,4 +66,12 @@
       white-space: nowrap;
     }
   }
+  .overflow4 {
+    .details {
+      width: 186rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 </style>

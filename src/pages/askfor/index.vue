@@ -1,40 +1,62 @@
 <template>
 <div class="askfor">
   <nav-bar>药检单索取记录</nav-bar>
-  <statements :lists="lists"></statements>
-  <div class="list" v-for="(item, index) in dataLists">
+  <statements  :lists="lists"></statements>
+  <div class="list" :class="{overflow4: isOpen && druglistId === item.uuid && item.other.status==='申请中'}" v-for="(item, index) in dataLists">
     <searchlist :details="detailsFun(item)" ></searchlist>
-    <span class="button" @click="tipDetail(item)">详情</span>
-    <block >
-      <span v-if="item.other.status==='已拒绝'" class="button" @click="toAsk(item)">重新索取</span>
-      <span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>
-    </block>
+    <div class="btnList">
+      <span class="button" @click="tipDetail(item)">详情</span>
+      <block v-if="selectNavIndex===0">
+        <span v-if="item.other.status==='已拒绝'" class="button ask" @click="toAsk(item)">重新索取</span>
+        <span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>
+      </block>
+      <block v-if="selectNavIndex===1">
+        <block :openKey="index" v-if="isOpen && druglistId === item.uuid && item.other.status==='申请中'">
+          <span class="button" @click="consent(item)">同意</span>
+          <span class="button" @click="refuse(item)">拒绝</span>
+        </block>
+        <span v-if="item.other.status==='申请中'" @click="toggle(item, index)" :class="{more_operate: !isOpen && druglistId === item.uuid, back: isOpen && druglistId === item.uuid}" class="button operate" ></span>
+      </block>
+    </div>
   </div>
+  <p class="text-footer" v-if="!more">
+    暂无更多数据
+  </p>
   <vue-tab-bar @fetchIndex="clickIndexNav"  :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton"  :type="type"></vue-tab-bar>
+  <alert :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
 </div>
 </template>
 <script>
-  import {get, post} from '../../utils.js'
+  import {get, post, put} from '../../utils.js'
   import {throttle} from '../../utils/index.js'
   import config from '../../config.js'
   import Statements from '@/components/statements'
   import NavBar from '@/components/base_top'
   import VueTabBar from '@/components/vueTabBar'
   import Searchlist from '@/components/searchlist'
+  import Alert from '@/components/alert'
 
   export default {
     components: {
       NavBar,
+      Alert,
       Statements,
       Searchlist,
       VueTabBar
     },
     data () {
       return {
+        druglistId: '',
+        tips: '签章密码',
+        placeholder: '输入签章密码',
+        isShow: false,
         next: null,
+        password: null,
         more: true,
+        uuid: '',
         req: 'send', // 请求接口字段 默认是我的索取记录
         type: '',
+        isOpen: false,
         selectNavIndex: 0,
         needButton: false,
         downloaded: {},
@@ -114,9 +136,86 @@
         return false
       }
       this.getList(this.next)
-      console.log('加载', this.dataLists)
     },
     methods: {
+      cancelShow (msg) {
+        this.isShow = msg
+        this.reason = ''
+      },
+      alertConfirm (msg) {
+        this.password = msg.resaon
+        if (this.password) {
+          this.isShow = false
+          this.consentReq(this.uuid)
+        }
+      },
+      refuse (item) {
+        this.refuseReq(item)
+      },
+      async refuseReq (item) { // 重新索取请求
+        let uuid = item.uuid
+        var url = '/api/ask/receive/report/' + uuid + '/'
+        let vm = this
+        await put({
+          url,
+          data: {
+            type: 'reject'
+          }
+        }).then((resp) => {
+          vm.getList()
+        })
+      },
+      async consentReq (uuid) { // 重新索取请求
+        let password = this.password
+        var url = '/api/ask/receive/report/' + uuid + '/'
+        let vm = this
+        var resultData = await put({
+          url,
+          data: {
+            type: 'agree',
+            password: password
+          }
+        }).then((resp) => {
+          vm.getList()
+        })
+        if (resultData) {
+          console.log(resultData)
+          if (resultData.code >= 400) {
+            var tip = resultData.data.detail || resultData.data.errmsg
+            wx.showToast({
+              icon: 'none',
+              title: tip
+            })
+          } else if (resultData.statusCode >= 200 && resultData.statusCode < 300) {
+          }
+        }
+      },
+      consent (item) {
+        let ukey = wx.getStorageSync('use_ukey')
+        let DrugSign = wx.getStorageSync('DrugSign')
+        if (ukey === 1) {
+          wx.showToast({
+            icon: 'none',
+            title: 'UKEY用户暂时无法在小程序上使用签章功能',
+            duration: 2000
+          })
+          return
+        }
+        if (DrugSign === false) {
+          wx.showToast({
+            icon: 'none',
+            title: '您没有签章权限，请联系管理员设置。',
+            duration: 2000
+          })
+          return
+        }
+        this.isShow = true
+        this.uuid = item.uuid
+      },
+      toggle (item, index) {
+        this.druglistId = item.uuid
+        this.isOpen = !this.isOpen
+      },
       openPdf (url) {
         wx.openDocument({
           filePath: url,
@@ -135,7 +234,6 @@
           if (!url.includes('https://')) {
             path = config.host + url
           }
-          console.log(path)
           wx.showLoading({title: '加载中'})
           wx.downloadFile({
             url: path,
@@ -166,7 +264,7 @@
       toAsk (item) {
         let vm = this
         wx.showModal({
-          title: '提示',
+          title: '',
           content: '是否重新索取药检单',
           success (res) {
             if (res.confirm) {
@@ -205,6 +303,7 @@
         return details
       },
       async getList (_url) {
+        this.isOpen = false
         var url = '/api/ask/' + this.req + '/report/list'
         if (_url) {
           url = _url
@@ -213,28 +312,20 @@
         await get({
           url
         }).then((resp) => {
-          var data = resp.data
+          let data = resp.data
           if (_url) {
             this.dataLists = this.dataLists.concat(data.results)
           } else {
             this.dataLists = data.results
-            console.log(data.results)
             wx.stopPullDownRefresh()
             this.more = true
           }
-          if (data.dataLists.length === 0) {
+          if (this.dataLists.length === 0) {
             this.more = false
           } else {
             this.more = true
           }
           this.next = data.next // 获取下页路径
-          this.details.bgColor = this.dataLists
-          this.details.name = this.dataLists.drug.name
-          this.details.batch = this.dataLists.batch
-          this.details.package = this.dataLists.drug.package
-          this.details.enterprise_name = this.dataLists.receiver
-          console.log(this.dataLists)
-          console.log(this.details)
         })
       },
       clickIndexNav (msg) {
@@ -242,7 +333,7 @@
         this.req = msg === 0 ? 'send' : 'receive'
         this.getList()
         this.lists[0].text = msg === 0 ? '索取中' : '待处理'
-        console.log('切换', this.dataLists)
+        msg === 0 && (this.isOpen = false)
       }
     }
   }
@@ -255,6 +346,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      .searchlist{
+        background: red;
+      }
+      .btnList{
+        display: flex;
+      }
     }
     span.button{
       display: inline-block;
@@ -268,6 +365,24 @@
       border-radius: 8rpx;
       box-shadow:0px 7px 16px 0px rgba(121,197,255,0.5);
       margin-left: 15*$unit;
+    }
+    span.ask{
+      width:60rpx;
+      height:60rpx;
+      line-height:34rpx;
+      padding:20rpx;
+    }
+    span.operate{
+      background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
+      background-size: 40rpx 8rpx;
+    }
+    span.more_operate {
+      background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
+      background-size: 40rpx 8rpx;
+    }
+    span.back {
+      background: #1E9EFF url(../../images/cancel.png) no-repeat center center;
+      background-size: 30rpx 30rpx;
     }
   }
 </style>
