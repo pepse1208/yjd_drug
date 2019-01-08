@@ -7,7 +7,8 @@
       </view>
       <view class='_toast-main'>
         <view class='_toast-input'>
-          <input :placeholder="placeholder" bindinput='_setValue' data-name='_stuEidtName' v-model="resaon" :reason="resaon"/>
+          <input :placeholder="placeholder" v-if="isPassword" type="password" maxlength="6" bindinput='_setValue' data-name='_stuEidtName' v-model="resaon" :reason="resaon"/>
+          <input :placeholder="placeholder" v-if="!isPassword" bindinput='_setValue' data-name='_stuEidtName' v-model="resaon" :reason="resaon"/>
         </view>
       </view>
       <view class='_toast-button'>
@@ -25,10 +26,12 @@
   export default {
     data () {
       return {
-        resaon: ''
+        resaon: '',
+        type: 'text',
+        length: 200
       }
     },
-    props: ['tips', 'placeholder', 'hidden', 'resaon'],
+    props: ['tips', 'placeholder', 'hidden', 'resaon', 'isPassword'],
     methods: {
       clickMask () {
         this.hidden = false
