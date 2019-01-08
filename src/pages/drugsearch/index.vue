@@ -9,15 +9,15 @@
           <search-list :details="initDetails(item)"></search-list>
           <div class="btns">
             <div class="flex flexrow" v-if="item.btnStatus">
-              <div class="btn_com" @click="tipDetail(item)">详情</div>
-              <div class="btn_com" v-if="item.other.status === '已获取' && item.other.status !== '索取中'" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
-              <div class="btn_com" @click="askfor(index, item.uuid)" v-if="item.other.status === '未共享' && item.other.status !== '索取中'">索取</div>
-              <div class="btn_com more_operate" @click="showOperateBtns(index)" v-if="item.other.status === '已共享' && item.other.status !== '索取中'"></div>
+              <button class="btn_com" @click="tipDetail(item)">详情</button>
+              <button class="btn_com" v-if="item.other.status === '已获取' && item.other.status !== '索取中'" @click="downloadPdf(item.other.url, item.uuid)">查看</button>
+              <button class="btn_com" @click="askfor(index, item.uuid)" v-if="item.other.status === '未共享' && item.other.status !== '索取中'">索取</button>
+              <button class="btn_com more_operate" @click="showOperateBtns(index)" v-if="item.other.status === '已共享' && item.other.status !== '索取中'"></button>
             </div>
             <div class="flex flexrow operation" v-if="!item.btnStatus">
-              <div class="btn_com" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
-              <div class="btn_com" @click="gain(index, item.uuid)">获取</div>
-              <div class="btn_com back" @click="backCb(index)"></div>
+              <button class="btn_com" @click="downloadPdf(item.other.url, item.uuid)">查看</button>
+              <button class="btn_com" @click="gain(index, item.uuid)">获取</button>
+              <button class="btn_com back" @click="backCb(index)"></button>
             </div>
           </div>
         </div>
@@ -213,7 +213,21 @@
           })
         }
       }, 2000),
-      async askfor (index, id) { // 索取
+      askfor (index, id) {
+        let self = this
+        wx.showModal({
+          title: '信息',
+          content: '索取后，您的联系方式将提供给上游供应企业，确定吗？',
+          success (res) {
+            if (res.confirm) {
+              self.askforAjax(index, id)
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
+      async askforAjax (index, id) { // 索取
         const data = await post({
           url: '/api/ask/report/' + id + '/'
         })
@@ -278,21 +292,24 @@
       }
     }
   }
+.btns {
   .btn_com {
-  width: 100rpx;
-  height: 100rpx;
-  text-align: center;
-  line-height: 100rpx;
-  font-size: 30rpx;
-  color: white;
-  border: 0;
-  border-radius: 4rpx;
-  background: #1E9EFF;
-  padding: 0;
-}
-.more_operate {
-  background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
-  background-size: 40rpx 8rpx;
+    width: 100rpx;
+    height: 100rpx;
+    color: #fff;
+    line-height: 100rpx;
+    text-align: center;
+    border: 0;
+    padding: 0;
+    font-size: 30rpx;
+    margin-left: 30rpx;
+    background: #1E9EFF;
+    box-shadow:0px 7px 16px 0px rgba(121,197,255,0.5);
+  }
+  .more_operate {
+    background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
+    background-size: 40rpx 8rpx;
+  }
 }
 .btn_com ~ .btn_com {
   margin-left: 30rpx;
