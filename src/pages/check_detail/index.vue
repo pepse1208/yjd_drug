@@ -416,7 +416,7 @@
     border: 0;
   }
   .big_item {
-    border-bottom: 1rpx solid rgba(199,199,199,1);
+    border-bottom: 1rpx solid #eee;
   }
   .big_item:last-child {
     border-bottom: 0;
