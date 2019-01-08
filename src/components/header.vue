@@ -126,6 +126,9 @@
     .top,
     .topExpand {
       justify-content: space-between;
+      button {
+        padding: 0;
+      }
     }
     .top > div,
     .topExpand > div {
