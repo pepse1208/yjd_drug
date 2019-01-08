@@ -1,5 +1,6 @@
 <template>
-  <div class="_top flex flexrow">
+<div>
+  <div class="_top flex flexrow fixed">
     <div class="_crumbs"><slot></slot></div>
     <div class="flex flexrow">
       <div @click="account" class="_company">{{info.name}}</div>
@@ -8,6 +9,9 @@
       </div>
     </div>
   </div>
+  <div class="_top"></div>
+</div>
+  
 </template>
 <script>
   import {get} from '../utils.js'
@@ -60,9 +64,11 @@
 <style lang="scss">
   ._top {
     width: 100%;
-    height: 92rpx;
-    line-height: 92rpx;
+    height: 46px;
+    line-height: 46px;
     box-sizing: border-box;
+    background: #fff;
+    padding: 0 24rpx;
     $unit: 2rpx;
     ._crumbs{
       color: #3E3A39;
@@ -91,5 +97,14 @@
         /*vertical-align: top;*/
       }
     }
+  }
+  ._top.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+  .shadow ._top {
+    box-shadow:0px 6px 20px 0px rgba(212,219,224,0.3);
   }
 </style>

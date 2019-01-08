@@ -138,7 +138,7 @@
 </script>
 <style lang="scss" scoped>
   .druglist {
-    border-bottom: 1px solid rgba(199,199,199,1);
+    border-bottom: 1px solid #EEEEEE;
     padding: 30rpx 0;
   }
   .druglist:last-child {

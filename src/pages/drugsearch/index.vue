@@ -1,31 +1,35 @@
 <template>
-  <div class="drugSearch">
-    <drug-head @childSearch="childSearch"></drug-head>
-    <statements :lists="statements"></statements>
-    <block v-for="(item, index) in lists" :key="index">
-      <div :class="{'overflow': !item.btnStatus, 'flex flexrow borderBottomEEE': true}">
-        <search-list :details="initDetails(item)"></search-list>
-        <div class="btns">
-          <div class="flex flexrow" v-if="item.btnStatus">
-            <div class="btn_com" @click="tipDetail(item)">详情</div>
-            <div class="btn_com" v-if="item.other.status === '已获取' && item.other.status !== '索取中'" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
-            <div class="btn_com" @click="askfor(index, item.uuid)" v-if="item.other.status === '未共享' && item.other.status !== '索取中'">索取</div>
-            <div class="btn_com more_operate" @click="showOperateBtns(index)" v-if="item.other.status === '已共享' && item.other.status !== '索取中'"></div>
-          </div>
-          <div class="flex flexrow operation" v-if="!item.btnStatus">
-            <div class="btn_com" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
-            <div class="btn_com" @click="gain(index, item.uuid)">获取</div>
-            <div class="btn_com back" @click="backCb(index)"></div>
+  <div class="drugSearch shadow">
+    <base-top>药检单查询</base-top>
+    <div>
+      <drug-head @childSearch="childSearch"></drug-head>
+      <statements :lists="statements"></statements>
+      <block v-for="(item, index) in lists" :key="index">
+        <div :class="{'overflow': !item.btnStatus, 'flex flexrow borderBottomEEE': true}">
+          <search-list :details="initDetails(item)"></search-list>
+          <div class="btns">
+            <div class="flex flexrow" v-if="item.btnStatus">
+              <div class="btn_com" @click="tipDetail(item)">详情</div>
+              <div class="btn_com" v-if="item.other.status === '已获取' && item.other.status !== '索取中'" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
+              <div class="btn_com" @click="askfor(index, item.uuid)" v-if="item.other.status === '未共享' && item.other.status !== '索取中'">索取</div>
+              <div class="btn_com more_operate" @click="showOperateBtns(index)" v-if="item.other.status === '已共享' && item.other.status !== '索取中'"></div>
+            </div>
+            <div class="flex flexrow operation" v-if="!item.btnStatus">
+              <div class="btn_com" @click="downloadPdf(item.other.url, item.uuid)">查看</div>
+              <div class="btn_com" @click="gain(index, item.uuid)">获取</div>
+              <div class="btn_com back" @click="backCb(index)"></div>
+            </div>
           </div>
         </div>
-      </div>
-    </block>
-    <p class="text-footer" v-if="!more">
-      暂无更多数据
-    </p>
+      </block>
+      <p class="text-footer" v-if="!more">
+        暂无更多数据
+      </p>
+    </div>
   </div>
 </template>
 <script>
+  import BaseTop from '@/components/base_top'
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
   import Statements from '@/components/statements'
@@ -36,7 +40,8 @@
     components: {
       DrugHead,
       SearchList,
-      Statements
+      Statements,
+      BaseTop
     },
     data () {
       return {

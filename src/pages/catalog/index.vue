@@ -137,7 +137,4 @@
     margin-left: 18rpx;
   }
 }
-.item + .item {
-  /*margin-top: -84rpx;*/
-}
 </style>
