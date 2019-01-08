@@ -84,7 +84,7 @@
             wx.stopPullDownRefresh()
             this.more = true
           }
-          if (data.results.length === 0) {
+          if (this.results.length === 0) {
             this.more = false
           } else {
             this.more = true

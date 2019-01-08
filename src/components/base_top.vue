@@ -35,6 +35,21 @@
             })
           } else if (resultData.statusCode >= 200 && resultData.statusCode < 300) {
             this.info = resultData.data.result
+            let index = this.info.permissions.toString().indexOf('drug.sign')
+            let isDrugSign = true
+            if (index > -1) {
+              isDrugSign = true
+            } else {
+              isDrugSign = false
+            }
+            wx.setStorage({ //
+              key: 'use_ukey',
+              data: this.info.enterprise.use_ukey
+            })
+            wx.setStorage({ //
+              key: 'DrugSign',
+              data: isDrugSign
+            })
           }
         }
       },

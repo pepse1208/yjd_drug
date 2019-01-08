@@ -57,6 +57,14 @@
         key: 'type',
         data: ''
       })
+      wx.setStorage({ //
+        key: 'use_ukey',
+        data: ''
+      })
+      wx.setStorage({ //
+        key: 'DrugSign',
+        data: false
+      })
       /* let vm = this
       get({ // 获取sessionid 的接口
         url: this.sessionidUrl
@@ -69,8 +77,8 @@
       }) */
     },
     onShow () {
-      this.userName = '' // 清空输入框的内容
-      this.pwd = ''
+      this.userName = '67444758@tianzhu.com' // 清空输入框的内容
+      this.pwd = '67444758'
       var vm = this
       wx.login({
         success (res) {
@@ -156,8 +164,6 @@
       check () {
         this.userName = this.userName.trim()
         this.pwd = this.pwd.trim()
-        this.userName = '67444758@tianzhu.com'
-        this.pwd = '67444758'
         if (!this.userName) {
           this.tip('请输入用户名')
           return false
@@ -206,8 +212,6 @@
             this.sessionid = this.getWord(resultData, 'sessionid')
             this.unitedid = this.getWord(resultData, '_united_id')
             this.csrftoken = this.getWord(resultData, 'csrftoken')
-            console.log(this.sessionid)
-            console.log(this.unitedid)
             wx.setStorage({ //
               key: 'sessionid',
               data: this.sessionid

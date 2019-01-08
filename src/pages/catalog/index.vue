@@ -21,7 +21,7 @@
       return {
         productionLists: [
           {title: '药检单管理', url: '/pages/drugmanage/main', isMustLogin: false},
-          {title: '药检单索取记录', url: '/pages/drugsearch/main', isMustLogin: false}
+          {title: '药检单索取记录', url: '/pages/askfor/main', isMustLogin: false}
         ],
         lists: [
           {title: '查收药检单', url: '/pages/recv/main', isMustLogin: false},
