@@ -292,22 +292,24 @@
       }
     }
   }
-.btns .btn_com {
-  width: 100rpx;
-  height: 100rpx;
-  color: #fff;
-  line-height: 100rpx;
-  text-align: center;
-  border: 0;
-  padding: 0;
-  font-size: 30rpx;
-  margin-left: 30rpx;
-  background: #1E9EFF;
-  box-shadow:0px 7px 16px 0px rgba(121,197,255,0.5);
-}
-.more_operate {
-  background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
-  background-size: 40rpx 8rpx;
+.btns {
+  .btn_com {
+    width: 100rpx;
+    height: 100rpx;
+    color: #fff;
+    line-height: 100rpx;
+    text-align: center;
+    border: 0;
+    padding: 0;
+    font-size: 30rpx;
+    margin-left: 30rpx;
+    background: #1E9EFF;
+    box-shadow:0px 7px 16px 0px rgba(121,197,255,0.5);
+  }
+  .more_operate {
+    background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
+    background-size: 40rpx 8rpx;
+  }
 }
 .btn_com ~ .btn_com {
   margin-left: 30rpx;
