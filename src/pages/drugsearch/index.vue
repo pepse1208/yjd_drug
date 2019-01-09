@@ -50,7 +50,7 @@
         name: '',
         batch: '',
         enterprise: '',
-        packages: '',
+        reg_number: '',
         next: '',
         butsStatus: [],
         downloaded: {},
@@ -76,7 +76,7 @@
         this.name = res.name
         this.batch = res.batch
         this.enterprise = res.enterprise
-        this.packages = res.packages
+        this.reg_number = res.reg_number
         this.getList()
       },
       async getList (next) {
@@ -91,7 +91,7 @@
           data: {
             drug_name: this.name,
             batch: this.batch,
-            reg_number: this.packages,
+            reg_number: this.reg_number,
             enterprise: this.enterprise
           }
         })
@@ -280,6 +280,11 @@
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.lists.length = 0
+      this.name = ''
+      this.batch = ''
+      this.enterprise = ''
+      this.reg_number = ''
+      this.next = ''
     }
   }
 </script>
