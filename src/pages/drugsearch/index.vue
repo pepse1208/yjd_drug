@@ -77,7 +77,7 @@
         this.batch = res.batch
         this.enterprise = res.enterprise
         this.packages = res.packages
-        this.getList(true)
+        this.getList()
       },
       async getList (next) {
         let url = '/api/drugReport/report/all/'
@@ -100,7 +100,8 @@
           res = data.data.results
         } else {
           wx.showToast({
-            title: data.data.errmsg
+            title: data.data.errmsg,
+            icon: 'none'
           })
           return
         }
@@ -236,7 +237,8 @@
           this.lists[index].other.status = '索取中'
         } else {
           wx.showToast({
-            title: data.data.errmsg
+            title: data.data.errmsg,
+            icon: 'none'
           })
         }
       },
@@ -250,7 +252,8 @@
           this.lists[index].btnStatus = true
         } else {
           wx.showToast({
-            title: data.data.errmsg
+            title: data.data.errmsg,
+            icon: 'none'
           })
         }
         console.log(data)
@@ -266,7 +269,8 @@
         this.getList(this.next)
       } else {
         wx.showToast({
-          title: '没有了'
+          title: '没有了',
+          icon: 'none'
         })
         this.more = false
       }
