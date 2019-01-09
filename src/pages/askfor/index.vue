@@ -7,7 +7,7 @@
     <div class="btnList">
       <span class="button" @click="tipDetail(item)">详情</span>
       <block v-if="selectNavIndex===0">
-        <span v-if="item.other.status==='已拒绝'" class="button ask" @click="toAsk(item)">重新索取</span>
+        <span v-if="item.other.status==='已拒绝'" class="button ask" @click="toAsk(item)"></span>
         <span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>
       </block>
       <block v-if="selectNavIndex===1">
@@ -23,7 +23,7 @@
     暂无更多数据
   </p>
   <vue-tab-bar @fetchIndex="clickIndexNav"  :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton"  :type="type"></vue-tab-bar>
-  <alert :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
+  <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
 </div>
 </template>
 <script>
@@ -155,38 +155,51 @@
       async refuseReq (item) { // 重新索取请求
         let uuid = item.uuid
         var url = '/api/ask/receive/report/' + uuid + '/'
-        let vm = this
-        await put({
+        var resultData = await put({
           url,
           data: {
             type: 'reject'
           }
-        }).then((resp) => {
-          vm.getList()
         })
+        if (resultData) {
+          if (resultData.data.code >= 400) {
+            var tip = resultData.data.detail || resultData.data.errmsg
+            wx.showToast({
+              icon: 'none',
+              title: tip
+            })
+          } else if (resultData.data.code >= 200 && resultData.data.code < 300) {
+            this.getList()
+            wx.showToast({
+              icon: 'none',
+              title: '已拒绝'
+            })
+          }
+        }
       },
-      async consentReq (uuid) { // 重新索取请求
+      async consentReq (uuid) { // 索取请求
         let password = this.password
         var url = '/api/ask/receive/report/' + uuid + '/'
-        let vm = this
         var resultData = await put({
           url,
           data: {
             type: 'agree',
             password: password
           }
-        }).then((resp) => {
-          vm.getList()
         })
         if (resultData) {
-          console.log(resultData)
-          if (resultData.code >= 400) {
+          if (resultData.data.code >= 400) {
             var tip = resultData.data.detail || resultData.data.errmsg
             wx.showToast({
               icon: 'none',
               title: tip
             })
-          } else if (resultData.statusCode >= 200 && resultData.statusCode < 300) {
+          } else if (resultData.data.code >= 200 && resultData.data.code < 300) {
+            this.getList()
+            wx.showToast({
+              icon: 'none',
+              title: '已同意'
+            })
           }
         }
       },
@@ -331,6 +344,7 @@
       clickIndexNav (msg) {
         this.selectNavIndex = msg
         this.req = msg === 0 ? 'send' : 'receive'
+        this.dataLists = []
         this.getList()
         this.lists[0].text = msg === 0 ? '索取中' : '待处理'
         msg === 0 && (this.isOpen = false)
@@ -367,10 +381,12 @@
       margin-left: 15*$unit;
     }
     span.ask{
-      width:60rpx;
+      /*width:60rpx;
       height:60rpx;
       line-height:34rpx;
-      padding:20rpx;
+      padding:20rpx;*/
+      background: #1E9EFF url(../../images/ask2x.png)  28rpx center no-repeat ;
+      background-size: 50rpx 44rpx;
     }
     span.operate{
       background: #1E9EFF url(../../images/ellipsis.png) no-repeat center center;
