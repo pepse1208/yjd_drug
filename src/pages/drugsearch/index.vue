@@ -50,7 +50,7 @@
         name: '',
         batch: '',
         enterprise: '',
-        packages: '',
+        reg_number: '',
         next: '',
         butsStatus: [],
         downloaded: {},
@@ -76,8 +76,8 @@
         this.name = res.name
         this.batch = res.batch
         this.enterprise = res.enterprise
-        this.packages = res.packages
-        this.getList(true)
+        this.reg_number = res.reg_number
+        this.getList()
       },
       async getList (next) {
         let url = '/api/drugReport/report/all/'
@@ -91,7 +91,7 @@
           data: {
             drug_name: this.name,
             batch: this.batch,
-            reg_number: this.packages,
+            reg_number: this.reg_number,
             enterprise: this.enterprise
           }
         })
@@ -100,7 +100,8 @@
           res = data.data.results
         } else {
           wx.showToast({
-            title: data.data.errmsg
+            title: data.data.errmsg,
+            icon: 'none'
           })
           return
         }
@@ -236,7 +237,8 @@
           this.lists[index].other.status = '索取中'
         } else {
           wx.showToast({
-            title: data.data.errmsg
+            title: data.data.errmsg,
+            icon: 'none'
           })
         }
       },
@@ -250,7 +252,8 @@
           this.lists[index].btnStatus = true
         } else {
           wx.showToast({
-            title: data.data.errmsg
+            title: data.data.errmsg,
+            icon: 'none'
           })
         }
         console.log(data)
@@ -266,7 +269,8 @@
         this.getList(this.next)
       } else {
         wx.showToast({
-          title: '没有了'
+          title: '没有了',
+          icon: 'none'
         })
         this.more = false
       }
@@ -276,6 +280,11 @@
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.lists.length = 0
+      this.name = ''
+      this.batch = ''
+      this.enterprise = ''
+      this.reg_number = ''
+      this.next = ''
     }
   }
 </script>

@@ -28,7 +28,7 @@
           <input v-model="batch" placeholder="请输入生产批号" type="text">
         </div>
         <div class="box flex flexrow">
-          <input v-model="packages" placeholder="请输入批准文号" type="text">
+          <input v-model="reg_number" placeholder="请输入批准文号" type="text">
           <input v-model="enterprise" placeholder="请输入供应企业" type="text">
         </div>
       </div>
@@ -43,7 +43,7 @@
         show: true,
         name: '',
         batch: '',
-        packages: '',
+        reg_number: '',
         enterprise: ''
       }
     },
@@ -62,7 +62,7 @@
         this.$emit('childSearch', {
           name: this.name,
           batch: this.batch,
-          packages: this.packages,
+          reg_number: this.reg_number,
           enterprise: this.enterprise
         })
       },
@@ -74,6 +74,13 @@
         // console.log('unexpand')
         this.show = true
       }
+    },
+    onUnload: function () { // 如果页面被卸载时被执行
+      this.show = true
+      this.name = ''
+      this.batch = ''
+      this.enterprise = ''
+      this.reg_number = ''
     }
   }
 </script>

@@ -36,8 +36,6 @@
       // }
       let query = wx.createSelectorQuery()
       query.select('#statements').boundingClientRect((rect) => {
-        console.log('move')
-        console.log(rect)
         let top = rect.top
         if (top <= 39) { // 临界值，根据自己的需求来调整
           this.isFixed = true
