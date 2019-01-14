@@ -2,7 +2,7 @@
 <div class="askfor">
   <nav-bar>药检单索取记录</nav-bar>
   <statements  :lists="lists"></statements>
-  <div class="list" :class="{overflow4: isOpen && druglistId === item.uuid && item.other.status==='申请中'}" v-for="(item, index) in dataLists" :key="index">
+  <div class="list" :class="{overflow4: openArr[index] && item.other.status==='申请中'}" v-for="(item, index) in dataLists" :key="index">
     <searchlist :details="detailsFun(item)" ></searchlist>
     <div class="btnList">
       <block v-if="selectNavIndex===0">
@@ -11,12 +11,12 @@
         <span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>
       </block>
       <block v-if="selectNavIndex===1">
-        <span :class="{show: !isOpen && druglistId === item.uuid, hide: isOpen && druglistId === item.uuid}" class="button" @click="tipDetail(item)">详情</span>
-        <block :openKey="index" v-if="isOpen && druglistId === item.uuid && item.other.status==='申请中'">
+        <span :class="{show: !openArr[index], hide: openArr[index]}" class="button" @click="tipDetail(item)">详情</span>
+        <block :openKey="index" v-if="openArr[index] && item.other.status==='申请中'">
           <span class="button" @click="consent(item)">同意</span>
           <span class="button" @click="refuse(item)">拒绝</span>
         </block>
-        <span v-if="item.other.status==='申请中'" @click="toggle(item, index)" :class="{more_operate: !isOpen && druglistId === item.uuid, back: isOpen && druglistId === item.uuid}" class="button operate" ></span>
+        <span v-if="item.other.status==='申请中'" @click="toggle(item, index)" :class="{more_operate: !openArr[index], back: openArr[index]}" class="button operate" ></span>
       </block>
     </div>
   </div>
@@ -57,7 +57,7 @@
         uuid: '',
         req: 'send', // 请求接口字段 默认是我的索取记录
         type: '',
-        isOpen: false,
+        openArr: [],
         selectNavIndex: 0,
         needButton: false,
         downloaded: {},
@@ -143,7 +143,6 @@
       if (this.selectNavIndex === 0) {
         this.req = 'send'
         this.lists[0].text = '索取中'
-        this.isOpen = false
       } else {
         this.req = 'receive'
         this.lists[0].text = '待处理'
@@ -241,7 +240,8 @@
         console.log(item)
         console.log(this.isOpen)
         this.druglistId = item.uuid
-        this.isOpen = !this.isOpen
+        this.openArr[index] = !this.openArr[index]
+        this.$forceUpdate() // 没有触发render函数进行自动更新，需手动调用
       },
       openPdf (url) { // 打开pdf
         wx.openDocument({
@@ -342,7 +342,6 @@
         return details
       },
       async getList (_url) { // 获取列表数据
-        this.isOpen = false
         var url = '/api/ask/' + this.req + '/report/list'
         if (_url) {
           url = _url
@@ -358,6 +357,12 @@
             this.dataLists = data.results
             wx.stopPullDownRefresh()
             this.more = true
+          }
+          if (this.selectNavIndex === 1) {
+            let len = this.dataLists.length
+            for (let i = 0; i < len; i++) {
+              this.openArr[i] = false
+            }
           }
           if (this.dataLists.length === 0) {
             this.more = false
@@ -384,7 +389,6 @@
         if (this.selectNavIndex === 0) { // 切换页面 数据刷新
           this.req = 'send'
           this.lists[0].text = '索取中'
-          this.isOpen = false
         } else {
           this.req = 'receive'
           this.lists[0].text = '待处理'
