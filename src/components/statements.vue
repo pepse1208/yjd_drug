@@ -53,7 +53,7 @@
     width: 100%;
     height: 88rpx;
     line-height: 88rpx;
-    border-bottom: 1px solid #EEEEEE;
+    // border-bottom: 1px solid #EEEEEE;
     background: #fff;
     font-size: 12*$unit;
     span.declare{

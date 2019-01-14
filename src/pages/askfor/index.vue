@@ -238,6 +238,8 @@
         this.uuid = item.uuid
       },
       toggle (item, index) { // 按钮...跟X切换
+        console.log(item)
+        console.log(this.isOpen)
         this.druglistId = item.uuid
         this.isOpen = !this.isOpen
       },

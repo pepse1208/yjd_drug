@@ -139,6 +139,9 @@
   }
 </script>
 <style lang="scss" scoped>
+  .alldruglist {
+    margin-top: 10rpx;
+  }
   .druglist {
     border-bottom: 1px solid #EEEEEE;
     padding: 30rpx 0;
