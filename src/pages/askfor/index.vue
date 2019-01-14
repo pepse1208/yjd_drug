@@ -64,7 +64,7 @@
         dataLists: [],
         myStatus: {
           '已拒绝': 'red_bg',
-          '已结束': 'red_bg',
+          '已处理': 'red_bg',
           '已同意': 'green_bg',
           '申请中': 'orange_bg',
           '已申请': 'orange_bg'
@@ -244,12 +244,11 @@
         wx.openDocument({
           filePath: url,
           success: function (res) {
-            console.log('打开文档成功')
+            // console.log('打开文档成功')
           }
         })
       },
       downloadPdf: throttle(function (url, id) { // 查看pdf
-        console.log(url, id)
         var self = this
         if (self.downloaded[id]) {
           self.openPdf(self.downloaded[id])
@@ -293,9 +292,9 @@
           success (res) {
             if (res.confirm) {
               vm.askReq(item)
-              console.log('用户点击确定')
+              // console.log('用户点击确定')
             } else if (res.cancel) {
-              console.log('用户点击取消')
+              // console.log('用户点击取消')
             }
           }
         })

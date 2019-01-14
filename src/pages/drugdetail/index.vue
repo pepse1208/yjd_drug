@@ -62,7 +62,7 @@
     mounted () {
       this.info = JSON.parse(this.$root.$mp.query.json)
       this.infolist = this.info.drug
-      console.log(this.info, 'info11')
+      // console.log(this.info, 'info11')
       // this.info = {
       //   name: '六味地黄丸',
       //   batch: 'yky0001',
@@ -84,7 +84,6 @@
         })
       },
       goOperate () {
-        console.log(123)
         wx.navigateTo({
           url: '/pages/drugoperate/main'
         })

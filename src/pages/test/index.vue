@@ -102,7 +102,7 @@
         return today
       },
       bindDateChange (e) {
-        console.log('picker发送选择改变，携带值为', e.mp.detail.value)
+        // console.log('picker发送选择改变，携带值为', e.mp.detail.value)
         this.startDate = e.mp.detail.value
         /* this.setData({
           date: e.mp.detail.value
@@ -118,7 +118,7 @@
             const tempFilePaths = res.tempFilePaths
             vm.imgUrl = tempFilePaths
             vm.urls.push(tempFilePaths[0])
-            console.log(typeof vm.urls)
+            // console.log(typeof vm.urls)
             /* wx.uploadFile({
               url: 'https://example.weixin.qq.com/upload', // 仅为示例，非真实的接口地址
               filePath: tempFilePaths[0],
@@ -154,11 +154,11 @@
             if (res.authSetting['scope.userInfo']) {
               wx.getUserInfo({
                 success: function (res) {
-                  console.log('用户已经授权过')
+                  // console.log('用户已经授权过')
                 }
               })
             } else {
-              console.log('用户还未授权过')
+              // console.log('用户还未授权过')
             }
           }
         })
@@ -168,14 +168,14 @@
         if (wx.canIUse('button.open-type.getUserInfo')) {
           // 用户版本可用
         } else {
-          console.log('请升级微信版本')
+          // console.log('请升级微信版本')
         }
       },
       bindGetUserInfo (e) {
         if (e.mp.detail.rawData) {
-          console.log('用户按了允许授权按钮')
+          // console.log('用户按了允许授权按钮')
         } else {
-          console.log('用户按了拒绝按钮')
+          // console.log('用户按了拒绝按钮')
         }
       },
       fingerprint () {
@@ -188,31 +188,31 @@
         })
       },
       fingerpriter (e) {
-        console.log(wx.canIUse('checkIsSupportSoterAuthentication'))
+        // console.log(wx.canIUse('checkIsSupportSoterAuthentication'))
         if (wx.canIUse('checkIsSupportSoterAuthentication')) { // 判断此接口是否可用
-          console.log('接口可用')
+          // console.log('接口可用')
           wx.checkIsSupportSoterAuthentication({
             fail: function () {
-              console.log('调用失败')
+              // console.log('调用失败')
             },
             success: function (res) {
-              console.log('本机支持的 SOTER 生物认证', res)
+              // console.log('本机支持的 SOTER 生物认证', res)
               if (res.supportMode === []) {
-                console.log('不具备任何被SOTER支持的生物识别方式')
+                // console.log('不具备任何被SOTER支持的生物识别方式')
               } else if (res.supportMode[0] === 'fingerPrint') {
                 wx.startSoterAuthentication({
                   requestAuthModes: ['fingerPrint'],
                   challenge: '123456',
                   authContent: '请用指纹解锁',
                   success: function (res) {
-                    console.log('js', res)
+                    // console.log('js', res)
                   },
                   fail: function (res) {
-                    console.log('用户取消了指纹识别，或调用出现错误')
+                    // console.log('用户取消了指纹识别，或调用出现错误')
                   }
                 })
               } else {
-                console.log('当前该设备不支持指纹识别')
+                // console.log('当前该设备不支持指纹识别')
               }
             }
           })

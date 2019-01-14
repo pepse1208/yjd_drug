@@ -26,7 +26,7 @@
         wx.navigateTo({
           url: '/pages/accountcenter/main',
           success () {
-            console.log('success')
+            // console.log('success')
           }
         })
       },
@@ -34,7 +34,7 @@
         wx.navigateTo({
           url: '/pages/login/main',
           success () {
-            console.log('登录')
+            // console.log('登录')
           }
         })
       }

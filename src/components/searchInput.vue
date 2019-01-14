@@ -16,14 +16,13 @@
     },
     methods: {
       async searchDrug (url) {
-        console.log(this.name)
+        // console.log(this.name)
         var resp = await get({
           url,
           data: {
             name: this.name
           }
         })
-        console.log(resp.data)
         this.$emit('renderData', resp.data)
       }
     },

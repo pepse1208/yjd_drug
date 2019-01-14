@@ -187,7 +187,7 @@
         wx.openDocument({
           filePath: url,
           success: function (res) {
-            console.log('打开文档成功')
+            // console.log('打开文档成功')
           }
         })
       },
@@ -223,7 +223,7 @@
             if (res.confirm) {
               self.askforAjax(index, id)
             } else if (res.cancel) {
-              console.log('用户点击取消')
+              // console.log('用户点击取消')
             }
           }
         })
@@ -256,7 +256,6 @@
             icon: 'none'
           })
         }
-        console.log(data)
       }
     },
     onPullDownRefresh () {

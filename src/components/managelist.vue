@@ -49,7 +49,7 @@
         wx.navigateTo({
           url,
           success () {
-            console.log(uuid)
+            // console.log(uuid)
           }
         })
       },
@@ -71,7 +71,7 @@
         wx.openDocument({
           filePath: url,
           success: function (res) {
-            console.log('打开文档成功')
+            // console.log('打开文档成功')
           }
         })
       },
