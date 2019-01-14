@@ -44,9 +44,9 @@
                       <button class="more_operate" v-if="tmp.status !== '签收' && status === '待查收'" @click="showOperateBtns(index, tmp.uuid, _index, tmp.status)"></button>
                     </div>
                     <div class="operate_btns btn_com" v-if="tmp.buttonState.operate_btns">
-                      <button class="agree_btn" @click="agreeRefuseDel(index, _index)">接收</button>
-                      <button class="delete_btn" @click="agreeRefuseDel(index, _index, '删除')">删除</button>
-                      <button class="reject_btn" @click="agreeRefuseDel (index, _index, '退回')">退回</button>
+                      <button class="agree_btn green_bg" @click="agreeRefuseDel(index, _index)">接收</button>
+                      <button class="delete_btn orange_bg" @click="agreeRefuseDel(index, _index, '删除')">删除</button>
+                      <button class="reject_btn red_bg" @click="agreeRefuseDel (index, _index, '退回')">退回</button>
                       <button class="back" @click="closeOperateBtns(index, tmp.uuid, _index)"></button>
                     </div>
                     <div class="other_btns btn_com" v-if="status === '待查收' && tmp.status !== '未处理'">
@@ -495,15 +495,15 @@
       }
       .operate_btns {
         .agree_btn {
-          background: #16AB24;
+          // background: #16AB24;
           box-shadow:0px 7px 16px 0px rgba(131,255,143,0.5);
         }
         .delete_btn {
-          background: #FF821D;
+          // background: #FF821D;
           box-shadow:0px 7px 16px 0px rgba(255,168,97,0.5);
         }
         .reject_btn {
-          background: #E71F10;
+          // background: #E71F10;
           box-shadow:0px 7px 16px 0px rgba(255,115,105,0.5);
         }
         .back {
