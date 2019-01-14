@@ -52,7 +52,7 @@
             })
           } else if (resultData.statusCode >= 200 && resultData.statusCode < 300) {
             if (resultData.data.result.random_modified === undefined) return
-            console.log(resultData.data.result.random_modified + '模块')
+            // console.log(resultData.data.result.random_modified + '模块')
             wx.setStorage({ //
               key: 'random_modified',
               data: resultData.data.result.random_modified
@@ -66,11 +66,11 @@
             if (res.authSetting['scope.userInfo']) {
               wx.getUserInfo({
                 success: function (res) {
-                  console.log('用户已经授权过')
+                  // console.log('用户已经授权过')
                 }
               })
             } else {
-              console.log('用户还未授权过')
+              // console.log('用户还未授权过')
             }
           }
         })
@@ -80,14 +80,14 @@
         if (wx.canIUse('button.open-type.getUserInfo')) {
           // 用户版本可用
         } else {
-          console.log('请升级微信版本')
+          // console.log('请升级微信版本')
         }
       },
       bindGetUserInfo (e) {
         if (e.mp.detail.rawData) {
-          console.log('用户按了允许授权按钮')
+          // console.log('用户按了允许授权按钮')
         } else {
-          console.log('用户按了拒绝按钮')
+          // console.log('用户按了拒绝按钮')
         }
       },
       jump (url, flag) {

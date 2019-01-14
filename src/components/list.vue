@@ -47,10 +47,8 @@
       }
     },
     mounted () {
-      console.log(this.lists, 'lists')
-      console.log(123)
-      console.log(this.bgColor)
-      console.log(456)
+      // console.log(this.lists, 'lists')
+      // console.log(this.bgColor)
     },
     methods: {
       getDetail (index) {
@@ -91,7 +89,7 @@
       },
       showOperateBtns () { // 点击 ··· 显示更多操作按钮
         this.isShow = true
-        console.log('show more btns')
+        // console.log('show more btns')
       },
       backCb () {
         this.isShow = false

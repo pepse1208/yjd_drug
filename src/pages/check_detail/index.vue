@@ -132,12 +132,12 @@
         wx.openDocument({
           filePath: url,
           success: function (res) {
-            console.log('打开文档成功')
+            // console.log('打开文档成功')
           }
         })
       },
       downloadPdf: throttle(function (url, id) { // 查看pdf
-        console.log(config.host + url)
+        // console.log(config.host + url)
         var self = this
         if (self.downloaded[id]) {
           self.openPdf(self.downloaded[id])
@@ -172,7 +172,7 @@
           operate = 'other_btns'
           this.druglist[drugIndex].files[subIndex].buttonState['reason_btn'] = true
         }
-        if (this.status === '已结束') {
+        if (this.status === '已处理') {
           operate = 'other_btns'
           this.druglist[drugIndex].files[subIndex].buttonState['reason_btn'] = true
         }
@@ -295,7 +295,6 @@
             }
           }
         }
-        console.log(data)
         return data
       },
       async completeAjaxPost () {

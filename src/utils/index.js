@@ -11,7 +11,7 @@ export function throttle (fn, gapTime) {
     let _nowTime = +new Date()
     if (_nowTime - _lastTime > gapTime || !_lastTime) {
       // 将this和参数传给原函数
-      console.log(6666)
+      // console.log(6666)
       fn.apply(this, arguments)
       _lastTime = _nowTime
     }

@@ -50,7 +50,7 @@ export function put ({url, data, header}) {
 
 // 可以封装一个保存sessinid的方法，将sessionid存储在localstorage中，定为半小时之后清空此sessionid缓存。
 function saveSession (sessionId) {
-  console.log(' now save sessionid: ' + sessionId)
+  // console.log(' now save sessionid: ' + sessionId)
   wx.setStorageSync('sessionid', sessionId)// 保存sessionid
   wx.setStorageSync('sessiondate', Date.parse(new Date()))// 保存当前时间，
 }
@@ -59,7 +59,7 @@ function saveSession (sessionId) {
 function removeLocalSession () {
   wx.removeStorageSync('sessionid')
   wx.removeStorageSync('sessiondate')
-  console.log('remove session!')
+  // console.log('remove session!')
 }
 
 // 检查sessionid是否过期的方法
@@ -67,7 +67,7 @@ function removeLocalSession () {
 function checkSessionTimeout () {
   var sessionid = wx.getStorageSync('sessionId')
   if (sessionid === null || sessionid === undefined || sessionid === '') {
-    console.log('session is empty')
+    // console.log('session is empty')
     return false
   }
   var sessionTime = wx.getStorageSync('sessiondate')
@@ -80,7 +80,7 @@ function checkSessionTimeout () {
 }
 // 保存cookie
 function saveCookie (cookie) {
-  console.log(' now save cookie: ' + cookie)
+  // console.log(' now save cookie: ' + cookie)
   wx.setStorageSync('cookie', cookie)// 保存cookie
 }
 export function getCookie () {
@@ -90,11 +90,11 @@ export function getCookie () {
 // 如果sessionid过期，重新获取sessionid
 
 function checkSessionOk () {
-  console.log('check session ok?...')
+  // console.log('check session ok?...')
   var sessionOk = checkSessionTimeout()
   if (!sessionOk) {
     get('url', 'data', 'header').then((data) => {
-      console.log(arguments)
+      // console.log(arguments)
       saveSession(data)
       saveCookie(data.header)
     })

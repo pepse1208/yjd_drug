@@ -41,7 +41,7 @@
       this.pageName = options.name // 获取将要跳转的页面
     },
     onUnload: function () { // 如果页面被卸载时被执行
-      console.log(this.backName)
+      // console.log(this.backName)
       if (this.backName === 'catalog') {
         wx.reLaunch({
           url: '/pages/catalog/main'

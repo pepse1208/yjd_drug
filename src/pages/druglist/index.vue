@@ -50,9 +50,7 @@
       this.drug = this.$root.$mp.query.drug
       this.isBack = this.$root.$mp.query.isBack
       this.is_upload = this.$root.$mp.query.is_upload
-      console.log(typeof this.is_upload)
       this.getList()
-      console.log(this.is_upload)
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.info = {}
