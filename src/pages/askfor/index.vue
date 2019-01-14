@@ -239,6 +239,7 @@
       toggle (item, index) { // 按钮...跟X切换
         this.druglistId = item.uuid
         this.openArr[index] = !this.openArr[index]
+        this.$forceUpdate() // 没有触发render函数进行自动更新，需手动调用
       },
       openPdf (url) { // 打开pdf
         wx.openDocument({
