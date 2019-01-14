@@ -5,12 +5,13 @@
   <div class="list" :class="{overflow4: isOpen && druglistId === item.uuid && item.other.status==='申请中'}" v-for="(item, index) in dataLists" :key="index">
     <searchlist :details="detailsFun(item)" ></searchlist>
     <div class="btnList">
-      <span class="button" @click="tipDetail(item)">详情</span>
       <block v-if="selectNavIndex===0">
+        <span class="button" @click="tipDetail(item)">详情</span>
         <span v-if="item.other.status==='已拒绝'" class="button ask" @click="toAsk(item)"></span>
         <span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>
       </block>
       <block v-if="selectNavIndex===1">
+        <span :class="{show: !isOpen && druglistId === item.uuid, hide: isOpen && druglistId === item.uuid}" class="button" @click="tipDetail(item)">详情</span>
         <block :openKey="index" v-if="isOpen && druglistId === item.uuid && item.other.status==='申请中'">
           <span class="button" @click="consent(item)">同意</span>
           <span class="button" @click="refuse(item)">拒绝</span>
@@ -397,6 +398,12 @@
   div.askfor{
     $unit: 2rpx;
     padding-bottom: 50*$unit;
+    .hide{
+      display: none !important;
+    }
+    .show{
+      display: inline-block !important;
+    }
     div.list{
       display: flex;
       align-items: center;

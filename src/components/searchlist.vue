@@ -68,7 +68,7 @@
   }
   .overflow4 {
     .details {
-      width: 186rpx;
+      width: 275rpx;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
