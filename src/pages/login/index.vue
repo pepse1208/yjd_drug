@@ -244,7 +244,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('http://192.168.1.239:8000/static/images/mobile/login_bg.jpg') center/100% no-repeat;
+    background: url('https://yjd.yxsjob.com/static/images/mobile/login_bg.jpg') center/100% no-repeat;
   }
   .login{
     $unit: 2rpx;
