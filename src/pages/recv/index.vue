@@ -78,6 +78,8 @@
           }
           if (data.results.length === 0) {
             self.more = false
+          } else {
+            self.more = true
           }
         } else {
           wx.showToast({

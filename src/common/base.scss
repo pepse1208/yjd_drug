@@ -35,19 +35,19 @@ page {
   color: #A5A5A5;
 }
 .gray_bg {
-  background: #A5A5A5;
+  background: #A5A5A5 !important;
 }
 .green_bg {
-  background: #16AB24;
+  background: #16AB24 !important;
 }
 .orange_bg {
-  background: #ffd20d;
+  background: #ffd20d !important;
 }
 .red_bg {
-  background: #E71F10;
+  background: #E71F10 !important;
 }
 .blue_bg {
-  background: #1E9EFF;
+  background: #1E9EFF !important;
 }
 .no_datas {
   text-align: center;
@@ -65,4 +65,7 @@ page {
 }
 .borderBottomEEE {
   border-bottom: 1px solid #eee;
+}
+button:after {
+  border: none!important;
 }
