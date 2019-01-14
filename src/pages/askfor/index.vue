@@ -137,22 +137,33 @@
       }
       this.getList(this.next)
     },
+    onReady () {
+      this.selectNavIndex = 0
+      if (this.selectNavIndex === 0) {
+        this.req = 'send'
+        this.lists[0].text = '索取中'
+        this.isOpen = false
+      } else {
+        this.req = 'receive'
+        this.lists[0].text = '待处理'
+      }
+    },
     methods: {
-      cancelShow (msg) {
+      cancelShow (msg) { // 签章密码取消
         this.isShow = msg
         this.reason = ''
       },
-      alertConfirm (msg) {
+      alertConfirm (msg) { // 签章密码确定
         this.password = msg.resaon
         if (this.password) {
           this.isShow = false
           this.consentReq(this.uuid)
         }
       },
-      refuse (item) {
+      refuse (item) { // 拒绝操作
         this.refuseReq(item)
       },
-      async refuseReq (item) { // 重新索取请求
+      async refuseReq (item) { // 拒绝请求
         let uuid = item.uuid
         var url = '/api/ask/receive/report/' + uuid + '/'
         var resultData = await put({
@@ -203,7 +214,7 @@
           }
         }
       },
-      consent (item) {
+      consent (item) { // 同意操作
         let ukey = wx.getStorageSync('use_ukey')
         let DrugSign = wx.getStorageSync('DrugSign')
         if (ukey === 1) {
@@ -225,11 +236,11 @@
         this.isShow = true
         this.uuid = item.uuid
       },
-      toggle (item, index) {
+      toggle (item, index) { // 按钮...跟X切换
         this.druglistId = item.uuid
         this.isOpen = !this.isOpen
       },
-      openPdf (url) {
+      openPdf (url) { // 打开pdf
         wx.openDocument({
           filePath: url,
           success: function (res) {
@@ -273,7 +284,7 @@
           vm.getList()
         })
       },
-      toAsk (item) {
+      toAsk (item) { // 重新索取弹窗提示
         let vm = this
         wx.showModal({
           title: '',
@@ -289,21 +300,34 @@
         })
       },
       tipDetail (item) { // 弹窗显示详情
-        var name = item.drug.name || '--'
-        var batch = item.batch || '--'
-        var Package = item.drug.package || '--'
-        var allDosage = item.drug.all_dosage || '--'
-        var productionEnterprise = item.drug.production_enterprise || '--'
-        var enterpriseName = item.receiver || '--'
+        const drug = item.drug
+        let text = '供应企业：' + (item.receiver || '--') + '\r\n'
+        if (item.user_name !== undefined) { // 客户索取记录
+          text = '索取企业：' + (item.sender || '--') + '\r\n' +
+          '联系人：' + (item.user_name || '--') + '\r\n' +
+          '联系电话：' + (item.phone || '--') + '\r\n'
+        }
         wx.showModal({
           title: '',
-          content: '品种名称：' + name + '\r\n' + '生产批号：' + batch + '\r\n' + '包装规格：' + Package + '\r\n' + '供应企业：' + enterpriseName + '\r\n' + '剂型：' + allDosage + '\r\n' + '生产企业：' + productionEnterprise + '\r\n',
+          content:
+          '品种名称：' + (drug.name || '--') + '\r\n' +
+          '生产批号：' + (item.batch || '--') + '\r\n' +
+          '包装规格：' + (drug.package || '--') + '\r\n' +
+          '剂型：' + (drug.all_dosage || '--') + '\r\n' +
+          '材质：' + (drug.drug_material || '--') + '\r\n' +
+          '批准文号：' + (drug.reg_number || '--') + '\r\n' +
+          '生产企业：' + (drug.production_enterprise || '--') + '\r\n' +
+          text +
+          // '报告编号：' + productDate + '\r\n' +
+          '报告日期：' + (item.report_date || '--') + '\r\n' +
+          '生产日期：' + (item.product_date || '--') + '\r\n' +
+          '有效期至：' + (item.validity || '--'),
           showCancel: false,
           success (res) {
           }
         })
       },
-      detailsFun (item) {
+      detailsFun (item) { // 状态说明
         let status = item.other.status
         let details = {
           bgColor: this.myStatus[status],
@@ -314,7 +338,7 @@
         }
         return details
       },
-      async getList (_url) {
+      async getList (_url) { // 获取列表数据
         this.isOpen = false
         var url = '/api/ask/' + this.req + '/report/list'
         if (_url) {
@@ -340,13 +364,31 @@
           this.next = data.next // 获取下页路径
         })
       },
-      clickIndexNav (msg) {
+      clickIndexNav (msg) { // 切换页面
+        let isAuthorize = wx.getStorageSync('is_authorize')
+        let text = '该功能认证后才可使用，请前往PC端认证。'
+        if (isAuthorize !== 1) { // 未认证企业，不能访问客户索取记录
+          wx.showModal({
+            title: '',
+            content: text,
+            showCancel: false,
+            success (res) {
+            }
+          })
+          return
+        }
         this.selectNavIndex = msg
-        this.req = msg === 0 ? 'send' : 'receive'
+        if (this.selectNavIndex === 0) { // 切换页面 数据刷新
+          this.req = 'send'
+          this.lists[0].text = '索取中'
+          this.isOpen = false
+        } else {
+          this.req = 'receive'
+          this.lists[0].text = '待处理'
+        }
         this.dataLists = []
+        this.more = true
         this.getList()
-        this.lists[0].text = msg === 0 ? '索取中' : '待处理'
-        msg === 0 && (this.isOpen = false)
       }
     }
   }

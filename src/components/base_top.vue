@@ -11,7 +11,7 @@
   </div>
   <div class="_top"></div>
 </div>
-  
+
 </template>
 <script>
   import {get} from '../utils.js'
@@ -42,13 +42,17 @@
             } else {
               isDrugSign = false
             }
-            wx.setStorage({ //
+            wx.setStorage({ // uk用户
               key: 'use_ukey',
               data: this.info.enterprise.use_ukey
             })
             wx.setStorage({ //
               key: 'DrugSign',
               data: isDrugSign
+            })
+            wx.setStorage({ // 未认证企业
+              key: 'is_authorize',
+              data: this.info.enterprise.is_authorize
             })
           }
         }

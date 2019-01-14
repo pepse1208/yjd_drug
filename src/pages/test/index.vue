@@ -18,8 +18,14 @@
   <div @click="fingerpriter">指纹认证</div>
   <div @click="password">密码输入</div>
   <alert :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
+  <div class="details" @click="details">展示详情</div>
+  <div class="model" v-if="isShowDel" @click="close"></div>
+  <div class="main" v-bind:style="{ height: height}" @click="main">
+    <div class="con">详细内容</div>
+    <div class="btn">其他操作</div>
+  </div>
 </div>
-</template>
+</template>·
 <script>
   import Alert from '@/components/alert'
 
@@ -32,6 +38,8 @@
         tips: '签章密码',
         placeholder: '输入签章密码',
         isShow: false,
+        isShowDel: false,
+        height: 0,
         reason: '',
         imgUrl: '',
         urls: [],
@@ -48,6 +56,14 @@
       this.pickerStart = today
     },
     methods: {
+      close () {
+        this.isShowDel = false
+        this.height = 0
+      },
+      details () { // 展示详情
+        this.isShowDel = true
+        this.height = '50%'
+      },
       cancelShow (msg) {
         this.isShow = msg
         this.reason = ''
@@ -206,4 +222,24 @@
   }
 </script>
 <style lang="scss" scoped>
+    .model{
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.3);
+      position: absolute;
+      top:0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    .main{
+      background: #fff;
+      height: 0;
+      overflow: hidden;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transition: height 500ms;
+    }
 </style>
