@@ -43,6 +43,9 @@
           this.isFixed = false
         }
       }).exec()
+    },
+    onUnload: function () {
+      this.isFixed = false
     }
   }
 </script>
