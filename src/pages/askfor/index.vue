@@ -277,15 +277,23 @@
         let uuid = item.uuid
         let reportId = item.report_uuid
         var url = '/api/ask/report/' + reportId + '/'
-        let vm = this
-        await post({
+        let resultData = await post({
           url,
           data: {
             uuid: uuid
           }
-        }).then((resp) => {
-          vm.getList()
         })
+        if (resultData) {
+          if (resultData.data.code >= 400) {
+            var tip = resultData.data.detail || resultData.data.errmsg
+            wx.showToast({
+              icon: 'none',
+              title: tip
+            })
+          } else if (resultData.data.code >= 200 && resultData.data.code < 300) {
+            this.getList()
+          }
+        }
       },
       toAsk (item) { // 重新索取弹窗提示
         let vm = this
