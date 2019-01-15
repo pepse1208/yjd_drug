@@ -77,8 +77,8 @@
       }) */
     },
     onShow () {
-      this.userName = '67444758@tianzhu.com' // 清空输入框的内容
-      this.pwd = '67444758'
+      this.userName = '' // 清空输入框的内容
+      this.pwd = ''
       var vm = this
       wx.login({
         success (res) {
