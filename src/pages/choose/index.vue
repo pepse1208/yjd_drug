@@ -1,7 +1,7 @@
 <template>
   <div class="drugmanage">
     <nav-bar>新建药检单</nav-bar>
-    <div class="alldruglist _container">
+    <div class="alldruglist _container mart">
       <search-input :url="searchUrl" @renderData="recvData">查询</search-input>
       <manage-list message="modify" :lists="lists" router="choose"></manage-list>
     </div>

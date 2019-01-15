@@ -49,13 +49,15 @@
     },
     methods: {
       richScan () {
-        wx.scanCode({
-          success () {
-            wx.showToast({
-              title: '此功能暂未开放cancel'
-            })
-          }
+        console.log(123)
+        // wx.scanCode({
+        //   success () {
+        wx.showToast({
+          title: '此功能暂未开放',
+          icon: 'none'
         })
+        //   }
+        // })
       },
       search () {
         // console.log('查询')

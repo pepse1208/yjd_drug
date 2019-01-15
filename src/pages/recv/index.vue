@@ -1,7 +1,7 @@
 <template>
   <div>
     <base-top>查收药检单</base-top>
-    <div class="alldruglist _container">
+    <div class="_container mart">
       <block v-for="(item, index) in lists" :key="index">
         <div class="druglist" @click="toCheck(item.uuid)">
           <div class="supply_enterprise">
@@ -139,9 +139,6 @@
   }
 </script>
 <style lang="scss" scoped>
-  .alldruglist {
-    margin-top: 10rpx;
-  }
   .druglist {
     border-bottom: 1px solid #EEEEEE;
     padding: 30rpx 0;

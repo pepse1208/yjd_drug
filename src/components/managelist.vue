@@ -152,7 +152,7 @@
     }
     .item{
       box-sizing: border-box;
-      margin: 12*$unit 0 0 0;
+      padding-top: 12*$unit;
       width: 100%;
       border-bottom: 1px solid #ddd;
       color: #3E3A39;

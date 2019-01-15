@@ -1,7 +1,7 @@
 <template>
-  <div class="drugmanage ">
+  <div class="drugmanage">
     <nav-bar>药检单管理</nav-bar>
-    <div class="alldruglist _container" v-if="lists.length > 0">
+    <div class="_container mart" v-if="lists.length > 0">
       <manage-list message="druglist" :lists="lists" :isUpload="is_upload"></manage-list>
     </div>
     <p class="text-footer" v-if="!more">
