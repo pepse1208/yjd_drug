@@ -54,6 +54,10 @@
               key: 'is_authorize',
               data: this.info.enterprise.is_authorize
             })
+            wx.setStorage({ // 是否设置签章密码
+              key: 'set_password',
+              data: this.info.set_password
+            })
           }
         }
       },

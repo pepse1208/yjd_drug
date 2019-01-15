@@ -254,6 +254,7 @@
       consent (item) { // 同意操作
         let ukey = wx.getStorageSync('use_ukey')
         let DrugSign = wx.getStorageSync('DrugSign')
+        let setPassword = wx.getStorageSync('set_password')
         if (ukey === 1) {
           wx.showToast({
             icon: 'none',
@@ -266,6 +267,14 @@
           wx.showToast({
             icon: 'none',
             title: '您没有签章权限，请联系管理员设置。',
+            duration: 2000
+          })
+          return
+        }
+        if (setPassword !== true) { // 没有设置签章密码
+          wx.showToast({
+            icon: 'none',
+            title: '您尚未设置签章密码，请前往电脑端设置。',
             duration: 2000
           })
           return
@@ -419,7 +428,7 @@
       },
       clickIndexNav (msg) { // 切换页面
         let isAuthorize = wx.getStorageSync('is_authorize')
-        let text = '该功能认证后才可使用，请前往PC端认证。'
+        let text = '该功能认证后才可使用，请前往电脑端认证。'
         if (isAuthorize !== 1) { // 未认证企业，不能访问客户索取记录
           wx.showModal({
             title: '',
