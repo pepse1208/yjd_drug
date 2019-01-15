@@ -49,7 +49,6 @@
     },
     methods: {
       richScan () {
-        console.log(123)
         // wx.scanCode({
         //   success () {
         wx.showToast({
