@@ -8,7 +8,7 @@
       暂无更多数据
     </p>
     <div class="addNew" @click="addNew" v-if="is_upload"></div>
-    <vue-tab-bar @fetchIndex="clickIndexNav" :selectNavIndex="selectNavIndex" :navList="navList" :type="type"></vue-tab-bar>
+    <vue-tab-bar @fetchIndex="clickIndexNav" :selectNavIndex="selectNavIndex" :navList="navList" :type="type" v-if="isShow"></vue-tab-bar>
   </div>
 </template>
 <script>
@@ -35,12 +35,16 @@
         type: '',
         lists: [],
         selectNavIndex: 0,
-        navList: []
+        navList: [],
+        isShow: false
       }
     },
     onLoad (options) {
       // this.tip = options.tip
       this.type = wx.getStorageSync('type')
+      if (this.type === '商业公司') {
+        this.isShow = true
+      }
       this.navList = [
         {
           pagePath: '/pages/index/main',
@@ -78,24 +82,24 @@
           url = _url
         }
         // url += '?_rt=' + Math.random()
-        await get({
+        var resp = await get({
           url
-        }).then((resp) => {
-          var data = resp.data
-          if (_url) {
-            this.lists = this.lists.concat(data.results)
-          } else {
-            this.lists = data.results
-            wx.stopPullDownRefresh()
-            this.more = true
-          }
-          if (this.results.length === 0) {
-            this.more = false
-          } else {
-            this.more = true
-          }
-          this.next = data.next // 获取下页路径
         })
+        var data = resp.data
+        if (_url) {
+          this.lists = this.lists.concat(data.results)
+        } else {
+          this.lists = data.results
+          wx.stopPullDownRefresh()
+          this.more = true
+        }
+        if (!data.next) {
+          this.more = false
+          this.next = null
+        } else {
+          this.more = true
+          this.next = data.next // 获取下页路径
+        }
       },
       clickIndexNav (msg) {
         this.selectNavIndex = msg
