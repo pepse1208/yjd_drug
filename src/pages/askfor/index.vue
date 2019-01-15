@@ -23,7 +23,7 @@
   <p class="text-footer" v-if="!more">
     暂无更多数据
   </p>
-  <vue-tab-bar @fetchIndex="clickIndexNav"  :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton"  :type="type"></vue-tab-bar>
+  <vue-tab-bar v-if="isMy" @fetchIndex="clickIndexNav"  :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton"  :type="type"></vue-tab-bar>
   <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
 </div>
 </template>
@@ -51,6 +51,7 @@
         tips: '签章密码',
         placeholder: '输入签章密码',
         isShow: false,
+        isMy: true,
         next: null,
         password: null,
         more: true,
@@ -124,6 +125,37 @@
     onShow () {
     },
     mounted () {
+      this.type = wx.getStorageSync('type')
+      let my = this.type !== '生产企业'
+      let client = this.type === '生产企业' || this.type === '商业公司'
+      if (my !== client) {
+        my && (this.req = 'send')
+        client && (this.req = 'receive')
+        this.selectNavIndex = my === true ? 0 : 1
+        // return
+      }
+      if (this.selectNavIndex === 0) {
+        this.lists[0].text = '索取中'
+      } else {
+        this.lists[0].text = '待处理'
+      }
+      this.navList = [
+        {
+          pagePath: '/pages/index/main',
+          iconPath: require('../../images/upload_black.png'),
+          selectedIconPath: require('../../images/upload_blue.png'),
+          text: '我的索取记录',
+          isShow: my
+        },
+        {
+          pagePath: '/pages/index/main',
+          iconPath: require('../../images/recv_black.png'),
+          selectedIconPath: require('../../images/recv_blue.png'),
+          text: '客户索取记录',
+          isShow: client
+        }
+      ]
+      this.isMy = my
       this.getList()
     },
     onPullDownRefresh () {

@@ -23,6 +23,12 @@
           {title: '药检单管理', url: '/pages/drugmanage/main', isMustLogin: false},
           {title: '药检单索取记录', url: '/pages/askfor/main', isMustLogin: false}
         ],
+        all: [
+          {title: '查收药检单', url: '/pages/recv/main', isMustLogin: false},
+          {title: '药检单管理', url: '/pages/drugmanage/main', isMustLogin: false},
+          {title: '药检单查询', url: '/pages/drugsearch/main', isMustLogin: false},
+          {title: '药检单索取记录', url: '/pages/askfor/main', isMustLogin: false}
+        ],
         lists: [
           {title: '查收药检单', url: '/pages/recv/main', isMustLogin: false},
           {title: '药检单管理', url: '/pages/drugmanage/main', isMustLogin: false},
@@ -98,6 +104,8 @@
       let type = wx.getStorageSync('type')
       if (type === '生产企业') {
         this.lists = this.productionLists
+      } else {
+        this.lists = this.all
       }
     }
   }
