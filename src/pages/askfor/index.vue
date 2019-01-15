@@ -126,17 +126,23 @@
     },
     mounted () {
       this.type = wx.getStorageSync('type')
-      let my = this.type !== '生产企业'
-      let client = this.type === '生产企业' || this.type === '商业公司'
-      if (my !== client) {
-        my && (this.req = 'send')
-        client && (this.req = 'receive')
-        this.selectNavIndex = my === true ? 0 : 1
-        // return
+      if (this.type !== '商业公司') {
+        if (this.type === '生产企业') {
+          this.selectNavIndex = 1
+        }
+        if (this.type === '医疗机构') {
+          this.selectNavIndex = 0
+        }
+        this.isMy = false
+      } else {
+        this.isMy = true
+        this.selectNavIndex = 0
       }
       if (this.selectNavIndex === 0) {
+        this.req = 'send'
         this.lists[0].text = '索取中'
       } else {
+        this.req = 'receive'
         this.lists[0].text = '待处理'
       }
       this.navList = [
@@ -145,17 +151,16 @@
           iconPath: require('../../images/upload_black.png'),
           selectedIconPath: require('../../images/upload_blue.png'),
           text: '我的索取记录',
-          isShow: my
+          isShow: true
         },
         {
           pagePath: '/pages/index/main',
           iconPath: require('../../images/recv_black.png'),
           selectedIconPath: require('../../images/recv_blue.png'),
           text: '客户索取记录',
-          isShow: client
+          isShow: true
         }
       ]
-      this.isMy = my
       this.getList()
     },
     onPullDownRefresh () {
