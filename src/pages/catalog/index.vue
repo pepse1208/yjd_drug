@@ -38,8 +38,10 @@
         success (res) {
         }
       })
-      this.lists = []
       // this.randomModified()
+    },
+    onUnload: function () { // 如果页面被卸载时被执行
+      this.lists = []
     },
     methods: {
       async randomModified  () { // 将判断是否修改密码存入缓存
@@ -97,6 +99,7 @@
       }
     },
     mounted () {
+      this.lists = []
       let type = wx.getStorageSync('type')
       if (type === '生产企业') {
         this.lists = this.productionLists
