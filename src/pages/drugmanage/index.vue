@@ -147,12 +147,11 @@
       position: fixed;
       bottom: 146rpx;
       right: 48rpx;
-      width: 96rpx;
-      height: 96rpx;
+      width: 134rpx;
+      height: 134rpx;
       background: url(../../images/addNew.png);
-      background-size: 96rpx 96rpx;
+      background-size: 134rpx 134rpx;
       color: #fff;
-      font-size: 40rpx;
       border-radius: 50%;
       text-align: center;
     }
