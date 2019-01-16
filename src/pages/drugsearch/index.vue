@@ -248,8 +248,10 @@
         })
         let code = data.statusCode
         if (code >= 200 && code < 300) {
-          this.lists[index].other.status = '已获取'
-          this.lists[index].btnStatus = true
+          // this.lists[index].other.status = '已获取'
+          // this.lists[index].btnStatus = true
+          this.downloaded = {}
+          this.getList()
         } else {
           wx.showToast({
             title: data.data.errmsg,
