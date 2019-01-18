@@ -68,6 +68,7 @@
       this.is_upload = true
       this.lists.length = 0
       this.selectNavIndex = 0
+      this.type = ''
       /* wx.reLaunch({
         url: config.indexUrl
       }) */
