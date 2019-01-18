@@ -154,7 +154,7 @@
       box-sizing: border-box;
       padding-top: 12*$unit;
       width: 100%;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #eee;
       color: #3E3A39;
       p{
         padding-bottom: 15*$unit;

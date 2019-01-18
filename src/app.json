@@ -21,6 +21,7 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1e9eff",
     "navigationBarTitleText": "药检单",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom" 
   }
 }

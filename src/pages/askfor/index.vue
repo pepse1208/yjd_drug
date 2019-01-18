@@ -1,5 +1,5 @@
 <template>
-<div class="askfor">
+<div class="askfor shadow">
   <nav-bar>药检单索取记录</nav-bar>
   <statements  :lists="lists"></statements>
   <div class="list borderBottomEEE" :class="{overflow4: openArr[index] && item.other.status==='申请中'}" v-for="(item, index) in dataLists" :key="index">

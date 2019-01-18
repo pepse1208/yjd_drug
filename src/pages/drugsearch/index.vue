@@ -1,5 +1,6 @@
 <template>
   <div class="drugSearch shadow">
+    <progress :percent="percent" stroke-width="4" backgroundColor="#fff"/>
     <base-top>药检单查询</base-top>
     <div>
       <drug-head @childSearch="childSearch"></drug-head>
@@ -68,7 +69,8 @@
             text: '未共享',
             color: 'red_bg'
           }
-        ]
+        ],
+        percent: 0
       }
     },
     methods: {
@@ -184,10 +186,15 @@
         this.lists[index].btnStatus = true
       },
       openPdf (url) {
+        console.log(typeof url)
+        console.log(url)
+        const self = this
         wx.openDocument({
           filePath: url,
           success: function (res) {
-            // console.log('打开文档成功')
+            self.percent = 0
+            console.log(self.percent)
+            console.log('打开文档成功')
           }
         })
       },
@@ -195,23 +202,44 @@
         id = id.replace(/-/ig, '')
         var self = this
         if (self.downloaded[id]) {
+          console.log('直接打开')
           self.openPdf(self.downloaded[id])
         } else {
+          console.log('下载')
           var path = url
           if (!url.includes('https://')) {
             path = config.host + url
           }
           wx.showLoading({title: '加载中'})
-          wx.downloadFile({
+          const self = this
+          // const url = 'https://yjd.yxsjob.com/media/2019/1/16/f902367378ea4bfa97d995f08e1049c1/kgSbzLlWbNIxUPFphBNR.pdf'
+          const downloadTask = wx.downloadFile({
             url: path,
-            success: function (res) {
+            success (res) {
               const filePath = res.tempFilePath
               // 避免发送方修改文件后，没及时更新
               self.downloaded[id] = filePath
+              // self.percent = 0
               wx.hideLoading()
               self.openPdf(filePath)
+              // downloadTask.abort() // 取消下载任务
             }
           })
+          downloadTask.onProgressUpdate((res) => {
+            self.percent = res.progress
+            // console.log('下载进度', res.progress)
+          })
+          // wx.downloadFile({
+          //   url: path,
+          //   success: function (res) {
+          //     const filePath = res.tempFilePath
+          //     // 避免发送方修改文件后，没及时更新
+          //     self.downloaded[id] = filePath
+          //     self.percent = 100
+          //     wx.hideLoading()
+          //     self.openPdf(filePath)
+          //   }
+          // })
         }
       }, 2000),
       askfor (index, id) {
@@ -260,6 +288,9 @@
         }
       }
     },
+    onShow () {
+      this.percent = 0
+    },
     onPullDownRefresh () {
       // 下拉刷新
       this.getList()
@@ -286,6 +317,7 @@
       this.enterprise = ''
       this.reg_number = ''
       this.next = ''
+      this.percent = 0
     }
   }
 </script>
@@ -332,6 +364,13 @@
 }
 .borderBottomEEE:last-child {
   border: 0;
+}
+progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2000;
 }
 </style>
 
