@@ -1,7 +1,7 @@
 <template>
   <div class="drugSearch shadow">
     <div class="page-top">
-      <navigation-bar :title="123"></navigation-bar>
+      <navigation-bar :back="true"></navigation-bar>
       <base-top>药检单查询</base-top>
     </div>
     <progress :percent="percent" stroke-width="4" backgroundColor="#fff"/>

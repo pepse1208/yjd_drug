@@ -1,5 +1,6 @@
 <template>
 <div class="root">
+  <navigation-bar :back="false"></navigation-bar>
   <div class="catalog flex">
     <block  v-for="(item, index) in lists" :key="index">
       <div class="item" @click="jump(item.url, item.isMustLogin)">
@@ -15,7 +16,7 @@
 </template>
 <script>
   import {getStorageOpenid, get} from '../../utils.js'
-
+  import NavigationBar from '@/components/navigationBar'
   export default {
     data () {
       return {
@@ -31,6 +32,9 @@
         ],
         lists: []
       }
+    },
+    components: {
+      NavigationBar
     },
     onShow () {
       wx.getStorage({

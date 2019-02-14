@@ -40,13 +40,15 @@ export default {
       background: '#FFF',
       fixed: true,
       color: '#ddd',
-      back: true,
       showHomeButton: true,
       title: '药检通平台',
       show: true,
       placeholderBg: 'transparent'
     }
   },
+  props: [
+    'back'
+  ],
   methods: {
     clickme: function () { console.log(13) },
     navigateBack () {
