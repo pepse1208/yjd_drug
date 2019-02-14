@@ -88,6 +88,7 @@
 <style lang="scss" scope>
   .header{
     margin-top: 10rpx;
+    /*margin-bottom: 30rpx;*/
     font-size: 12px;
     .nav {
       width: 100%;
@@ -129,7 +130,7 @@
       height: 56rpx;
       padding-left: 10rpx;
       border:1px solid rgba(199,199,199,1)
-      
+
     }
     .top,
     .topExpand {

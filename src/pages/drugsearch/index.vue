@@ -1,7 +1,10 @@
 <template>
   <div class="drugSearch shadow">
+    <div class="page-top">
+      <navigation-bar :title="123"></navigation-bar>
+      <base-top>药检单查询</base-top>
+    </div>
     <progress :percent="percent" stroke-width="4" backgroundColor="#fff"/>
-    <base-top>药检单查询</base-top>
     <div>
       <drug-head @childSearch="childSearch"></drug-head>
       <statements :lists="statements"></statements>
@@ -34,6 +37,7 @@
   import DrugHead from '@/components/header'
   import SearchList from '@/components/searchlist'
   import Statements from '@/components/statements'
+  import NavigationBar from '@/components/navigationBar'
   import {get, post} from '../../utils.js'
   import {throttle} from '../../utils/index.js'
   import config from '../../config.js'
@@ -42,7 +46,8 @@
       DrugHead,
       SearchList,
       Statements,
-      BaseTop
+      BaseTop,
+      NavigationBar
     },
     data () {
       return {
@@ -367,7 +372,8 @@
 }
 progress {
   position: fixed;
-  top: 0;
+  background: red;
+  top: 60px;
   left: 0;
   width: 100%;
   z-index: 2000;

@@ -3,6 +3,11 @@ page {
   padding: 0 24rpx;
   box-sizing: border-box;
 }
+.page-top {
+  position: relative;
+  width: 750rpx;
+  left: -24rpx;
+}
 .flex {
   display: flex;
   flex-direction: column;
@@ -70,4 +75,13 @@ button:after {
 }
 .mart {
   margin-top: 10rpx;
+}
+.absolute {
+  position: absolute;
+  left: 0;
+}
+.fixed {
+ position: fixed;
+ top: 0;
+ left: 0;
 }

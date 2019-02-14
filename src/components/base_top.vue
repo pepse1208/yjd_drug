@@ -84,7 +84,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   ._top {
     width: 100%;
     height: 46px;
@@ -123,11 +123,14 @@
   }
   ._top.fixed {
     position: fixed;
-    top: 0;
+    top: 60px;
     left: 0;
     z-index: 1000;
   }
-  .shadow ._top {
+  .shadow ._top:first-child {
     box-shadow:0px 6px 20px 0px rgba(212,219,224,0.3);
+  }
+  ._top:last-child {
+    background: transparent;
   }
 </style>

@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/login/main",
     "pages/drugsearch/main",
+    "pages/login/main",
     "pages/recv/main",
     "pages/catalog/main",
     "pages/askfor/main",
