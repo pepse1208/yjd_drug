@@ -1,6 +1,9 @@
 <template>
   <div class="druglist" :class="{bottom: is_upload === 'true'}">
-    <nav-bar>药检单列表</nav-bar>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>药检单列表</base-top>
+    </div>
     <list-details :info="info"></list-details>
     <div class="list">
       <manage-list message="druglistdetail" :lists="lists"></manage-list>
@@ -15,15 +18,17 @@
 </template>
 <script>
   import ManageList from '@/components/managelist'
-  import NavBar from '@/components/base_top'
+  import BaseTop from '@/components/base_top'
   import ListDetails from '@/components/listdetails'
+  import NavigationBar from '@/components/navigationBar'
   import {get} from '../../utils.js'
 
   export default {
     components: {
       ManageList,
       ListDetails,
-      NavBar
+      NavigationBar,
+      BaseTop
     },
     data () {
       return {

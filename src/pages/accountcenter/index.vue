@@ -1,6 +1,9 @@
 <template>
   <div class="accountcenter">
-    <nav-bar>账号中心</nav-bar>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>账号中心</base-top>
+    </div>
     <div class="box">
       <div class="panel">
         <p class="first">
@@ -28,12 +31,14 @@
   </div>
 </template>
 <script>
-  import NavBar from '@/components/base_top'
+  import BaseTop from '@/components/base_top'
+  import NavigationBar from '@/components/navigationBar'
   import {get} from '../../utils.js'
 
   export default {
     components: {
-      NavBar
+      BaseTop,
+      NavigationBar
     },
     data () {
       return {

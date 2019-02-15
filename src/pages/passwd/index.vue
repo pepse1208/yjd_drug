@@ -1,6 +1,9 @@
 <template>
   <div class="passwd">
-    <nav-bar>修改密码</nav-bar>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>修改密码</base-top>
+    </div>
     <div class="box">
       <div class="panel">
         <p>
@@ -21,12 +24,14 @@
   </div>
 </template>
 <script>
-  import NavBar from '@/components/base_top'
+  import BaseTop from '@/components/base_top'
+  import NavigationBar from '@/components/navigationBar'
   import {put} from '../../utils.js'
 
   export default {
     components: {
-      NavBar
+      BaseTop,
+      NavigationBar
     },
     data () {
       return {

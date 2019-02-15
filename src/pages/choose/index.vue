@@ -1,6 +1,9 @@
 <template>
   <div class="drugmanage">
-    <nav-bar>新建药检单</nav-bar>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>新建药检单</base-top>
+    </div>
     <div class="alldruglist _container mart">
       <search-input :url="searchUrl" @renderData="recvData">查询</search-input>
       <manage-list message="modify" :lists="lists" router="choose"></manage-list>
@@ -11,15 +14,17 @@
   </div>
 </template>
 <script>
-  import NavBar from '@/components/base_top'
+  import BaseTop from '@/components/base_top'
   import SearchInput from '@/components/searchInput'
   import ManageList from '@/components/managelist'
+  import NavigationBar from '@/components/navigationBar'
   import {get} from '../../utils.js'
 
   export default {
     components: {
-      NavBar,
+      BaseTop,
       SearchInput,
+      NavigationBar,
       ManageList
     },
     data () {

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <base-top>查收药检单</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>查收药检单</base-top>
+    </div>
     <div class="_container mart">
       <block v-for="(item, index) in lists" :key="index">
         <div class="druglist" @click="toCheck(item.uuid)">
@@ -30,6 +33,7 @@
 </template>
 <script>
   import BaseTop from '@/components/base_top'
+  import NavigationBar from '@/components/navigationBar'
   import {get} from '../../utils.js'
   import {changePwd} from '../../utils/tochangepwd.js'
   import {throttle} from '../../utils/index.js'
@@ -46,7 +50,8 @@
       }
     },
     components: {
-      BaseTop
+      BaseTop,
+      NavigationBar
     },
     methods: {
       toCheck: throttle(function (id) { // 查看pdf

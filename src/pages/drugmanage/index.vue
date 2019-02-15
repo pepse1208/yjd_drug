@@ -1,6 +1,9 @@
 <template>
   <div class="drugmanage">
-    <nav-bar>药检单管理</nav-bar>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>药检单管理</base-top>
+    </div>
     <div class="_container mart" v-if="lists.length > 0">
       <manage-list message="druglist" :lists="lists" :isUpload="is_upload"></manage-list>
     </div>
@@ -12,17 +15,19 @@
   </div>
 </template>
 <script>
-  import NavBar from '@/components/base_top'
+  import BaseTop from '@/components/base_top'
   import ManageList from '@/components/managelist'
   import VueTabBar from '@/components/vueTabBar'
+  import NavigationBar from '@/components/navigationBar'
   import {get} from '../../utils.js'
   import {changePwd} from '../../utils/tochangepwd.js'
   // import config from '../../config'
 
   export default {
     components: {
-      NavBar,
+      BaseTop,
       ManageList,
+      NavigationBar,
       VueTabBar
     },
     data () {
