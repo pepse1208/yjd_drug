@@ -1,6 +1,9 @@
 <template>
 <div class="askfor shadow">
-  <nav-bar>药检单索取记录</nav-bar>
+  <div class="page-top">
+    <navigation-bar :back="true"></navigation-bar>
+    <base-top>药检单索取记录</base-top>
+  </div>
   <statements  :lists="lists"></statements>
   <div class="list borderBottomEEE" :class="{overflow4: openArr[index] && item.other.status==='申请中'}" v-for="(item, index) in dataLists" :key="index">
     <searchlist :details="detailsFun(item)" ></searchlist>
@@ -32,17 +35,19 @@
   import {throttle} from '../../utils/index.js'
   import config from '../../config.js'
   import Statements from '@/components/statements'
-  import NavBar from '@/components/base_top'
+  import BaseTop from '@/components/base_top'
   import VueTabBar from '@/components/vueTabBar'
   import Searchlist from '@/components/searchlist'
   import Alert from '@/components/alert'
+  import NavigationBar from '@/components/navigationBar'
 
   export default {
     components: {
-      NavBar,
+      BaseTop,
       Alert,
       Statements,
       Searchlist,
+      NavigationBar,
       VueTabBar
     },
     data () {

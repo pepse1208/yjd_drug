@@ -1,6 +1,9 @@
 <template>
   <div class="druglist">
-    <nav-bar>新建药检单</nav-bar>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>新建药检单</base-top>
+    </div>
     <list-details :info="info"></list-details>
     <p class="part">上传药检单</p>
     <div class="imgContent">
@@ -50,15 +53,17 @@
   </div>
 </template>
 <script>
-  import NavBar from '@/components/base_top'
+  import BaseTop from '@/components/base_top'
   import ListDetails from '@/components/listdetails'
   import config from '../../config'
+  import NavigationBar from '@/components/navigationBar'
   import {get, post} from '../../utils.js'
 
   export default {
     components: {
       ListDetails,
-      NavBar
+      NavigationBar,
+      BaseTop
     },
     data () {
       return {

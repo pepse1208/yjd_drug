@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="navigation-bar" 
+    <div class="navigation-bar"
       :style="{
         'padding-top': (paddingTop + 'px;'),
         'height': (height + 'px;'),
@@ -10,7 +10,7 @@
         'font-size': (fontSize + ';'),
         'position': (fixed && 'fixed;'),
         'transform': ('translateY(' + !show?( - paddingTop - height + 'px;'): '0;)')}">
-      <div class="back" v-if="back" 
+      <div class="back" v-if="back"
         :style="{
           'padding-top': (0 + 'px;'),
           'margin-top': '30px',
@@ -20,7 +20,7 @@
       </div>
       <div class="title">{{title !== 'none' ? title : ''}}</div>
     </div>
-    <div class="navigation-bar-holder" v-if="fixed && show" 
+    <div class="navigation-bar-holder" v-if="fixed && show"
       :style="{
         'background': (placeholderBg + ';'),
         'padding-top': (paddingTop + 'px;'),
@@ -84,7 +84,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .bar {
   position: absolute;
   top: 0;
@@ -102,7 +102,7 @@ export default {
   /* background: #45b9e5; */
   z-index: 2000;
   text-align: center;
-  transition: 300ms;
+  /*transition: 300ms;*/
   /* margin-top: 16rpx; */
   box-shadow:0px 0px 7px 0px rgba(143,143,143,0.16);
 }
@@ -117,7 +117,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 32rpx;
+  margin-left: 24rpx;
 }
 /* .icon-fanhui, .back-home{
   display: inline-block;

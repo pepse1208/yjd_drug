@@ -1,6 +1,9 @@
 <template>
   <div class="shadow">
-    <base-top>查收页面</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>查收页面</base-top>
+    </div>
     <statements :lists="statements"></statements>
     <div class="_container">
       <div :class="status === '对方已取消' ? 'info info_no_border' : 'info'">
@@ -73,6 +76,7 @@
   import BaseTop from '@/components/base_top'
   import AlertInput from '@/components/alert'
   import Statements from '@/components/statements'
+  import NavigationBar from '@/components/navigationBar'
   import {get, post} from '../../utils.js'
   import {throttle} from '../../utils/index.js'
   import config from '../../config.js'
@@ -115,6 +119,7 @@
     components: {
       BaseTop,
       AlertInput,
+      NavigationBar,
       Statements
     },
     onUnload: function () { // 如果页面被卸载时被执行
