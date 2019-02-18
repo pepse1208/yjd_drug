@@ -67,10 +67,7 @@
           url = _url
         }
         var resp = await get({
-          url,
-          header: {
-            'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjowLCJuYW1lIjoiXHU2NzZkXHU1ZGRlXHU2ZDRiXHU4YmQ1IiwidHlwZSI6OSwiZXhwIjoxNTQ0MjI3MTk5LCJ1dWlkIjoiMDA5MGMyZmQtYTIzMi00MjljLWJkY2MtNTdlNmI4YjcyMTRmIn0.b09oLbva_kElkuYGBNPQzkh18BWnJtVgNgcnBdGZ75c'
-          }
+          url
         })
         var code = resp.statusCode
         if (code >= 200 && code < 300) {

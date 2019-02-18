@@ -130,19 +130,25 @@
     onShow () {
     },
     mounted () {
+      this.isMy = this.$root.$mp.query.isMy
       this.type = wx.getStorageSync('type')
-      if (this.type !== '商业公司') {
-        if (this.type === '生产企业') {
-          this.selectNavIndex = 1
-        }
-        if (this.type === '医疗机构') {
-          this.selectNavIndex = 0
-        }
-        this.isMy = false
-      } else {
-        this.isMy = true
+      if (this.isMy === 'true') {
         this.selectNavIndex = 0
+      } else {
+        this.selectNavIndex = 1
       }
+      // if (this.type !== '商业公司') {
+      //   if (this.type === '生产企业') {
+      //     this.selectNavIndex = 1
+      //   }
+      //   if (this.type === '医疗机构') {
+      //     this.selectNavIndex = 0
+      //   }
+      //   this.isMy = false
+      // } else {
+      //   this.isMy = true
+      //   this.selectNavIndex = 0
+      // }
       if (this.selectNavIndex === 0) {
         this.req = 'send'
         this.lists[0].text = '索取中'
@@ -196,7 +202,7 @@
         this.reason = ''
       },
       alertConfirm (msg) { // 签章密码确定
-        this.password = msg.resaon
+        this.password = msg.reason
         if (this.password) {
           this.isShow = false
           this.consentReq(this.uuid)

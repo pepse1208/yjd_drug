@@ -90,17 +90,17 @@ export default {
       let list = []
       if (data.includes('申请发送')) {
         list.push(
-          {title: '申请发送', url: '/pages/drugmanage/main?is_upload=true', position: '-5px -135px'}
+          {title: '申请发送', url: '/pages/send_step1/main', position: '-5px -135px'}
         )
       }
       if (data.includes('发送申请列表')) {
         list.push(
-          {title: '发送申请列表', url: '/pages/drugmanage/main?is_upload=true', position: '-5px -179px'}
+          {title: '待签章列表', url: '/pages/send_apply_list/main', position: '-5px -179px'}
         )
       }
       if (data.includes('发送记录')) {
         list.push(
-          {title: '发送记录', url: '/pages/drugmanage/main?is_upload=true', position: '-5px -224px'}
+          {title: '发送记录', url: '/pages/send_record/main', position: '-5px -224px'}
         )
       }
       lists.push(
@@ -122,12 +122,12 @@ export default {
       let list = []
       if (data.includes('我索取的药检单')) {
         list.push(
-          {title: '我的索取记录', url: '/pages/drugmanage/main?is_upload=true', position: '-5px -314px'}
+          {title: '我的索取记录', url: '/pages/askfor/main?isMy=true', position: '-5px -314px'}
         )
       }
       if (data.includes('客户索取我的药检单')) {
         list.push(
-          {title: '客户索取记录', url: '/pages/drugmanage/main?is_upload=true', position: '-5px -359px'}
+          {title: '客户索取记录', url: '/pages/askfor/main?isMy=false', position: '-5px -359px'}
         )
       }
       lists.push(

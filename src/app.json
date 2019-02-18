@@ -1,8 +1,13 @@
 {
   "pages": [
-    "pages/catalog/main",
     "pages/login/main",
+    "pages/send_apply_list/main",
+    "pages/send_apply_detail/main",
+    "pages/catalog/main",
     "pages/drugsearch/main",
+    "pages/send_step1/main",
+    "pages/send_step2/main",
+    "pages/send_step3/main",
     "pages/recv/main",
     "pages/askfor/main",
     "pages/choose/main",
