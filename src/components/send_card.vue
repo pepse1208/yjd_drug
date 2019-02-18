@@ -3,7 +3,7 @@
       <div class="headline">
         <p class="left">
           <span class="title bold">接收企业：</span>
-          <span class="content bold">{{info.receiverName || '--;'}}</span>
+          <span class="content bold">{{info.receiverName || '--'}}</span>
         </p>
       </div>
       <div class="">
@@ -36,6 +36,7 @@
           <span class="content">{{info.receiverUserPhone || '--'}}</span>
         </p>
       </div>
+      <span class="state">{{info.state}}</span>
     </div>
 </template>
 <script>
@@ -46,6 +47,7 @@
 <style lang="scss" scoped>
   @import url(../common/base.scss);
   .details{
+    position: relative;
     $unit: 2rpx;
     color: #fff;
     height: 190*$unit;
@@ -76,6 +78,20 @@
       height: 12*$unit;
       font-size: 15*$unit;
       padding-top: 15*$unit;
+    }
+    span.state{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: inline-block;
+      font-size: 10*$unit;
+      color: #fff;
+      width: 83*$unit;
+      height: 30*$unit;
+      text-align: center;
+      line-height: 30*$unit;
+      background: #0065c9;
+      border-radius:14px 0 0 0;
     }
   }
 </style>
