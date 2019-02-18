@@ -72,6 +72,7 @@
         backName: 'druglist', // 跳转页面
         pageName: '', // 返回页面
         imgUrl: '',
+        isModify: '',
         file: '', // 文件
         batch: '', // 生产批号
         code: '', // 报告编号
@@ -90,6 +91,9 @@
       /* 详情信息 */
       getInfo () {
         let url = '/api/common/drug/' + this.drug
+        if (this.isModify === 'true') {
+          url = '/api/drugReport/report/' + this.drug
+        }
         get({
           url
         }).then((resp) => {
@@ -239,6 +243,7 @@
       this.clear()
       this.drug = this.$root.$mp.query.drug
       this.pageName = this.$root.$mp.query.router
+      this.isModify = this.$root.$mp.query.isModify
       this.getInfo()
     }
   }
