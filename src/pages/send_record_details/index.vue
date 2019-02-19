@@ -7,15 +7,15 @@
     <send-card :info="info" ></send-card>
     <div class="tab" v-if="isTab">
       <div @click="accept" :class="{active: isAccept}">
-        对方接收&nbsp({{acceptNum}})
+        对方接收&nbsp;({{acceptNum}})
         <i></i>
       </div>
       <div @click="back" :class="{active: isBack}">
-        对方退回&nbsp({{backNum}})
+        对方退回&nbsp;({{backNum}})
         <i></i>
       </div>
       <div @click="remove" :class="{active: isRemove}">
-        对方删除&nbsp({{removeNum}})
+        对方删除&nbsp;({{removeNum}})
         <i></i>
       </div>
     </div>
@@ -32,19 +32,20 @@
         </div>
         <div >
           <span class="button" >查看</span>
-          <span class="button" v-if="isModify" @click="modify(item.drugReport.uuid)">修改</span>
+          <span class="button" v-if="isModify" @click="modify(item.drugReport.uuid,item.uuid)">修改</span>
         </div>
       </div>
     </div>
     <p class="text-footer" :class="{pb70: isCancelSend}" v-if="!more">
       暂无更多数据
     </p>
-    <div class="cancel" v-if="isCancelSend">
+    <div class="cancel" @click="cancel" v-if="isCancelSend">
       <span>取消发送</span>
     </div>
-    <div class="cancel" v-if="isResend">
+    <div class="cancel" @click="resend" v-if="isResend">
       <span>重新发送</span>
     </div>
+    <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
   </div>
 </template>
 <script>
@@ -52,14 +53,16 @@
   import NavigationBar from '@/components/navigationBar'
   import sendCard from '@/components/send_card'
   import Searchlist from '@/components/searchlist'
+  import Alert from '@/components/alert'
 
-  import {get} from '../../utils.js'
+  import {get, post, DELETE} from '../../utils.js'
 
   export default {
     components: {
       BaseTop,
       NavigationBar,
       sendCard,
+      Alert,
       Searchlist
     },
     data () {
@@ -68,6 +71,7 @@
         next: null, // 下一页路径
         more: true, // 是否有更多数据
         id: '',
+        uuid: null,
         status: 1,
         isActive: true,
         isAccept: true,
@@ -80,6 +84,11 @@
         isResend: false,
         isTab: false,
         isModify: false,
+        isModifyFlag: false,
+        password: null,
+        isShow: false,
+        tips: '签章密码',
+        placeholder: '输入签章密码',
         lists: [] // 列表数据
       }
     },
@@ -88,8 +97,11 @@
     },
     mounted () {
       this.getData()
-      this.getAllLists()
-      this.getLists()
+      /* if (this.isTab) {
+        this.getLists()
+      } else {
+        this.getAllLists()
+      } */
     },
     onPullDownRefresh () {
       // 下拉刷新
@@ -121,12 +133,100 @@
       this.status = 1
       this.isModify = false
       this.isTab = false
+      this.isCancelSend = false
+      this.isResend = false
       this.lists = []
     },
     methods: {
-      modify (uuid) { // 修改按钮
+      cancelShow (msg) { // 签章密码取消
+        this.isShow = msg
+        this.reason = ''
+      },
+      alertConfirm (msg) { // 签章密码确定
+        this.password = msg.resaon
+        if (this.password) {
+          this.isShow = false
+          this.consentReq(this.uuid)
+        }
+      },
+      resend () { // 同意操作
+        let ukey = wx.getStorageSync('use_ukey')
+        let DrugSign = wx.getStorageSync('DrugSign')
+        let setPassword = wx.getStorageSync('set_password')
+        if (ukey === 1) {
+          wx.showToast({
+            icon: 'none',
+            title: 'UKEY用户暂时无法在小程序上使用签章功能',
+            duration: 2000
+          })
+          return
+        }
+        if (DrugSign === false) {
+          wx.showToast({
+            icon: 'none',
+            title: '您没有签章权限，请联系管理员设置。',
+            duration: 2000
+          })
+          return
+        }
+        if (setPassword !== true) { // 没有设置签章密码
+          wx.showToast({
+            icon: 'none',
+            title: '您尚未设置签章密码，请前往电脑端设置。',
+            duration: 2000
+          })
+          return
+        }
+        this.isShow = true
+      },
+      async consentReq (uuid) { // 输入签章密码后
+        let password = this.password
+        var url = '/api/drugReport/reply/' + uuid + '/'
+        var resultData = await post({
+          url,
+          data: {
+            password: password
+          }
+        })
+        if (resultData) {
+          if (resultData.data.code >= 400) {
+            var tip = resultData.data.detail || resultData.data.errmsg
+            wx.showToast({
+              icon: 'none',
+              title: tip
+            })
+          } else if (resultData.data.code >= 200 && resultData.data.code < 300) {
+            // this.getList()
+            wx.navigateBack({
+              url: '/pages/send_record/main',
+              success () {
+              }
+            })
+            wx.showToast({
+              icon: 'none',
+              title: ''
+            })
+          }
+        }
+      },
+      cancel () {
+        var vm = this
+        wx.showModal({
+          title: '',
+          content: '取消发送后,不会返还扣除的发送页数,确认取消？',
+          success (res) {
+            if (res.confirm) {
+              // console.log('用户点击确定')
+              vm.cancelAjax()
+            } else if (res.cancel) {
+              // console.log('用户点击取消')
+            }
+          }
+        })
+      },
+      modify (drug, uuid) { // 修改按钮
         wx.navigateTo({
-          url: '/pages/modify/main?drug=' + uuid + '&isModify=true'
+          url: '/pages/modification/main?drug=' + drug + '&uuid=' + uuid
         })
       },
       accept () {
@@ -142,7 +242,11 @@
         this.isAccept = false
         this.isBack = true
         this.isRemove = false
-        this.isModify = true
+        if (this.isModifyFlag) {
+          this.isModify = true
+        } else {
+          this.isModify = false
+        }
         this.status = 2
         this.lists = []
         this.getLists()
@@ -155,6 +259,57 @@
         this.status = 3
         this.lists = []
         this.getLists()
+      },
+      async cancelAjax () {
+        wx.stopPullDownRefresh()
+        var url = '/api/drugReport/send/' + this.id + '/'
+        var resp = await DELETE({
+          url
+        })
+        var code = resp.statusCode
+        if (code >= 200 && code < 300) {
+          var data = resp.data
+          wx.navigateBack({
+            url: '/pages/send_record/main',
+            success () {
+            }
+          })
+          /* wx.showToast({
+            icon: 'none',
+            title: '取消成功',
+            duration: 2000,
+            success () {
+              setTimeout(function () {
+                wx.navigateBack({
+                  url: '/pages/choose/main',
+                  success () {
+                  }
+                })
+              }, 1000)
+            }
+          }) */
+        } else {
+          wx.showToast({
+            title: data.errmsg,
+            icon: 'none'
+          })
+        }
+      },
+      async resendAjax () {
+        wx.stopPullDownRefresh()
+        var url = '/api/drugReport/send/' + this.id + '/'
+        var resp = await post({
+          url
+        })
+        var code = resp.statusCode
+        if (code >= 200 && code < 300) {
+          var data = resp.data
+        } else {
+          wx.showToast({
+            title: data.errmsg,
+            icon: 'none'
+          })
+        }
       },
       async getData () {
         wx.stopPullDownRefresh()
@@ -175,26 +330,37 @@
             receiverUserName: data.receiver_user.name,
             receiverUserPhone: data.receiver_user.phone
           }
+          this.uuid = data.uuid
           this.acceptNum = data.count['签收']
           this.backNum = data.count['退回']
           this.removeNum = data.count['删除']
+          this.isModifyFlag = true
           if (data.status === '待签章') {
             this.isCancelSend = true
             this.isResend = false
             this.isTab = false
-            this.getAllLists()
           } else if (data.status === '待对方查收') {
             this.isCancelSend = true
             this.isResend = false
             this.isTab = false
-            this.getAllLists()
           } else if (data.status === '已取消') {
+            this.isCancelSend = false
+            this.isResend = false
             this.isTab = false
-            this.getAllLists()
           } else {
             this.isCancelSend = false
-            this.isResend = true
+            this.isResend = false
+            this.isModifyFlag = false
+            if (data.status === '对方已退回') {
+              this.isResend = true
+              this.isModifyFlag = true
+            }
             this.isTab = true
+          }
+          if (this.isTab) {
+            this.getLists()
+          } else {
+            this.getAllLists()
           }
         } else {
           wx.showToast({
@@ -222,7 +388,6 @@
           } else {
             self.lists = data.results
           }
-          console.log(data.results.length)
           if (data.results.length === 0) {
             self.more = false
           } else {
@@ -254,7 +419,6 @@
           } else {
             self.lists = data.results
           }
-          console.log(data.results.length)
           if (data.results.length === 0) {
             self.more = false
           } else {

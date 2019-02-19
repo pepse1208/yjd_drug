@@ -2,7 +2,7 @@
   <div class="druglist">
     <div class="page-top">
       <navigation-bar :back="true"></navigation-bar>
-      <base-top>新建药检单</base-top>
+      <base-top>修改药检单</base-top>
     </div>
     <list-details :info="info"></list-details>
     <p class="part">上传药检单</p>
@@ -18,35 +18,35 @@
       <div class="list">
         <i class="redIcon">*</i>
         <span class="">生产批号：</span>
-        <input v-model.trim="batch" placeholder-style="color:#a5a5a5;" placeholder="请填写生产批号" type="text">
+        <input v-model.trim="batch" disabled :value="data.batch" placeholder-style="color:#a5a5a5;" placeholder="请填写生产批号" type="text">
       </div>
       <div class="list">
         <span class="">报告编号：</span>
-        <input v-model.trim="code" placeholder-style="color:#a5a5a5;" placeholder="请填写报告编号" type="text">
+        <input v-model.trim="code" :value="data.code || ''" disabled placeholder-style="color:#a5a5a5;"  type="text">
       </div>
       <div class="list">
         <span class="">报告日期：</span>
-        <picker mode="date"
+        <!--<picker mode="date"
                 :value="startDate"
-                :start="pickerStart" end="2217-09-01" @change="bindDateChange($event, 'reportDate')"  >
-          <p class="">{{ reportDate }}</p>
-        </picker>
+                :start="pickerStart" end="2217-09-01" @change="bindDateChange($event, 'reportDate')"  >-->
+          <p class="">{{ data.report_date || '' }}</p>
+        <!--</picker>-->
       </div>
       <div class="list">
         <span class="">生产日期：</span>
-        <picker mode="date"
+        <!--<picker mode="date"
                 :value="startDate"
-                :start="pickerStart" end="2217-09-01" @change="bindDateChange($event, 'productDate')"  >
-          <p class="">{{ productDate }}</p>
-        </picker>
+                :start="pickerStart" end="2217-09-01" @change="bindDateChange($event, 'productDate')"  >-->
+          <p class="">{{ data.product_date || '' }}</p>
+        <!--</picker>-->
       </div>
       <div class="list">
         <span class="">有效期至：</span>
-        <picker mode="date"
+        <!--<picker mode="date"
                 :value="startDate"
-                :start="pickerStart" end="2217-09-01" @change="bindDateChange($event, 'validity')"  >
-          <p class="">{{ validity }}</p>
-        </picker>
+                :start="pickerStart" end="2217-09-01" @change="bindDateChange($event, 'validity')"  >-->
+          <p class="">{{ data.validity || ''}}</p>
+        <!--</picker>-->
       </div>
       <span @click="submit" class="submit">提 交</span>
     </div>
@@ -68,10 +68,13 @@
     data () {
       return {
         info: {}, // 详情信息
+        data: {}, // 所有信息
         drug: '', // 药品id
+        uuid: '', //
         backName: 'druglist', // 跳转页面
         pageName: '', // 返回页面
         imgUrl: '',
+        isModify: '',
         file: '', // 文件
         batch: '', // 生产批号
         code: '', // 报告编号
@@ -89,11 +92,20 @@
     methods: {
       /* 详情信息 */
       getInfo () {
-        let url = '/api/common/drug/' + this.drug
+        let url = '/api/drugReport/report/' + this.drug
         get({
           url
         }).then((resp) => {
-          this.info = resp.data.result // 获取药品信息
+          this.data = resp.data.result
+          this.info = {
+            name: this.data.drug.name,
+            reg_number: this.data.drug.reg_number,
+            package: this.data.drug.package,
+            all_dosage: this.data.drug.all_dosage,
+            drug_material: this.data.drug.drug_material,
+            production_enterprise: this.data.drug.production_enterprise
+          }
+          // this.imgUrl = this.data.file_url
         })
       },
       /* 上传图片 */
@@ -148,7 +160,14 @@
       },
       /* 提交 */
       submit () {
-        this.check() && this.submitAjax()
+        if (!this.imgUrl) {
+          wx.showToast({
+            icon: 'none',
+            title: '请上传药检单原件扫描件！'
+          })
+          return false
+        }
+        this.submitAjax()
       },
       check () {
         if (this.productDate && this.validity) {
@@ -181,15 +200,9 @@
       async submitAjax () {
         let resultData = await post({
           data: {
-            batch: this.batch,
-            code: this.code,
-            drug: this.drug,
-            file: this.file,
-            product_date: this.productDate === '请选择生产日期' ? '' : this.productDate,
-            report_date: this.reportDate === '请填写报告日期' ? '' : this.reportDate,
-            validity: this.validity === '请选择有效期' ? '' : this.validity
+            file: this.file
           },
-          url: '/api/drugReport/report/'
+          url: '/api/drugReport/modify/' + this.uuid + '/'
         })
         if (resultData) {
           if (resultData.statusCode >= 400) {
@@ -202,7 +215,7 @@
             let vm = this
             wx.showToast({
               icon: 'none',
-              title: '药检单上传成功',
+              title: '药检单修改成功',
               duration: 2000,
               success () {
                 setTimeout(function () {
@@ -238,7 +251,7 @@
     mounted () {
       this.clear()
       this.drug = this.$root.$mp.query.drug
-      this.pageName = this.$root.$mp.query.router
+      this.uuid = this.$root.$mp.query.uuid
       this.getInfo()
     }
   }
