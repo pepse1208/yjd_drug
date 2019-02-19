@@ -2,7 +2,7 @@
 
 > drug 药检单小程序。
 
-## Build Setup,
+## Build Setup
 
 ``` bash
 # install dependencies
