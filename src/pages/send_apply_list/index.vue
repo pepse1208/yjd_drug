@@ -2,10 +2,7 @@
   <div class="applylist">
     <navigation-bar :back="true"></navigation-bar>
     <base-top>待签章列表</base-top>
-    <div class="_search flex flexrow">
-      <input v-model="enterprise_name" placeholder="请输入企业全称" type="text" class="_search_input">
-      <span class="_search_text" @click="searchDrug">查&emsp;询</span>
-    </div>
+    <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入企业全称"' :searchName="'enterprise_name'">查&emsp;询</search-input>
     <div class="list">
       <send-apply-list :lists="lists"></send-apply-list>
     </div>
@@ -18,13 +15,14 @@
 import NavigationBar from '@/components/navigationBar'
 import BaseTop from '@/components/base_top'
 import sendApplyList from '@/components/send_apply_list'
+import SearchInput from '@/components/searchInput'
 import {get} from '../../utils.js'
-import {throttle} from '../../utils/index.js'
 export default {
   components: {
     BaseTop,
     NavigationBar,
-    sendApplyList
+    sendApplyList,
+    SearchInput
   },
   data () {
     return {
@@ -33,8 +31,7 @@ export default {
       more: true,
       text: '暂无数据',
       noMoreData: 'no_datas',
-      searchUrl: '/api/drugReport/send/list/',
-      enterprise_name: ''
+      searchUrl: '/api/drugReport/send/list/?status=0'
     }
   },
   beforeMount () {
@@ -51,7 +48,6 @@ export default {
       var resp = await get({
         url,
         data: {
-          enterprise_name: this.enterprise_name,
           status: 0
         }
       })
@@ -76,9 +72,16 @@ export default {
         })
       }
     },
-    searchDrug: throttle(function () {
-      this.getData()
-    }, 300)
+    recvData (data) {
+      console.log(data)
+      if (data.count === 0) {
+        this.more = false
+      } else {
+        this.more = true
+      }
+      this.lists = data.results
+      this.next = data.next
+    }
   },
   onPullDownRefresh () {
     // 下拉刷新
@@ -98,11 +101,10 @@ export default {
     this.lists = []
     this.text = '暂无数据'
     this.noMoreData = 'no_datas'
-    this.enterprise_name = ''
   }
 }
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 ._search_input {
   width: 528rpx;
 }

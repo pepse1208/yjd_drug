@@ -1,7 +1,7 @@
 <template>
-  <div class="list">
+  <div class="apply-list list-shadow">
     <block v-for="(item, index) in lists" :key="index">
-      <div class="item flex flexrow">
+      <div class="li-style flex flexrow">
         <div class="left-info">
           <div class="supply_enterprise ellipsis">
             <span class="enterprise_txt">接收企业：</span>
@@ -19,8 +19,8 @@
           <span class="button" @click="submit(item.uuid)">签章</span>
         </div>
       </div>
-      </block>
-      <alert-input :tips="'签章密码'" :placeholder="'请输入签章密码'" :hidden="isShow" :reason="reason" @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert-input>
+    </block>
+    <alert-input :tips="'签章密码'" :placeholder="'请输入签章密码'" :hidden="isShow" :reason="reason" @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert-input>
   </div>
 </template>
 <script>
@@ -43,7 +43,7 @@ export default {
   methods: {
     look: throttle(function (uuid) {
       wx.navigateTo({
-        url: '/pages/send_apply_detail/main?uuid=' + uuid
+        url: '/pages/send_record_details/main?id=' + uuid
       })
     }, 2000),
     submit: throttle(function (uuid) {
@@ -99,17 +99,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.list {
-  box-shadow:0px 0px 11px 0px rgba(139,139,139,0.14);
-}
-.item {
-  padding: 22rpx 0;
-  margin: 0 22rpx;
-  border-bottom: 2rpx solid #EEEEEE;
-}
-.item:last-child {
-  border-bottom: 0;
-}
 .supply_enterprise {
   height: 30rpx;
   line-height: 30rpx;

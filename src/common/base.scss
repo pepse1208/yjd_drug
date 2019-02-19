@@ -106,3 +106,14 @@ button:after {
   text-align: center;
   border-radius: 8rpx;
 }
+.list-shadow {
+  box-shadow:0px 0px 11px 0px rgba(139,139,139,0.14);
+}
+.li-style {
+  padding: 22rpx 0;
+  margin: 0 22rpx;
+  border-bottom: 2rpx solid #EEEEEE;
+}
+.li-style:last-child {
+  border-bottom: 0;
+}

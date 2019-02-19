@@ -36,8 +36,9 @@
       // }
       let query = wx.createSelectorQuery()
       query.select('#statements').boundingClientRect((rect) => {
+        console.log(rect.top <= 106)
         let top = rect.top
-        if (top <= 39) { // 临界值，根据自己的需求来调整
+        if (top <= 106) { // 临界值，根据自己的需求来调整
           this.isFixed = true
         } else {
           this.isFixed = false
@@ -80,7 +81,7 @@
   }
   div.statements.fixed {
     position: fixed;
-    top: 92rpx;
+    top: 212rpx!important;
     left: 0;
     z-index: 100;
     padding-left: 24rpx;

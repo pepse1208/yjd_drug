@@ -1,33 +1,37 @@
 <template>
   <div class="_search flex flexrow">
-    <input v-model="name" :placeholder="placeholder" type="text" class="_search_input">
+    <input v-model="content" :placeholder="placeholder" type="text" class="_search_input">
     <span class="_search_text" @click="searchDrug(url)"><slot></slot></span>
   </div>
 </template>
 <script>
   import {get} from '../utils.js'
   export default {
-    props: ['url', 'placeholder'],
+    props: ['url', 'placeholder', 'searchName'],
     data () {
       return {
-        name: '',
+        content: '',
         show: true
       }
     },
     methods: {
       async searchDrug (url) {
-        // console.log(this.name)
+        console.log(this.searchName)
+        let dataObj = {}
+        if (this.searchName === 'name') {
+          dataObj = {name: this.content}
+        } else if (this.searchName === 'enterprise_name') {
+          dataObj = {enterprise_name: this.content}
+        }
         var resp = await get({
           url,
-          data: {
-            name: this.name
-          }
+          data: dataObj
         })
         this.$emit('renderData', resp.data)
       }
     },
     onShow () {
-      this.name = ''
+      this.content = ''
     }
   }
 </script>
