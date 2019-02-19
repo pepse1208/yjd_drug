@@ -1,6 +1,6 @@
-# drug
+# drug 药检单小程序
 
-> drug
+> drug 药检单小程序
 
 ## Build Setup
 
