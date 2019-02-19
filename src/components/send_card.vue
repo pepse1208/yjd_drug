@@ -52,7 +52,7 @@
     color: #fff;
     height: 190*$unit;
     padding: 0*$unit 15*$unit 0*$unit;
-    margin-bottom: 50*$unit;
+    margin-bottom: 30*$unit;
     /*background: url('../images/manage_bg.png') center 100% no-repeat;*/
     background: linear-gradient(to right,#1E58FF, #1E8CFF , #2CA1FF);
     border-radius: 8rpx;

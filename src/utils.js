@@ -47,6 +47,9 @@ export function post ({url, data, header}) {
 export function put ({url, data, header}) {
   return request({url, method: 'PUT', data, header})
 }
+export function DELETE ({url, data, header}) {
+  return request({url, method: 'DELETE', data, header})
+}
 
 // 可以封装一个保存sessinid的方法，将sessionid存储在localstorage中，定为半小时之后清空此sessionid缓存。
 function saveSession (sessionId) {
