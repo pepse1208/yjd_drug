@@ -31,7 +31,7 @@
           </p>
         </div>
         <div >
-          <span class="button" >查看</span>
+          <span class="button" @click="check">查看</span>
           <span class="button" v-if="isModify" @click="modify(item.drugReport.uuid,item.uuid)">修改</span>
         </div>
       </div>
@@ -46,6 +46,7 @@
       <span>重新发送</span>
     </div>
     <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
+    <check-details :isShowCheck="isShowCheck" @modalShow="modalShow"></check-details>
   </div>
 </template>
 <script>
@@ -53,6 +54,7 @@
   import NavigationBar from '@/components/navigationBar'
   import sendCard from '@/components/send_card'
   import Searchlist from '@/components/searchlist'
+  import CheckDetails from '@/components/check_details'
   import Alert from '@/components/alert'
 
   import {get, post, DELETE} from '../../utils.js'
@@ -63,6 +65,7 @@
       NavigationBar,
       sendCard,
       Alert,
+      CheckDetails,
       Searchlist
     },
     data () {
@@ -87,6 +90,7 @@
         isModifyFlag: false,
         password: null,
         isShow: false,
+        isShowCheck: false,
         tips: '签章密码',
         placeholder: '输入签章密码',
         lists: [] // 列表数据
@@ -138,6 +142,13 @@
       this.lists = []
     },
     methods: {
+      modalShow (msg) { // 查看详情隐藏
+        this.isShowCheck = msg
+        console.log('有没有')
+      },
+      check () {
+        this.isShowCheck = true
+      },
       cancelShow (msg) { // 签章密码取消
         this.isShow = msg
         this.reason = ''
