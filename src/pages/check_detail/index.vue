@@ -353,7 +353,7 @@
         var subIndex = self.subIndex
         var type = self.type
         var data = self.druglist[drugIndex].files[subIndex]
-        var value = msg.resaon
+        var value = msg.reason
         if (value) {
           data.reason = value
           self.reason = ''

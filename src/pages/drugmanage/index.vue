@@ -47,6 +47,7 @@
     onLoad (options) {
       // this.tip = options.tip
       this.type = wx.getStorageSync('type')
+      this.is_upload = this.$root.$mp.query.is_upload === 'true'
       if (this.type === '商业公司') {
         this.isShow = true
       }
@@ -66,6 +67,10 @@
       ]
       if (this.type !== '生产企业' && this.type !== '商业公司') {
         this.is_upload = false
+      }
+      if (this.is_upload) {
+        this.selectNavIndex = 0
+      } else {
         this.selectNavIndex = 1
       }
     },

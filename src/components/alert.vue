@@ -7,8 +7,8 @@
       </view>
       <view class='_toast-main'>
         <view class='_toast-input'>
-          <input :placeholder="placeholder" v-if="isPassword" type="password" maxlength="6" bindinput='_setValue' data-name='_stuEidtName' v-model="resaon" :reason="resaon"/>
-          <input :placeholder="placeholder" v-if="!isPassword" bindinput='_setValue' data-name='_stuEidtName' v-model="resaon" :reason="resaon"/>
+          <input :placeholder="placeholder" v-if="isPassword" type="password" maxlength="6" bindinput='_setValue' data-name='_stuEidtName' v-model="reason" :reason="reason"/>
+          <input :placeholder="placeholder" v-if="!isPassword" bindinput='_setValue' data-name='_stuEidtName' v-model="reason" :reason="reason"/>
         </view>
       </view>
       <view class='_toast-button'>
@@ -16,7 +16,7 @@
           <button @click="$emit('cancelShow', false)">取消</button>
         </view>
         <view class='_confirm'>
-          <button @click="$emit('alertConfirm', {resaon})">确定</button>
+          <button @click="$emit('alertConfirm', {reason})">确定</button>
         </view>
       </view>
     </view>
@@ -26,12 +26,12 @@
   export default {
     data () {
       return {
-        resaon: '',
+        reason: '',
         type: 'text',
         length: 200
       }
     },
-    props: ['tips', 'placeholder', 'hidden', 'resaon', 'isPassword'],
+    props: ['tips', 'placeholder', 'hidden', 'reason', 'isPassword'],
     methods: {
       clickMask () {
         this.hidden = false
@@ -47,6 +47,7 @@
     position: fixed;
     top: 0px;
     left: 0px;
+    z-index: 10000;
 }
 ._toastbg {
     opacity: 0.2;
@@ -61,6 +62,7 @@
     width: 70%;
     margin-left: 15%;
     margin-top: 40%;
+    z-index: 20000;
 }
 ._toast-title {
     padding-left: 5%;
@@ -90,9 +92,14 @@
 }
 ._cancel {
     width: 50%;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    box-sizing: border-box;
 }
 ._confirm {
     width: 50%;
+    border-top: 1px solid #ddd;
+    box-sizing: border-box;
 }
 ._cancel button {
     width: 100%;
