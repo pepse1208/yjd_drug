@@ -5,7 +5,7 @@
       <base-top>新建药检单</base-top>
     </div>
     <div class="alldruglist _container mart">
-      <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入品种名称"'>查询</search-input>
+      <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入品种名称"' :searchName="'name'">查询</search-input>
       <manage-list message="modify" :lists="lists" router="choose"></manage-list>
     </div>
     <p class="no_more_data" v-if="!more">
