@@ -31,7 +31,7 @@
           </p>
         </div>
         <div >
-          <span class="button" @click="check">查看</span>
+          <span class="button" @click="check(item)">查看</span>
           <span class="button" v-if="isModify" @click="modify(item.drugReport.uuid,item.uuid)">修改</span>
         </div>
       </div>
@@ -46,7 +46,7 @@
       <span>重新发送</span>
     </div>
     <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
-    <check-details :isShowCheck="isShowCheck" @modalShow="modalShow"></check-details>
+    <check-details :checkDetails="checkDetails" :isShowCheck="isShowCheck" @modalShow="modalShow"></check-details>
   </div>
 </template>
 <script>
@@ -92,6 +92,7 @@
         isShow: false,
         isShowCheck: false,
         tips: '签章密码',
+        checkDetails: {},
         placeholder: '输入签章密码',
         lists: [] // 列表数据
       }
@@ -144,9 +145,20 @@
     methods: {
       modalShow (msg) { // 查看详情隐藏
         this.isShowCheck = msg
-        console.log('有没有')
       },
-      check () {
+      check (item) {
+        this.checkDetails = {
+          name: item.drugReport.drug.name || '--',
+          all_dosage: item.drugReport.drug.all_dosage || '--',
+          drug_material: item.drugReport.drug.drug_material || '--',
+          package: item.drugReport.drug.package || '--',
+          reg_number: item.drugReport.drug.reg_number || '--',
+          production_enterprise: item.drugReport.drug.production_enterprise || '--',
+          batch: item.drugReport.batch || '--',
+          amount: item.amount || '--'
+        }
+        // this.checkDetails = item
+        console.log(item)
         this.isShowCheck = true
       },
       cancelShow (msg) { // 签章密码取消
