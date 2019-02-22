@@ -1,7 +1,7 @@
 <template>
   <div   class="check_details">
-    <div class="modal" @click="$emit('modalShow', false)" :class="{hideModal: ishide}"></div>
-    <div class="con" :class="{showCon: isShowCheck}">
+    <div class="modal" @click="$emit('modalShow', false)" :class="{showModal: isShowModal}"></div>
+    <div class="con" :class="{showCon: isShowCheck, showConthree: isShowCheck && specialDetails.type}">
       <div class="conBlock">
         <div class="line">
           <span class="explain">品种名称</span>
@@ -36,47 +36,62 @@
           <span class="details">{{checkDetails.amount}}</span>
         </div>
         <!--特殊处理-->
-        <!--已处理、已接受-->
-        <block v-if="isShow">
-          <div class="line">
-            <span class="explain">审核结果</span>
-            <span class="details">{{checkDetails.report_date}}</span>
-          </div>
-        </block>
-        <!--已退回-->
-        <block v-if="isShow">
-          <div class="line">
-            <span class="explain">拒绝原因</span>
-            <span class="details">{{checkDetails.report_date}}</span>
-          </div>
+        <!--已处理、对方已接收、对方已退回-->
+        <block v-if="specialDetails.state === '已处理' || specialDetails.state === '对方已接收' || specialDetails.state === '对方已退回'">
+          <!--对方接收-->
+          <block v-if="specialDetails.type === 1">
+            <div class="line">
+              <span class="explain">审核结果</span>
+              <span class="details">审核通过</span>
+            </div>
+          </block>
+          <!--对方退回-->
+          <block v-if="specialDetails.type === 2">
+            <div class="line">
+              <span class="explain">拒绝原因</span>
+              <span class="details">{{specialDetails.reason}}</span>
+            </div>
+          </block>
+          <!--对方删除-->
+          <block v-if="specialDetails.type === 3">
+            <div class="line">
+              <span class="explain">删除原因</span>
+              <span class="details">{{specialDetails.reason}}</span>
+            </div>
+          </block>
         </block>
         <!--已取消、待对方查收-->
-        <block v-if="isShow">
+        <block v-if="specialDetails.state === '已取消' || specialDetails.state === '待对方查收'">
           <div class="line">
             <span class="explain">报告日期</span>
-            <span class="details">{{checkDetails.batch}}</span>
+            <span class="details">{{specialDetails.report_date}}</span>
           </div>
           <div class="line">
             <span class="explain">生产日期</span>
-            <span class="details">{{checkDetails.batch}}</span>
+            <span class="details">{{specialDetails.product_date}}</span>
           </div>
           <div class="line">
             <span class="explain">有效期至</span>
-            <span class="details">{{checkDetails.batch}}</span>
+            <span class="details">{{specialDetails.validity}}</span>
           </div>
         </block>
         <span class="close" @click="$emit('modalShow', false)">&times;</span>
-        <span class="btn">查看PDF文件</span>
+        <span @click="downloadPdf(checkDetails.url, checkDetails.uuid)" class="btn">查看PDF文件</span>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import {throttle} from '../utils/index.js'
+  import config from '../config.js'
+
   export default {
-    props: ['isShowCheck', 'checkDetails'],
+    props: ['isShowCheck', 'checkDetails', 'specialDetails'],
     data () {
       return {
         isShow: false,
+        isShowModal: false,
+        downloaded: {},
         ishide: true
       }
     },
@@ -85,24 +100,55 @@
         var vm = this
         if (val === false) {
           setTimeout(function () {
-            vm.ishide = true
+            vm.isShowModal = false
           }, 500)
         } else {
           setTimeout(function () {
-            vm.ishide = false
+            vm.isShowModal = true
           }, 50)
         }
       }
     },
     mounted () {
       console.log('组件', this.checkDetails)
+      console.log('特殊处理', this.specialDetails.type)
     },
     computed: {
     },
     methods: {
       modal () {
         this.isShowCheck = false
-      }
+      },
+      openPdf (url) { // 打开pdf
+        wx.openDocument({
+          filePath: url,
+          success: function (res) {
+            // console.log('打开文档成功')
+          }
+        })
+      },
+      downloadPdf: throttle(function (url, id) { // 查看pdf
+        var self = this
+        if (self.downloaded[id]) {
+          self.openPdf(self.downloaded[id])
+        } else {
+          var path = url
+          if (!url.includes('https://')) {
+            path = config.host + url
+          }
+          wx.showLoading({title: '加载中'})
+          wx.downloadFile({
+            url: path,
+            success: function (res) {
+              const filePath = res.tempFilePath
+              // 避免发送方修改文件后，没及时更新
+              self.downloaded[id] = filePath
+              wx.hideLoading()
+              self.openPdf(filePath)
+            }
+          })
+        }
+      }, 2000)
     }
   }
 </script>
@@ -116,15 +162,15 @@
       top: 0;
       background: #000;
       bottom: 0;
-      opacity: 0.4;
-      z-index:1001;
-      display: block;
-      /*transition: opacity 1000ms;*/
-    }
-    .hideModal{
       opacity: 0;
       display: none;
       z-index:-1;
+      /*transition: opacity 1000ms;*/
+    }
+    .showModal{
+      opacity: 0.4;
+      z-index:1001;
+      display: block;
     }
     .con{
       position: absolute;
@@ -144,13 +190,14 @@
       justify-content: center;
       align-items: center;
       padding-bottom: 25*$unit;
-      margin-bottom: 25*$unit;
       .close{
         position: absolute;
         top: 12*$unit;
         right: 17*$unit;
         color: #3E3A39FF;
         font-size: 20px;
+        width: 30*$unit;
+        text-align: right;
       }
       .btn{
         width:134*$unit;
@@ -162,6 +209,7 @@
         text-align: center;
         color: #FFFFFFFF;
         margin-top: 20*$unit;
+        border-radius: 4*$unit;
       }
       .line{
         display: flex;
@@ -170,7 +218,7 @@
         margin-bottom: 14*$unit;
         width: 100%;
         &:first-child{
-          margin-top: 45*$unit;
+          margin-top: 50*$unit;
         }
         .explain{
           font-size: 12px;
@@ -184,7 +232,10 @@
       }
     }
     .showCon{
-      height: 395*$unit;
+      height: 500*$unit;
+    }
+    .showConthree{
+      height: 435*$unit;
     }
   }
 </style>

@@ -39,14 +39,14 @@
     <p class="text-footer" :class="{pb70: isCancelSend}" v-if="!more">
       暂无更多数据
     </p>
-    <div class="cancel" @click="cancel" v-if="isCancelSend">
+    <div class="btn" @click="cancel" v-if="isCancelSend">
       <span>取消发送</span>
     </div>
-    <div class="cancel" @click="resend" v-if="isResend">
+    <div class="btn" @click="resend" v-if="isResend">
       <span>重新发送</span>
     </div>
     <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
-    <check-details :checkDetails="checkDetails" :isShowCheck="isShowCheck" @modalShow="modalShow"></check-details>
+    <check-details :specialDetails="specialDetails" :checkDetails="checkDetails" :isShowCheck="isShowCheck" @modalShow="modalShow"></check-details>
   </div>
 </template>
 <script>
@@ -93,6 +93,8 @@
         isShowCheck: false,
         tips: '签章密码',
         checkDetails: {},
+        specialDetails: {},
+        state: '',
         placeholder: '输入签章密码',
         lists: [] // 列表数据
       }
@@ -155,10 +157,40 @@
           reg_number: item.drugReport.drug.reg_number || '--',
           production_enterprise: item.drugReport.drug.production_enterprise || '--',
           batch: item.drugReport.batch || '--',
-          amount: item.amount || '--'
+          amount: item.amount || 0,
+          url: item.file,
+          uuid: item.uuid
+        }
+        if (this.state === '已处理' || this.state === '对方已接收' || this.state === '对方已退回') {
+          if (this.status === 1) {
+            this.specialDetails = {
+              state: this.state,
+              type: 1
+            }
+          } else if (this.status === 2) {
+            this.specialDetails = {
+              state: this.state,
+              type: 2,
+              reason: item.reason
+            }
+          } else if (this.status === 3) {
+            this.specialDetails = {
+              state: this.state,
+              type: 3,
+              reason: item.reason || ''
+            }
+          }
+        }
+        if (this.state === '待对方查收' || this.state === '已取消') {
+          this.specialDetails = {
+            state: this.state,
+            report_date: item.drugReport.report_date || '--',
+            product_date: item.drugReport.product_date || '--',
+            validity: item.drugReport.validity || '--'
+          }
         }
         // this.checkDetails = item
-        console.log(item)
+        console.log(item, this.state)
         this.isShowCheck = true
       },
       cancelShow (msg) { // 签章密码取消
@@ -353,6 +385,7 @@
             receiverUserName: data.receiver_user.name,
             receiverUserPhone: data.receiver_user.phone
           }
+          this.state = data.status
           this.uuid = data.uuid
           this.acceptNum = data.count['签收']
           this.backNum = data.count['退回']
@@ -577,7 +610,7 @@
         }
       }
     }
-    .cancel{
+    .btn{
       height: 50*$unit;
       background: #fff;
       box-shadow:0px 0px 7px 0px rgba(143,143,143,0.16);
@@ -588,6 +621,7 @@
       bottom: 0;
       left: 0;
       right: 0;
+      border-radius: 4*$unit;
       span{
         width: 81*$unit;
         height: 28*$unit;

@@ -8,9 +8,9 @@
     <statements  :lists="stateList"></statements>
     <div class="_container mart">
       <block v-for="(item, index) in lists" :key="index">
-        <div class="druglist" @click="edit()">
+        <div class="druglist" @click="edit(item)">
           <div class="supply_enterprise">
-            <span class="enterprise_dot" :class="{green_bg: item.is_temp}"></span>
+            <span class="enterprise_dot" :class="{green_bg: !item.is_temp}"></span>
             <span class="enterprise">{{item.enterprise_name}}</span>
           </div>
           <div class="second_line flex flexrow">
@@ -108,7 +108,6 @@
     },
     methods: {
       recvData (data) {
-        console.log(data)
         if (data.count === 0) {
           this.more = false
         } else {
@@ -117,9 +116,9 @@
         this.lists = data.results
         this.next = data.next
       },
-      edit () {
+      edit (item) {
         wx.navigateTo({
-          url: '/pages/connect_edit/main?operate=edit'
+          url: '/pages/connect_edit/main?operate=edit&data=' + JSON.stringify(item)
         })
       },
       addNew () {
