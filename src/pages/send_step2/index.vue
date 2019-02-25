@@ -125,6 +125,7 @@ export default {
     },
     recvData (data) {
       this.initSendStepTwoListData(data.results)
+      console.log(data)
       if (data.count === 0) {
         this.more = false
       } else {

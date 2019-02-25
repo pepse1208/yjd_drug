@@ -60,8 +60,8 @@ export default {
   },
   methods: {
     toSelectedList () {
-      wx.navigateTo({
-        url: '/pages/send_step2/main'
+      wx.navigateBack({
+        delta: '1'
       })
     },
     submit () {
@@ -75,8 +75,6 @@ export default {
       }
       this.drugReportsObj.drugReports = drugReportArr
       this.drugReportsObj.receiver = $store.state.receiver
-      console.log(this.drugReportsObj)
-      console.log(this.selectedDrug)
       this.completeAjaxPost()
     },
     async completeAjaxPost () {
@@ -91,7 +89,7 @@ export default {
           icon: 'none',
           duration: 4000,
           success () {
-            wx.navigateTo({
+            wx.reLaunch({
               url: '/pages/send_record/main'
             })
           }
@@ -117,7 +115,7 @@ export default {
           showCancel: false,
           success (res) {
             if (res.confirm) {
-              wx.navigateTo({
+              wx.reLaunch({
                 url: '/pages/send_record/main'
               })
             } else if (res.cancel) {
@@ -138,7 +136,7 @@ export default {
       })
       var code = data.statusCode
       if (code >= 200 && code < 300) {
-        wx.navigateTo({
+        wx.reLaunch({
           url: '/pages/send_record/main'
         })
       } else if (code >= 400) {

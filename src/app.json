@@ -1,12 +1,12 @@
 {
   "pages": [
     "pages/login/main",
+    "pages/catalog/main",
     "pages/set_send_count/main",
     "pages/send_step1/main",
     "pages/selected_list/main",
     "pages/send_apply_list/main",
     "pages/send_apply_detail/main",
-    "pages/catalog/main",
     "pages/drugsearch/main",
     "pages/send_step2/main",
     "pages/send_step3/main",

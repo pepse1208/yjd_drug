@@ -6,6 +6,7 @@
 </template>
 <script>
   import {get} from '../utils.js'
+  import $store from '../store/index'
   export default {
     props: ['url', 'placeholder', 'searchName'],
     data () {
@@ -22,6 +23,7 @@
         } else if (this.searchName === 'enterprise_name') {
           dataObj = {enterprise_name: this.content}
         } else if (this.searchName === 'drug_name') {
+          $store.state.searchObj = {}
           dataObj = {drug_name: this.content}
         }
         var resp = await get({

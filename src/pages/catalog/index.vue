@@ -197,10 +197,12 @@
   }
   .icon {
     display: inline-block;
-    width: 41px;
-    height: 40px;
+    width: 32px;
+    height: 30px;
     margin-bottom: 24rpx;
-    background: url(../../images/catalog_icon.png) no-repeat -5px -2px;
+    background: url(../../images/catalog_icon.png) no-repeat 0 0;
+    background-size: 32px;
+    // border: 1rpx solid red;
   }
   .text {}
 }
