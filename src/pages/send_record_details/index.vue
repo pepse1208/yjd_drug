@@ -31,7 +31,7 @@
           </p>
         </div>
         <div >
-          <span class="button" >查看</span>
+          <span class="button" @click="check(item)">查看</span>
           <span class="button" v-if="isModify" @click="modify(item.drugReport.uuid,item.uuid)">修改</span>
         </div>
       </div>
@@ -39,13 +39,14 @@
     <p class="text-footer" :class="{pb70: isCancelSend}" v-if="!more">
       暂无更多数据
     </p>
-    <div class="cancel" @click="cancel" v-if="isCancelSend">
+    <div class="btn" @click="cancel" v-if="isCancelSend">
       <span>取消发送</span>
     </div>
-    <div class="cancel" @click="resend" v-if="isResend">
+    <div class="btn" @click="resend" v-if="isResend">
       <span>重新发送</span>
     </div>
     <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
+    <check-details :specialDetails="specialDetails" :checkDetails="checkDetails" :isShowCheck="isShowCheck" @modalShow="modalShow"></check-details>
   </div>
 </template>
 <script>
@@ -53,6 +54,7 @@
   import NavigationBar from '@/components/navigationBar'
   import sendCard from '@/components/send_card'
   import Searchlist from '@/components/searchlist'
+  import CheckDetails from '@/components/check_details'
   import Alert from '@/components/alert'
 
   import {get, post, DELETE} from '../../utils.js'
@@ -63,6 +65,7 @@
       NavigationBar,
       sendCard,
       Alert,
+      CheckDetails,
       Searchlist
     },
     data () {
@@ -87,7 +90,11 @@
         isModifyFlag: false,
         password: null,
         isShow: false,
+        isShowCheck: false,
         tips: '签章密码',
+        checkDetails: {},
+        specialDetails: {},
+        state: '',
         placeholder: '输入签章密码',
         lists: [] // 列表数据
       }
@@ -135,9 +142,58 @@
       this.isTab = false
       this.isCancelSend = false
       this.isResend = false
+      this.isShowCheck = false
       this.lists = []
     },
     methods: {
+      modalShow (msg) { // 查看详情隐藏
+        this.isShowCheck = msg
+      },
+      check (item) {
+        this.checkDetails = {
+          name: item.drugReport.drug.name || '--',
+          all_dosage: item.drugReport.drug.all_dosage || '--',
+          drug_material: item.drugReport.drug.drug_material || '--',
+          package: item.drugReport.drug.package || '--',
+          reg_number: item.drugReport.drug.reg_number || '--',
+          production_enterprise: item.drugReport.drug.production_enterprise || '--',
+          batch: item.drugReport.batch || '--',
+          amount: item.amount || 0,
+          url: item.file,
+          uuid: item.uuid
+        }
+        if (this.state === '已处理' || this.state === '对方已接收' || this.state === '对方已退回') {
+          if (this.status === 1) {
+            this.specialDetails = {
+              state: this.state,
+              type: 1
+            }
+          } else if (this.status === 2) {
+            this.specialDetails = {
+              state: this.state,
+              type: 2,
+              reason: item.reason
+            }
+          } else if (this.status === 3) {
+            this.specialDetails = {
+              state: this.state,
+              type: 3,
+              reason: item.reason || ''
+            }
+          }
+        }
+        if (this.state === '待对方查收' || this.state === '已取消') {
+          this.specialDetails = {
+            state: this.state,
+            report_date: item.drugReport.report_date || '--',
+            product_date: item.drugReport.product_date || '--',
+            validity: item.drugReport.validity || '--'
+          }
+        }
+        // this.checkDetails = item
+        console.log(item, this.state)
+        this.isShowCheck = true
+      },
       cancelShow (msg) { // 签章密码取消
         this.isShow = msg
         this.reason = ''
@@ -330,6 +386,7 @@
             receiverUserName: data.receiver_user.name,
             receiverUserPhone: data.receiver_user.phone
           }
+          this.state = data.status
           this.uuid = data.uuid
           this.acceptNum = data.count['签收']
           this.backNum = data.count['退回']
@@ -554,7 +611,7 @@
         }
       }
     }
-    .cancel{
+    .btn{
       height: 50*$unit;
       background: #fff;
       box-shadow:0px 0px 7px 0px rgba(143,143,143,0.16);
@@ -573,6 +630,7 @@
         line-height: 28*$unit;
         font-size: 12*$unit;
         color: #fff;
+        border-radius: 4*$unit;
         margin-right: 16*$unit;
       }
     }

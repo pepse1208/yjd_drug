@@ -84,14 +84,14 @@
       bottom: 0;
       right: 0;
       display: inline-block;
-      font-size: 10*$unit;
+      font-size: 11*$unit;
       color: #fff;
       width: 83*$unit;
       height: 30*$unit;
       text-align: center;
       line-height: 30*$unit;
       background: #0065c9;
-      border-radius:14px 0 0 0;
+      border-radius:14px 0 8rpx 0;
     }
   }
 </style>

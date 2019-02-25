@@ -23,6 +23,8 @@
     "pages/druglistdetail/main",
     "pages/drugoperate/main",
     "pages/accountcenter/main",
+    "pages/connect/main",
+    "pages/connect_edit/main",
     "pages/send_record/main",
     "pages/send_record_details/main",
     "pages/test/main"
