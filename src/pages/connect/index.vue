@@ -160,9 +160,12 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   .send_record{
     $unit: 2rpx;
+    ._search{
+      margin-bottom: 0;
+    }
     ._search_input {
       width: 528rpx;
     }

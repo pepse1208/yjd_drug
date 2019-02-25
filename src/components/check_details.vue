@@ -1,5 +1,6 @@
 <template>
   <div   class="check_details">
+    <progress :percent="percent" stroke-width="4" backgroundColor="#fff"/>
     <div class="modal" @click="$emit('modalShow', false)" :class="{showModal: isShowModal}"></div>
     <div class="con" :class="{showCon: isShowCheck, showConthree: isShowCheck && specialDetails.type}">
       <div class="conBlock">
@@ -89,9 +90,9 @@
     props: ['isShowCheck', 'checkDetails', 'specialDetails'],
     data () {
       return {
-        isShow: false,
         isShowModal: false,
         downloaded: {},
+        percent: 0,
         ishide: true
       }
     },
@@ -115,14 +116,20 @@
     },
     computed: {
     },
+    onUnload: function () { // 如果页面被卸载时被执行
+      this.percent = 0
+      this.isShowModal = false
+    },
     methods: {
       modal () {
         this.isShowCheck = false
       },
       openPdf (url) { // 打开pdf
+        let that = this
         wx.openDocument({
           filePath: url,
           success: function (res) {
+            that.percent = 0
             // console.log('打开文档成功')
           }
         })
@@ -137,15 +144,21 @@
             path = config.host + url
           }
           wx.showLoading({title: '加载中'})
-          wx.downloadFile({
+          const that = this
+          const downloadTask = wx.downloadFile({
             url: path,
             success: function (res) {
               const filePath = res.tempFilePath
               // 避免发送方修改文件后，没及时更新
               self.downloaded[id] = filePath
               wx.hideLoading()
-              self.openPdf(filePath)
+              setTimeout(function () {
+                self.openPdf(filePath)
+              }, 700)
             }
+          })
+          downloadTask.onProgressUpdate((res) => {
+            that.percent = res.progress
           })
         }
       }, 2000)
@@ -155,6 +168,14 @@
 <style lang="scss" scoped>
   .check_details{
     $unit: 2rpx;
+    progress {
+      position: fixed;
+      background: red;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      z-index: 2000;
+    }
     .modal{
       position: absolute;
       left: 0;

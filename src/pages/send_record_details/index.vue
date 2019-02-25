@@ -142,6 +142,7 @@
       this.isTab = false
       this.isCancelSend = false
       this.isResend = false
+      this.isShowCheck = false
       this.lists = []
     },
     methods: {
@@ -621,7 +622,6 @@
       bottom: 0;
       left: 0;
       right: 0;
-      border-radius: 4*$unit;
       span{
         width: 81*$unit;
         height: 28*$unit;
@@ -630,6 +630,7 @@
         line-height: 28*$unit;
         font-size: 12*$unit;
         color: #fff;
+        border-radius: 4*$unit;
         margin-right: 16*$unit;
       }
     }

@@ -13,8 +13,8 @@
       <div class="back" v-if="back"
         :style="{
           'padding-top': (0 + 'px;'),
-          'margin-top': '30px',
-          'height': (24 + 'px'),
+          'margin-top': '24px',
+          'height': (30 + 'px'),
           'line-height': (24 + 'px;')}">
         <div class="icon-fanhui" @click="navigateBack"></div>|<div class="back-home" v-if="showHomeButton" @click="navigateBackHome"></div>
       </div>
@@ -108,10 +108,10 @@ export default {
 }
 .back{
   position: absolute;
-  width: 136rpx;
-  height: 50rpx;
+  width: 166rpx;
+  height: 150rpx;
   border: 2rpx solid #EEEEEE;
-  border-radius:12px;
+  border-radius:16px;
   left: 0;
   top: 0;
   display: flex;
@@ -136,22 +136,24 @@ export default {
   color: #fff;
 } */
 .back-home {
-  width: 28rpx;
-  height: 26rpx;
+  /*width: 28rpx;*/
+  flex-grow: 1;
+  height: 100%;
   text-align: center;
   font-size: 30rpx;
-  background: url(../images/back-home.png) no-repeat;
+  background: url(../images/back-home.png) center no-repeat;
   background-size: 28rpx 26rpx;
-  margin-left: 18rpx;
-  margin-right: 18rpx;
+  /*padding-left: 18rpx;*/
+  /*padding-right: 18rpx;*/
 }
 .icon-fanhui{
-  width: 16rpx;
-  height: 26rpx;
-  background: url(../images/icon-fanhui.png) no-repeat;
+  /*width: 36rpx;*/
+  flex-grow: 1;
+  height: 100%;
+  background: url(../images/icon-fanhui.png) center no-repeat;
   background-size: 16rpx 26rpx;
-  margin-left: 20rpx;
-  margin-right: 20rpx;
+  /*padding-left: 20rpx;*/
+  /*padding-right: 20rpx;*/
 }
 .title{
   font-weight: bold;
