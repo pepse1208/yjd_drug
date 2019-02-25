@@ -13,8 +13,8 @@ export default {
    * 把store挂载到全局
    * Vue.prototype.$store = store;
    */
-  initData (state, {data, status}) {
-    state.initData.length = 0
+  initCheckDetailData (state, {data, status}) {
+    state.checkDetailData.length = 0
     let len = data.length // 药品数量
     for (let i = 0; i < len; i++) {
       var item = data[i]
@@ -43,7 +43,7 @@ export default {
           obj.num = 0
         }
       }
-      state.initData.push(obj)
+      state.checkDetailData.push(obj)
     }
   },
   /**
@@ -57,7 +57,6 @@ export default {
    */
   initSideBar (state, data) {
     state.sidebar.length = 0
-    console.log(data)
     let lists = []
     if (data.includes('药检单查询')) {
       lists.push(
@@ -151,5 +150,70 @@ export default {
     Object.keys(config).map((item, key) => {
       state[item] = config[item]
     })
+  },
+  initSendStepTwoListData (state, data) {
+    let len = data.length
+    state.searchObj = {}
+    for (let i = 0; i < len; i++) {
+      let uuid = data[i].uuid
+      let subObj = JSON.parse(JSON.stringify(data[i]))
+      let obj = {
+        drug: subObj,
+        count: 0,
+        chooseNum: 0,
+        files: {}
+      }
+      if (state.sendStepTwoListData[uuid] !== undefined) {
+        state.searchObj[uuid] = JSON.parse(JSON.stringify(state.sendStepTwoListData[uuid]))
+      } else {
+        state.sendStepTwoListData[uuid] = JSON.parse(JSON.stringify(obj))
+        state.searchObj[uuid] = JSON.parse(JSON.stringify(obj))
+      }
+    }
+  },
+  initSendStepTwoDrugData (state, {data}) {
+    let uuid = state.sendStepTwoDrugId
+    let fileObj = state.sendStepTwoListData[uuid].files
+    state.sendStepTwoDrugData = {}
+    if (Object.keys(fileObj).length > 0) {
+      state.sendStepTwoDrugData = JSON.parse(JSON.stringify(fileObj))
+      return
+    }
+    let len = data.length
+    for (let i = 0; i < len; i++) {
+      let obj = JSON.parse(JSON.stringify(data[i]))
+      obj.is_select = data[i].is_select || false
+      state.sendStepTwoDrugData[data[i].uuid] = JSON.parse(JSON.stringify(obj))
+    }
+  },
+  selectDrug (state, {uuid, isSelect}) {
+    let obj = state.sendStepTwoDrugData
+    let selectObj = state.selectObj
+    let subObj = obj[uuid]
+    let drugId = state.sendStepTwoDrugId
+    if (!selectObj[drugId]) {
+      selectObj[drugId] = {}
+    }
+    if (isSelect) {
+      subObj.is_select = false
+      delete selectObj[drugId][uuid]
+    } else {
+      subObj.is_select = true
+      selectObj[drugId][uuid] = obj[uuid]
+      selectObj[drugId][uuid].amount = ''
+    }
+  },
+  submit (state) {
+    let drugId = state.sendStepTwoDrugId
+    state.sendStepTwoListData[drugId].count = Object.keys(state.selectObj[drugId]).length
+    state.sendStepTwoListData[drugId].files = JSON.parse(JSON.stringify(state.sendStepTwoDrugData))
+    state.searchObj[drugId].count = Object.keys(state.selectObj[drugId]).length
+  },
+  initSelectedDrug (state) {
+    let selectObj = state.selectObj
+    let selectedList = state.selectedList
+    for (let i in selectObj) {
+      Object.assign(selectedList, selectObj[i])
+    }
   }
 }

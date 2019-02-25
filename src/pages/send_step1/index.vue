@@ -54,7 +54,6 @@ export default {
       if (code >= 200 && code < 300) {
         var data = resp.data
         self.next = data.next
-        console.log(data)
         if (_url) {
           self.lists = this.lists.concat(data.results)
         } else {
@@ -85,6 +84,14 @@ export default {
       wx.navigateTo({
         url: '/pages/send_step2/main'
       })
+    }
+  },
+  updated () {
+    if (!this.next) {
+      this.more = false
+      this.text = '暂无更多数据'
+      this.noMoreData = 'no_more_data'
+      return false
     }
   },
   beforeMount () {

@@ -16,12 +16,13 @@
     },
     methods: {
       async searchDrug (url) {
-        console.log(this.searchName)
         let dataObj = {}
         if (this.searchName === 'name') {
           dataObj = {name: this.content}
         } else if (this.searchName === 'enterprise_name') {
           dataObj = {enterprise_name: this.content}
+        } else if (this.searchName === 'drug_name') {
+          dataObj = {drug_name: this.content}
         }
         var resp = await get({
           url,

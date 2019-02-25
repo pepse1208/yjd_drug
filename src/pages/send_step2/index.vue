@@ -2,13 +2,14 @@
   <div class="step2">
     <navigation-bar :back="true"></navigation-bar>
     <base-top>选择药检单</base-top>
-    <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入企业全称"' :searchName="'name'">查&emsp;询</search-input>
+    <search-input :url="listUrl" @renderData="recvData" :placeholder='"请输入品种名称"' searchName="drug_name">查&emsp;询</search-input>
     <div class="list">
-      <send-step-list fatherPage="send_step2" :lists="lists"></send-step-list>
+      <send-step-list fatherPage="send_step2" :lists="lists"  @controlModal="controlModal"></send-step-list>
     </div>
     <p :class="noMoreData" v-if="!more">
       {{text}}
     </p>
+    <bottom-to-top-modal :showModalStatus="showModalStatus" @hideModal="hideModal" :height="height" :lists="drugs"></bottom-to-top-modal>
     <div class="foot flex flexrow">
       <div class="selected-text" @click="toSelectedList">查看已选药检单</div>
       <div class="next-step flex flexrow" @click="toSetSendCount">
@@ -24,31 +25,40 @@ import NavigationBar from '@/components/navigationBar'
 import BaseTop from '@/components/base_top'
 import SearchInput from '@/components/searchInput'
 import SendStepList from '@/components/send_step_list'
+import BottomToTopModal from '@/components/bottom_to_top_modal'
+import $store from '../../store/index'
+import {mapActions} from 'vuex'
 import {get} from '../../utils.js'
 export default {
   components: {
     NavigationBar,
     BaseTop,
     SearchInput,
-    SendStepList
+    SendStepList,
+    BottomToTopModal
   },
   data () {
     return {
-      next: '',
+      listNextUrl: '',
+      drugNextUrl: '',
+      drugs: [],
       lists: [],
       more: true,
       text: '暂无数据',
       noMoreData: 'no_datas',
-      searchUrl: '/api/drugReport/report/list/'
+      listUrl: '/api/drugReport/report/list/',
+      drugUrl: '/api/drugReport/report/drug/',
+      showModalStatus: false,
+      height: 0
     }
   },
   methods: {
-    async getData (_url) {
+    async getListData (nextUrl) {
       wx.stopPullDownRefresh()
       var self = this
-      var url = self.searchUrl
-      if (_url) {
-        url = _url
+      var url = self.listUrl
+      if (nextUrl) {
+        url = nextUrl
       }
       var resp = await get({
         url,
@@ -59,18 +69,53 @@ export default {
       var code = resp.statusCode
       if (code >= 200 && code < 300) {
         var data = resp.data
-        self.next = data.next
-        console.log(data)
-        if (_url) {
-          self.lists = this.lists.concat(data.results)
+        let result = $store.state.sendStepTwoListData
+        self.listNextUrl = data.next
+        self.initSendStepTwoListData(data.results)
+        self.lists = result
+        if (Object.keys(result).length === 0) {
+          self.more = false
         } else {
-          self.lists = data.results
+          self.more = true
         }
+        self.text = '暂无更多数据'
+      } else {
+        wx.showToast({
+          title: data.errmsg,
+          icon: 'none'
+        })
+      }
+    },
+    async getDrugData ({nextUrl, index}) {
+      wx.stopPullDownRefresh()
+      var self = this
+      let uuid = $store.state.sendStepTwoDrugId
+      var url = self.drugUrl + uuid
+      if (nextUrl) {
+        url = nextUrl
+      }
+      var resp = await get({
+        url
+      })
+      var code = resp.statusCode
+      if (code >= 200 && code < 300) {
+        var data = resp.data
+        let res
+        self.drugNextUrl = data.next
+        if (nextUrl) {
+          res = self.drugs.concat(data.results)
+        } else {
+          res = data.results
+        }
+        self.initSendStepTwoDrugData({data: res})
         if (data.results.length === 0) {
           self.more = false
         } else {
           self.more = true
         }
+        self.more = false
+        self.text = '暂无更多数据'
+        self.drugs = $store.state.sendStepTwoDrugData
       } else {
         wx.showToast({
           title: data.errmsg,
@@ -79,13 +124,14 @@ export default {
       }
     },
     recvData (data) {
+      this.initSendStepTwoListData(data.results)
       if (data.count === 0) {
         this.more = false
       } else {
         this.more = true
       }
-      this.lists = data.results
-      this.next = data.next
+      this.lists = $store.state.searchObj
+      this.listNextUrl = data.next
     },
     toSendStep2 () {
       wx.navigateTo({
@@ -93,35 +139,60 @@ export default {
       })
     },
     toSelectedList () {
+      this.initSelectedDrug()
       wx.navigateTo({
         url: '/pages/selected_list/main'
       })
     },
     toSetSendCount () {
+      this.initSelectedDrug()
       wx.navigateTo({
         url: '/pages/set_send_count/main'
       })
+    },
+    hideModal (bool) {
+      let self = this
+      self.height = 0
+      setTimeout(function () { self.showModalStatus = bool }, 300)
+    },
+    controlModal (data) {
+      let self = this
+      self.showModalStatus = data.showModalStatus
+      setTimeout(function () { self.height = data.height }, 300)
+    },
+    ...mapActions({
+      initSendStepTwoDrugData: 'initSendStepTwoDrugData',
+      initSendStepTwoListData: 'initSendStepTwoListData',
+      initSelectedDrug: 'initSelectedDrug'
+    })
+  },
+  updated () {
+    if (!this.listNextUrl) {
+      this.more = false
+      this.text = '暂无更多数据'
+      this.noMoreData = 'no_more_data'
+      return false
     }
   },
   beforeMount () {
-    this.getData()
+    this.getListData()
   },
   onPullDownRefresh () {
     // 下拉刷新
     if (!this.loading) {
-      this.getData()
+      this.getListData()
     }
   },
   onReachBottom () {
     // 上啦触底
-    if (!this.loading && this.next) {
-      this.getData(this.next)
+    if (!this.loading && this.listNextUrl) {
+      this.getListData(this.listNextUrl)
     }
   },
   onUnload: function () {
     this.more = true
-    this.next = ''
-    this.lists = []
+    this.listNextUrl = ''
+    this.drugs = []
     this.text = '暂无数据'
     this.noMoreData = 'no_datas'
   }
@@ -134,9 +205,6 @@ export default {
 </style>
 
 <style scoped lang="scss">
-.list {
-  margin-bottom: 50rpx;
-}
 .foot {
   position: fixed;
   left: 0;
