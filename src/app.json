@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/scan_code/main",
     "pages/login/main",
     "pages/catalog/main",
     "pages/set_send_count/main",
