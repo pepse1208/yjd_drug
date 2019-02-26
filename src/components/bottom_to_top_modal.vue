@@ -21,7 +21,7 @@
         </block>
       </div>
       <div class="submit flex" @click="complete" v-if="show">
-        <span>确定</span>
+        <span>确&emsp;定</span>
       </div>
       <div class="detail-list list" v-if="!show">
         <div class="line">
@@ -164,11 +164,11 @@ export default {
 }
 .cancel {
   position: absolute;
-  width: 24rpx;
-  height: 24rpx;
+  width: 50rpx;
+  height: 50rpx;
   top: 24rpx;
   right: 24rpx;
-  background: url(../images/cancel_black.png) no-repeat;
+  background: url(../images/cancel_black.png) no-repeat 26rpx 0;
   background-size: 24rpx 24rpx;
 }
 .list {
@@ -204,9 +204,10 @@ export default {
   height: 160rpx;
   justify-content: center;
   span {
+    width: 182rpx;
     height: 80rpx;
     line-height: 80rpx;
-    padding: 0 48rpx;
+    // padding: 0 48rpx;
     border-radius: 4rpx;
     background: #1e9eff;
     color: #fff;

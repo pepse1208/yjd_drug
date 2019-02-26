@@ -1,7 +1,9 @@
 <template>
   <div class="selected-list">
-    <navigation-bar :back="true"></navigation-bar>
-    <base-top>设置发货数量</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>设置发货数量</base-top>
+    </div>
     <div class="step-list list-shadow">
       <div class="item flex li-style flexrow" v-for="(item, key) in selectedDrug" :key="key">
         <div class="details">

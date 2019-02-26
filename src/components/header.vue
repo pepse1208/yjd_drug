@@ -60,8 +60,9 @@
             //   result: "http://lm30m5z,@MK@/4&O3(u7-N33c46a7a87b5788a7b9edb0",
             //   scanType: "WX_CODE"
             // }
+            let uuid = /scene=\w[^&]*/.exec(res.path)[0].replace('scene=', '')
             wx.navigateTo({
-              url: '/pages/scan_code/main'
+              url: '/pages/scan_code/main?scene=' + uuid
             })
           },
           fail () {

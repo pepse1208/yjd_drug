@@ -1,7 +1,9 @@
 <template>
   <div class="step2">
-    <navigation-bar :back="true"></navigation-bar>
-    <base-top>选择药检单</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>选择药检单</base-top>
+    </div>
     <search-input :url="listUrl" @renderData="recvData" :placeholder='"请输入品种名称"' searchName="drug_name">查&emsp;询</search-input>
     <div class="list">
       <send-step-list fatherPage="send_step2" :lists="lists"  @controlModal="controlModal"></send-step-list>
