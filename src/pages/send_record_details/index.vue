@@ -31,7 +31,7 @@
           </p>
         </div>
         <div >
-          <span class="button" @click="check(item)">查看</span>
+          <span class="button" @click="modalShow(true, item, 400)">查看</span>
           <span class="button" v-if="isModify" @click="modify(item.drugReport.uuid,item.uuid)">修改</span>
         </div>
       </div>
@@ -46,7 +46,81 @@
       <span>重新发送</span>
     </div>
     <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
-    <check-details :specialDetails="specialDetails" :checkDetails="checkDetails" :isShowCheck="isShowCheck" @modalShow="modalShow"></check-details>
+    <!--弹框详情组件-->
+    <public-check-details :checkDetailsDrug="checkDetailsDrug" :checkDetailsFile="checkDetailsFile" :checkDetails="checkDetails" :checkDetailsUuid="checkDetailsUuid" :checkDetailsUrl="checkDetailsUrl" :isShowCheck="isShowCheck" :height="height" @modalShow="modalShow">
+      <div class="line">
+        <span class="explain">品种名称</span>
+        <span class="details">{{checkDetailsDrug.name || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">剂型</span>
+        <span class="details">{{checkDetailsDrug.all_dosage || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">材质</span>
+        <span class="details">{{checkDetailsDrug.drug_material || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">包装规格</span>
+        <span class="details">{{checkDetailsDrug.package || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">批准文号</span>
+        <span class="details">{{checkDetailsDrug.reg_number || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产企业</span>
+        <span class="details">{{checkDetailsDrug.production_enterprise || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产批号</span>
+        <span class="details">{{checkDetailsOther.batch || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">发货数量</span>
+        <span class="details">{{checkDetails.amount || '0'}}</span>
+      </div>
+      <!--特殊处理-->
+      <!--已处理、对方已接收、对方已退回-->
+      <block v-if="checkDetailsFile.state === '已处理' || checkDetailsFile.state === '对方已接收' || checkDetailsFile.state === '对方已退回'">
+        <!--对方接收-->
+        <block v-if="checkDetailsFile.type === 1">
+          <div class="line">
+            <span class="explain">审核结果</span>
+            <span class="details">审核通过</span>
+          </div>
+        </block>
+        <!--对方退回-->
+        <block v-if="checkDetailsFile.type === 2">
+          <div class="line">
+            <span class="explain">拒绝原因</span>
+            <span class="details">{{checkDetailsFile.reason || '--'}}</span>
+          </div>
+        </block>
+        <!--对方删除-->
+        <block v-if="checkDetailsFile.type === 3">
+          <div class="line">
+            <span class="explain">删除原因</span>
+            <span class="details">{{checkDetailsFile.reason || '--'}}</span>
+          </div>
+        </block>
+      </block>
+      <!--已取消、待对方查收-->
+      <block v-if="checkDetailsFile.state === '已取消' || checkDetailsFile.state === '待对方查收'">
+        <div class="line">
+          <span class="explain">报告日期</span>
+          <span class="details">{{checkDetailsFile.report_date || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">生产日期</span>
+          <span class="details">{{checkDetailsFile.product_date || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">有效期至</span>
+          <span class="details">{{checkDetailsFile.validity || '--'}}</span>
+        </div>
+      </block>
+    </public-check-details>
   </div>
 </template>
 <script>
@@ -54,7 +128,7 @@
   import NavigationBar from '@/components/navigationBar'
   import sendCard from '@/components/send_card'
   import Searchlist from '@/components/searchlist'
-  import CheckDetails from '@/components/check_details'
+  import PublicCheckDetails from '@/components/public_check_details'
   import Alert from '@/components/alert'
 
   import {get, post, DELETE} from '../../utils.js'
@@ -65,7 +139,7 @@
       NavigationBar,
       sendCard,
       Alert,
-      CheckDetails,
+      PublicCheckDetails,
       Searchlist
     },
     data () {
@@ -90,10 +164,16 @@
         isModifyFlag: false,
         password: null,
         isShow: false,
+        isShowModal: false, // 弹窗显示状态
         isShowCheck: false,
-        tips: '签章密码',
+        checkDetailsUrl: null,
+        checkDetailsUuid: null,
+        height: 0,
         checkDetails: {},
-        specialDetails: {},
+        checkDetailsDrug: {},
+        checkDetailsOther: {},
+        checkDetailsFile: {},
+        tips: '签章密码',
         state: '',
         placeholder: '输入签章密码',
         lists: [] // 列表数据
@@ -142,57 +222,58 @@
       this.isTab = false
       this.isCancelSend = false
       this.isResend = false
-      this.isShowCheck = false
       this.lists = []
+      this.isShowModal = false
+      this.isShowCheck = false
+      this.checkDetailsUrl = null
+      this.checkDetailsUuid = null
+      this.height = 0
+      this.checkDetails = {}
+      this.checkDetailsDrug = {}
+      this.checkDetailsOther = {}
+      this.checkDetailsFile = {}
     },
     methods: {
-      modalShow (msg) { // 查看详情隐藏
-        this.isShowCheck = msg
-      },
-      check (item) {
-        this.checkDetails = {
-          name: item.drugReport.drug.name || '--',
-          all_dosage: item.drugReport.drug.all_dosage || '--',
-          drug_material: item.drugReport.drug.drug_material || '--',
-          package: item.drugReport.drug.package || '--',
-          reg_number: item.drugReport.drug.reg_number || '--',
-          production_enterprise: item.drugReport.drug.production_enterprise || '--',
-          batch: item.drugReport.batch || '--',
-          amount: item.amount || 0,
-          url: item.file,
-          uuid: item.uuid
-        }
-        if (this.state === '已处理' || this.state === '对方已接收' || this.state === '对方已退回') {
-          if (this.status === 1) {
-            this.specialDetails = {
-              state: this.state,
-              type: 1
+      modalShow (flag, details, height) { // 查看详情隐藏
+        this.isShowCheck = flag
+        this.height = height
+        if (details) {
+          this.checkDetails = details
+          this.checkDetailsDrug = details.drugReport.drug
+          this.checkDetailsOther = details.drugReport
+          this.checkDetailsUrl = details.file
+          this.checkDetailsUuid = details.uuid
+          if (this.state === '已处理' || this.state === '对方已接收' || this.state === '对方已退回') {
+            if (this.status === 1) {
+              this.checkDetailsFile = {
+                state: this.state,
+                type: 1
+              }
+            } else if (this.status === 2) {
+              this.checkDetailsFile = {
+                state: this.state,
+                type: 2,
+                reason: details.reason
+              }
+            } else if (this.status === 3) {
+              this.checkDetailsFile = {
+                state: this.state,
+                type: 3,
+                reason: details.reason || ''
+              }
             }
-          } else if (this.status === 2) {
-            this.specialDetails = {
+            this.height = 430
+          }
+          if (this.state === '待对方查收' || this.state === '已取消') {
+            this.checkDetailsFile = {
               state: this.state,
-              type: 2,
-              reason: item.reason
+              report_date: details.drugReport.report_date || '--',
+              product_date: details.drugReport.product_date || '--',
+              validity: details.drugReport.validity || '--'
             }
-          } else if (this.status === 3) {
-            this.specialDetails = {
-              state: this.state,
-              type: 3,
-              reason: item.reason || ''
-            }
+            this.height = 500
           }
         }
-        if (this.state === '待对方查收' || this.state === '已取消') {
-          this.specialDetails = {
-            state: this.state,
-            report_date: item.drugReport.report_date || '--',
-            product_date: item.drugReport.product_date || '--',
-            validity: item.drugReport.validity || '--'
-          }
-        }
-        // this.checkDetails = item
-        console.log(item, this.state)
-        this.isShowCheck = true
       },
       cancelShow (msg) { // 签章密码取消
         this.isShow = msg
@@ -291,7 +372,6 @@
         this.isRemove = false
         this.isModify = false
         this.status = 1
-        this.lists = []
         this.getLists()
       },
       back () {
@@ -304,7 +384,6 @@
           this.isModify = false
         }
         this.status = 2
-        this.lists = []
         this.getLists()
       },
       remove () {
@@ -313,7 +392,6 @@
         this.isRemove = true
         this.isModify = false
         this.status = 3
-        this.lists = []
         this.getLists()
       },
       async cancelAjax () {
@@ -337,7 +415,7 @@
             success () {
               setTimeout(function () {
                 wx.navigateBack({
-                  url: '/pages/choose/main',
+                  url: '/pages/send_record/main',
                   success () {
                   }
                 })
@@ -458,6 +536,7 @@
         }
       },
       async getLists (_url) {
+        this.lists = []
         wx.stopPullDownRefresh()
         var self = this
         var url = '/api/drugReport/send/info/list/' + this.id + '?status=' + this.status
@@ -514,8 +593,10 @@
           display: inline-block;
           width: 23*$unit;
           border-bottom: 2px solid transparent;
-          position: relative;
-          bottom: -10*$unit;
+          position: absolute;
+          left: 50%;
+          margin-left: -23*$unit;
+          bottom: 0*$unit;
         }
       }
       div.active{

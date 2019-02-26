@@ -15,57 +15,58 @@
       </div>
       <div  v-if="item.sender">
         <!--<span class="button" @click="downloadPdf(item.file, item.uuid)">查看</span>-->
-        <span class="button" @click="modal(true, item, 320)">查看</span>
+        <span class="button" @click="modalShow(true, item, 300)">查看</span>
       </div>
     </div>
-    <!--弹框详情-->
-    <div class="modal" @click="modal(false, null, 0)" :class="{showModal: isShowModal}"></div>
-    <div class="con" :style="{
-        'height': (height + 'px;')}">
-      <div class="conBlock">
-        <div class="line">
-          <span class="explain">生产批号</span>
-          <span class="details">{{checkDetails.batch || '--'}}</span>
-        </div>
-        <div class="line">
-          <span class="explain">报告编号</span>
-          <span class="details">{{checkDetails.code || '--'}}</span>
-        </div>
-        <block v-if="isShow">
-          <div class="line">
-            <span class="explain">供应企业</span>
-            <span class="details">{{checkDetails.senderName || '--'}}</span>
-          </div>
-        </block>
-        <div class="line">
-          <span class="explain">报告日期</span>
-          <span class="details">{{checkDetails.report_date || '--'}}</span>
-        </div>
-        <div class="line">
-          <span class="explain">生产日期</span>
-          <span class="details">{{checkDetails.product_date || '--'}}</span>
-        </div>
-        <div class="line">
-          <span class="explain">有效期至</span>
-          <span class="details">{{checkDetails.validity || '--'}}</span>
-        </div>
-        <span class="close" @click="modal(false, null, 0)">&times;</span>
-        <span @click="downloadPdf(checkDetails.file, checkDetails.uuid)" class="btn">查看PDF文件</span>
+    <!--弹框组件详情-->
+    <public-check-details  :checkDetails="checkDetails" :checkDetailsUuid="checkDetailsUuid" :checkDetailsUrl="checkDetailsUrl" :isShowCheck="isShowCheck" :height="height" @modalShow="modalShow">
+      <div class="line">
+        <span class="explain">生产批号</span>
+        <span class="details">{{checkDetails.batch || '--'}}</span>
       </div>
-    </div>
+      <div class="line">
+        <span class="explain">报告编号</span>
+        <span class="details">{{checkDetails.code || '--'}}</span>
+      </div>
+      <block v-if="checkDetails.isShow">
+        <div class="line">
+          <span class="explain">供应企业</span>
+          <span class="details">{{checkDetails.senderName || '--'}}</span>
+        </div>
+      </block>
+      <div class="line">
+        <span class="explain">报告日期</span>
+        <span class="details">{{checkDetails.report_date || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产日期</span>
+        <span class="details">{{checkDetails.product_date || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">有效期至</span>
+        <span class="details">{{checkDetails.validity || '--'}}</span>
+      </div>
+    </public-check-details>
   </div>
 </template>
 <script>
   import {throttle} from '../utils/index.js'
   import config from '../config.js'
+  import PublicCheckDetails from '@/components/public_check_details'
 
   export default {
     props: ['message', 'lists', 'router', 'isUpload'],
+    components: {
+      PublicCheckDetails
+    },
     data () {
       return {
         locked: true,
         downloaded: {},
         isShowModal: false, // 弹窗显示状态
+        isShowCheck: false,
+        checkDetailsUrl: null,
+        checkDetailsUuid: null,
         height: 0,
         checkDetails: {},
         isShow: true
@@ -76,15 +77,26 @@
       this.height = 0
       this.checkDetails = {}
     },
+    onUnload: function () { // 如果页面被卸载时被执行
+      this.checkDetails = {}
+      this.isShowModal = false
+      this.isShowCheck = false
+      this.checkDetailsUrl = null
+      this.checkDetailsUuid = null
+      this.height = 0
+    },
     methods: {
-      modal (flag, details, height) {
-        this.isShowModal = flag
+      modalShow (flag, details, height) { // 查看详情隐藏
+        this.isShowCheck = flag
         this.height = height
         if (this.isShow && this.height !== 0) {
-          this.height = 350
+          this.height = 330
         }
         if (details) {
           this.checkDetails = details
+          this.checkDetails.isShow = this.isShow
+          this.checkDetailsUrl = details.file
+          this.checkDetailsUuid = details.uuid
           this.checkDetails.senderName = details.sender.name
         }
       },
@@ -254,87 +266,6 @@
         border-radius: 8rpx;
         box-shadow:0px 7px 16px 0px rgba(121,197,255,0.5);
         margin-left: 15*$unit;
-      }
-    }
-    /* 弹框详情*/
-    .modal{
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      background: #000;
-      bottom: 0;
-      opacity: 0;
-      display: none;
-      z-index:-1;
-      /*transition: opacity 1000ms;*/
-    }
-    .showModal{
-      opacity: 0.4;
-      z-index:1001;
-      display: block;
-    }
-    .con{
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 0;
-      overflow: hidden;
-      transition: height 500ms;
-      background: #fff;
-      z-index:1002;
-      border-radius: 6*$unit 6*$unit 0 0;
-    }
-    .conBlock{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding-bottom: 25*$unit;
-      .close{
-        position: absolute;
-        top: 12*$unit;
-        right: 17*$unit;
-        color: #3E3A39FF;
-        font-size: 20px;
-        width: 30*$unit;
-        text-align: right;
-      }
-      .btn{
-        width:134*$unit;
-        height:40*$unit;
-        background:rgba(30,158,255,1);
-        border-radius:2px;
-        font-size: 15px;
-        line-height: 40*$unit;
-        text-align: center;
-        color: #FFFFFFFF;
-        margin-top: 40*$unit;
-        border-radius: 4*$unit;
-      }
-      .line{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 14*$unit;
-        width: 100%;
-        &:first-child{
-          margin-top: 50*$unit;
-        }
-        .explain{
-          font-size: 12px;
-          color: #A5A5A5FF;
-          margin-left: 24rpx;
-          width: 140*$unit;
-        }
-        .details{
-          color: #3E3A39FF;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          margin-right: 24rpx;
-        }
       }
     }
   }

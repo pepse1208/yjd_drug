@@ -1,5 +1,5 @@
 <template>
-  <div   class="check_details">
+  <div @touchmove.stop="stopPageScroll"  class="check_details">
     <progress :percent="percent" stroke-width="4" backgroundColor="#fff"/>
     <div class="modal" @click="$emit('modalShow', false)" :class="{showModal: isShowModal}"></div>
     <div class="con" :style="{'height': ((height || 0) + 'px;')}">
@@ -50,6 +50,8 @@
       this.isShowModal = false
     },
     methods: {
+      stopPageScroll () {
+      },
       modal () {
         this.isShowCheck = false
       },
@@ -94,7 +96,7 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   .check_details{
     $unit: 2rpx;
     progress {
@@ -106,7 +108,7 @@
       z-index: 2000;
     }
     .modal{
-      position: absolute;
+      position: fixed;
       left: 0;
       right: 0;
       top: 0;
@@ -123,7 +125,7 @@
       display: block;
     }
     .con{
-      position: absolute;
+      position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
@@ -140,6 +142,8 @@
       justify-content: center;
       align-items: center;
       padding-bottom: 25*$unit;
+      padding-right: 24rpx;
+      padding-left: 24rpx;
       .close{
         position: absolute;
         top: 12*$unit;
@@ -173,11 +177,14 @@
         .explain{
           font-size: 12px;
           color: #A5A5A5FF;
-          margin-left: 24rpx;
         }
         .details{
           color: #3E3A39FF;
-          margin-right: 24rpx;
+          width: 280*$unit;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          text-align: right;
         }
       }
     }
