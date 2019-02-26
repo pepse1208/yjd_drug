@@ -73,7 +73,6 @@ export default {
       }
     },
     recvData (data) {
-      console.log(data)
       if (data.count === 0) {
         this.more = false
       } else {

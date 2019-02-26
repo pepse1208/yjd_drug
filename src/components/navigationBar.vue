@@ -15,9 +15,7 @@
           'padding-top': (0 + 'px;'),
           'margin-top': '24px',
           'height': (30 + 'px'),
-          'line-height': (24 + 'px;')}">
-        <div class="icon-fanhui" @click="navigateBack"></div>|<div class="back-home" v-if="showHomeButton" @click="navigateBackHome"></div>
-      </div>
+          'line-height': (24 + 'px;')}"><div class="icon-fanhui" @click="navigateBack"></div>|<div class="back-home" v-if="showHomeButton" @click="navigateBackHome"></div></div>
       <div class="title">{{title !== 'none' ? title : ''}}</div>
     </div>
     <div class="navigation-bar-holder" v-if="fixed && show"

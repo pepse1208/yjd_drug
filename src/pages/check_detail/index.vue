@@ -186,6 +186,7 @@
   // import {mapState, mapMutations} from 'vuex'
   // 引入store
   import $store from '../../store/index'
+  import {mapActions} from 'vuex'
   export default {
     data () {
       return {
@@ -286,7 +287,6 @@
         })
       },
       downloadPdf: throttle(function (url, id) { // 查看pdf
-        // console.log(config.host + url)
         var self = this
         if (self.downloaded[id]) {
           self.openPdf(self.downloaded[id])
@@ -510,7 +510,10 @@
           return
         }
         self.saveData()
-      }
+      },
+      ...mapActions({
+        initCheckDetailData: 'initCheckDetailData'
+      })
     },
     async beforeMount () {
       this.exchangeId = this.$root.$mp.query.id
@@ -525,8 +528,10 @@
         this.create_time = data.create_time.slice(0, 10)
         this.druglistId = data.package[0].drug.uuid
         this.colorClass = status === '待查收' ? 'orange' : (status === '已接收' ? 'green' : (status === '已退回' ? 'red' : 'gray'))
-        $store.commit('initData', {data: data.package, status})
-        this.druglist = $store.state.initData
+        // $store.commit('initCheckDetailData', {data: data.package, status})
+        // $store.dispatch('initCheckDetailData', {data: data.package, status})
+        this.initCheckDetailData({data: data.package, status})
+        this.druglist = $store.state.checkDetailData
       }
     }
   }

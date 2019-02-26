@@ -13,8 +13,8 @@ export default {
    * 把store挂载到全局
    * Vue.prototype.$store = store;
    */
-  initData (state, {data, status}) {
-    state.initData.length = 0
+  initCheckDetailData (state, {data, status}) {
+    state.checkDetailData.length = 0
     let len = data.length // 药品数量
     for (let i = 0; i < len; i++) {
       var item = data[i]
@@ -43,7 +43,7 @@ export default {
           obj.num = 0
         }
       }
-      state.initData.push(obj)
+      state.checkDetailData.push(obj)
     }
   },
   /**
@@ -57,13 +57,13 @@ export default {
    */
   initSideBar (state, data) {
     state.sidebar.length = 0
-    console.log(data)
     let lists = []
     if (data.includes('药检单查询')) {
       lists.push(
         {
           title: '药检单查询',
-          list: [{title: '药检单查询', url: '/pages/drugsearch/main', position: '-5px -2px'}]
+          // list: [{title: '药检单查询', url: '/pages/drugsearch/main', position: '-5px -2px'}]
+          list: [{title: '药检单查询', url: '/pages/drugsearch/main', position: '0 0'}]
         }
       )
     }
@@ -71,12 +71,14 @@ export default {
       let list = []
       if (data.includes('我的药检单')) {
         list.push(
-          {title: '我的药检单', url: '/pages/drugmanage/main?is_upload=true', position: '-5px -47px'}
+          {title: '我的药检单', url: '/pages/drugmanage/main?is_upload=true', position: '0 -27px'}
+          // {title: '我的药检单', url: '/pages/drugmanage/main?is_upload=true', position: '-5px -47px'}
         )
       }
       if (data.includes('药检单云文件柜')) {
         list.push(
-          {title: '药检单云文件柜', url: '/pages/drugmanage/main?is_upload=false', position: '-4px -90px'}
+          {title: '药检单云文件柜', url: '/pages/drugmanage/main?is_upload=false', position: '0 -54px'}
+          // {title: '药检单云文件柜', url: '/pages/drugmanage/main?is_upload=false', position: '-4px -90px'}
         )
       }
       lists.push(
@@ -90,17 +92,20 @@ export default {
       let list = []
       if (data.includes('申请发送')) {
         list.push(
-          {title: '申请发送', url: '/pages/send_step1/main', position: '-5px -135px'}
+          {title: '申请发送', url: '/pages/send_step1/main', position: '0 -84px'}
+          // {title: '申请发送', url: '/pages/send_step1/main', position: '-5px -135px'}
         )
       }
       if (data.includes('发送申请列表')) {
         list.push(
-          {title: '待签章列表', url: '/pages/send_apply_list/main', position: '-5px -179px'}
+          {title: '待签章列表', url: '/pages/send_apply_list/main', position: '0 -112px'}
+          // {title: '待签章列表', url: '/pages/send_apply_list/main', position: '-5px -179px'}
         )
       }
       if (data.includes('发送记录')) {
         list.push(
-          {title: '发送记录', url: '/pages/send_record/main', position: '-5px -224px'}
+          {title: '发送记录', url: '/pages/send_record/main', position: '0 -141px'}
+          // {title: '发送记录', url: '/pages/send_record/main', position: '-5px -224px'}
         )
       }
       lists.push(
@@ -114,7 +119,8 @@ export default {
       lists.push(
         {
           title: '查收药检单',
-          list: [{title: '查收药检单', url: '/pages/recv/main', position: '-5px -269px'}]
+          list: [{title: '查收药检单', url: '/pages/recv/main', position: '0 -170px'}]
+          // list: [{title: '查收药检单', url: '/pages/recv/main', position: '-5px -269px'}]
         }
       )
     }
@@ -122,12 +128,14 @@ export default {
       let list = []
       if (data.includes('我索取的药检单')) {
         list.push(
-          {title: '我的索取记录', url: '/pages/askfor/main?isMy=true', position: '-5px -314px'}
+          {title: '我的索取记录', url: '/pages/askfor/main?isMy=true', position: '0 -198px'}
+          // {title: '我的索取记录', url: '/pages/askfor/main?isMy=true', position: '-5px -314px'}
         )
       }
       if (data.includes('客户索取我的药检单')) {
         list.push(
-          {title: '客户索取记录', url: '/pages/askfor/main?isMy=false', position: '-5px -359px'}
+          {title: '客户索取记录', url: '/pages/askfor/main?isMy=false', position: '0 -227px'}
+          // {title: '客户索取记录', url: '/pages/askfor/main?isMy=false', position: '-5px -359px'}
         )
       }
       lists.push(
@@ -141,7 +149,8 @@ export default {
       lists.push(
         {
           title: '企业通讯录',
-          list: [{title: '企业通讯录', url: '/pages/connect/main', position: '-5px -404px'}]
+          list: [{title: '企业通讯录', url: '/pages/connect/main', position: '0 -256px'}]
+          // list: [{title: '企业通讯录', url: '/pages/connect/main', position: '-5px -404px'}]
         }
       )
     }
@@ -151,5 +160,80 @@ export default {
     Object.keys(config).map((item, key) => {
       state[item] = config[item]
     })
+  },
+  initSendStepTwoListData (state, data) {
+    let len = data.length
+    for (let i = 0; i < len; i++) {
+      let uuid = data[i].uuid
+      let subObj = JSON.parse(JSON.stringify(data[i]))
+      let obj = {
+        drug: subObj,
+        count: 0,
+        chooseNum: 0,
+        files: {}
+      }
+      if (state.sendStepTwoListData[uuid] !== undefined) {
+        state.searchObj[uuid] = JSON.parse(JSON.stringify(state.sendStepTwoListData[uuid]))
+      } else {
+        state.sendStepTwoListData[uuid] = JSON.parse(JSON.stringify(obj))
+        state.searchObj[uuid] = JSON.parse(JSON.stringify(obj))
+      }
+    }
+  },
+  initSendStepTwoDrugData (state, {data}) {
+    let uuid = state.sendStepTwoDrugId
+    let fileObj = state.sendStepTwoListData[uuid].files
+    state.sendStepTwoDrugData = {}
+    if (Object.keys(fileObj).length > 0) {
+      state.sendStepTwoDrugData = JSON.parse(JSON.stringify(fileObj))
+      return
+    }
+    let len = data.length
+    for (let i = 0; i < len; i++) {
+      let obj = JSON.parse(JSON.stringify(data[i]))
+      obj.is_select = data[i].is_select || false
+      state.sendStepTwoDrugData[data[i].uuid] = JSON.parse(JSON.stringify(obj))
+    }
+  },
+  selectDrug (state, {uuid, isSelect}) {
+    let obj = state.sendStepTwoDrugData
+    let selectObj = state.selectObj
+    let subObj = obj[uuid]
+    let drugId = state.sendStepTwoDrugId
+    if (!selectObj[drugId]) {
+      selectObj[drugId] = {}
+    }
+    if (isSelect) {
+      subObj.is_select = false
+      delete selectObj[drugId][uuid]
+    } else {
+      subObj.is_select = true
+      selectObj[drugId][uuid] = obj[uuid]
+      selectObj[drugId][uuid].amount = ''
+    }
+  },
+  submit (state) {
+    console.log(1)
+    let drugId = state.sendStepTwoDrugId
+    console.log(2)
+    console.log(drugId)
+    console.log(state.sendStepTwoListData)
+    state.sendStepTwoListData[drugId].count = Object.keys(state.selectObj[drugId]).length
+    console.log(3)
+    console.log(state.sendStepTwoListData)
+    state.sendStepTwoListData[drugId].files = JSON.parse(JSON.stringify(state.sendStepTwoDrugData))
+    console.log(4)
+    console.log(state.sendStepTwoListData)
+    console.log(state.searchObj)
+    state.searchObj[drugId].count = Object.keys(state.selectObj[drugId]).length
+    console.log(5)
+    console.log(state.searchObj)
+  },
+  initSelectedDrug (state) {
+    let selectObj = state.selectObj
+    let selectedList = state.selectedList
+    for (let i in selectObj) {
+      Object.assign(selectedList, selectObj[i])
+    }
   }
 }
