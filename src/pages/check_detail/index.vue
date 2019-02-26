@@ -41,7 +41,9 @@
                   </div>
                   <div class="buttons">
                     <div class="see_btns btn_com" v-if="tmp.buttonState.see_btns">
-                      <button class="see" @click="downloadPdf(tmp.url, tmp.uuid)">查看</button>
+                      <!--<button class="see" @click="downloadPdf(tmp.url, tmp.uuid)">查看</button>-->
+                      <!--<button class="see" @click="modal(true, item, 520, tmp.url, _index)">查看</button>-->
+                      <button class="see" @click="modalShow(true, item, 510, tmp.url, _index)">查看</button>
                       <!-- <button class="more_operate" v-if="tmp.status !== '签收'" @click="status === '待查收' ? showOperateBtns(index, tmp.uuid, _index, tmp.status) : showReason(index, _index)">{{status === '待查收' ? '···' : '原因'}}</button> -->
                       <button v-if="tmp.status !== '签收' && status !== '待查收'" @click="showReason(index, _index)">原因</button>
                       <button class="more_operate" v-if="tmp.status !== '签收' && status === '待查收'" @click="showOperateBtns(index, tmp.uuid, _index, tmp.status)"></button>
@@ -70,6 +72,106 @@
       </div>
       <!-- <alert-input v-if="isShow" :tips="tips" :placeholder='placeholder'></alert-input> -->
       <alert-input :tips="tips" :placeholder='placeholder' :hidden="isShow" :reason="reason" @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert-input>
+    <!--弹框详情-->
+    <!--<div class="modal" @click="modal(false, null, 0)" :class="{showModal: isShowModal}"></div>
+    <div class="con" :style="{
+        'height': (height + 'px;')}">
+      <div class="conBlock">
+        <div class="line">
+          <span class="explain">品种名称</span>
+          <span class="details">{{checkDetailsDrug.name || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">生产批号</span>
+          <span class="details">{{checkDetailsFile.batch || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">包装规格</span>
+          <span class="details">{{checkDetailsDrug.package || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">剂型</span>
+          <span class="details">{{checkDetailsDrug.all_dosage || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">材质</span>
+          <span class="details">{{checkDetailsDrug.drug_material || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">生产企业</span>
+          <span class="details">{{checkDetailsDrug.production_enterprise || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">批准文号</span>
+          <span class="details">{{checkDetailsDrug.reg_number || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">发货数量</span>
+          <span class="details">{{checkDetailsFile.amount || '0'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">报告日期</span>
+          <span class="details">{{checkDetailsFile.report_date || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">生产日期</span>
+          <span class="details">{{checkDetailsFile.product_date || '&#45;&#45;'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">有效期至</span>
+          <span class="details">{{checkDetailsFile.validity || '&#45;&#45;'}}</span>
+        </div>
+        <span class="close" @click="modal(false, null, 0)">&times;</span>
+        <span @click="downloadPdf(checkDetails.Url, checkDetails.uuid)" class="btn">查看PDF文件</span>
+      </div>
+    </div>-->
+    <!--弹框详情组件-->
+    <public-check-details :checkDetailsDrug="checkDetailsDrug" :checkDetailsFile="checkDetailsFile" :checkDetails="checkDetails" :checkDetailsUuid="checkDetailsUuid" :checkDetailsUrl="checkDetailsUrl" :isShowCheck="isShowCheck" :height="height" @modalShow="modalShow">
+      <div class="line">
+        <span class="explain">品种名称</span>
+        <span class="details">{{checkDetailsDrug.name || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产批号</span>
+        <span class="details">{{checkDetailsFile.batch || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">包装规格</span>
+        <span class="details">{{checkDetailsDrug.package || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">剂型</span>
+        <span class="details">{{checkDetailsDrug.all_dosage || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">材质</span>
+        <span class="details">{{checkDetailsDrug.drug_material || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产企业</span>
+        <span class="details">{{checkDetailsDrug.production_enterprise || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">批准文号</span>
+        <span class="details">{{checkDetailsDrug.reg_number || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">发货数量</span>
+        <span class="details">{{checkDetailsFile.amount || '0'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">报告日期</span>
+        <span class="details">{{checkDetailsFile.report_date || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产日期</span>
+        <span class="details">{{checkDetailsFile.product_date || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">有效期至</span>
+        <span class="details">{{checkDetailsFile.validity || '--'}}</span>
+      </div>
+    </public-check-details>
   </div>
 </template>
 <script>
@@ -77,6 +179,7 @@
   import AlertInput from '@/components/alert'
   import Statements from '@/components/statements'
   import NavigationBar from '@/components/navigationBar'
+  import PublicCheckDetails from '@/components/public_check_details'
   import {get, post} from '../../utils.js'
   import {throttle} from '../../utils/index.js'
   import config from '../../config.js'
@@ -98,6 +201,14 @@
         placeholder: '', // 弹出框 placeholder
         isShow: false, // 弹出框 是否弹出
         downloaded: {},
+        isShowModal: false, // 弹窗显示状态
+        isShowCheck: false,
+        height: 0,
+        checkDetails: {},
+        checkDetailsUrl: null,
+        checkDetailsUuid: null,
+        checkDetailsDrug: {},
+        checkDetailsFile: {},
         drugIndex: '',
         subIndex: '',
         type: '',
@@ -119,6 +230,7 @@
     components: {
       BaseTop,
       AlertInput,
+      PublicCheckDetails,
       NavigationBar,
       Statements
     },
@@ -128,8 +240,40 @@
       this.status = ''
       this.create_time = ''
       this.sender = ''
+      this.isShowModal = false
+      this.isShowCheck = false
+      this.height = 0
+      this.checkDetails = {}
+      this.checkDetailsDrug = {}
+      this.checkDetailsFile = {}
+      this.checkDetailsUrl = null
+      this.checkDetailsUuid = null
     },
     methods: {
+      modalShow (flag, details, height, url, index) { // 查看详情隐藏
+        this.isShowCheck = flag
+        this.height = height
+        if (details) {
+          this.checkDetails = details
+          this.checkDetails.Url = url
+          this.checkDetailsDrug = details.drug
+          this.checkDetailsFile = details.files[index]
+          this.checkDetailsUrl = url
+          this.checkDetailsUuid = details.uuid
+        }
+      },
+      modal (flag, details, height, url, index) {
+        this.isShowModal = flag
+        this.height = height
+        console.log(details)
+        console.log(JSON.stringify(details))
+        if (details) {
+          this.checkDetails = details
+          this.checkDetails.Url = url
+          this.checkDetailsDrug = details.drug
+          this.checkDetailsFile = details.files[index]
+        }
+      },
       clickDocument (id) {
         this.druglistId = id
       },
@@ -556,5 +700,90 @@
     height: 34rpx;
     background: url(../../images/close_icon.png) no-repeat;
     background-size: 20rpx 34rpx;
+  }
+  .shadow{
+    $unit: 2rpx;
+    /* 弹框详情*/
+
+    .modal{
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      background: #000;
+      bottom: 0;
+      opacity: 0;
+      display: none;
+      z-index:-1;
+      /*transition: opacity 1000ms;*/
+    }
+    .showModal{
+      opacity: 0.4;
+      z-index:1001;
+      display: block;
+    }
+    .con{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      overflow: hidden;
+      transition: height 500ms;
+      background: #fff;
+      z-index:1002;
+      border-radius: 6*$unit 6*$unit 0 0;
+    }
+    .conBlock{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 25*$unit;
+      .close{
+        position: absolute;
+        top: 12*$unit;
+        right: 17*$unit;
+        color: #3E3A39FF;
+        font-size: 20px;
+        width: 30*$unit;
+        text-align: right;
+      }
+      .btn{
+        width:134*$unit;
+        height:40*$unit;
+        background:rgba(30,158,255,1);
+        border-radius:2px;
+        font-size: 15px;
+        line-height: 40*$unit;
+        text-align: center;
+        color: #FFFFFFFF;
+        margin-top: 40*$unit;
+        border-radius: 4*$unit;
+      }
+      .line{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14*$unit;
+        width: 100%;
+        &:first-child{
+          margin-top: 50*$unit;
+        }
+        .explain{
+          font-size: 12px;
+          color: #A5A5A5FF;
+          margin-left: 24rpx;
+          width: 140*$unit;
+        }
+        .details{
+          color: #3E3A39FF;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-right: 24rpx;
+        }
+      }
+    }
   }
 </style>

@@ -9,12 +9,12 @@
     <searchlist :details="detailsFun(item)" ></searchlist>
     <div class="btnList">
       <block v-if="selectNavIndex===0">
-        <span class="button" @click="tipDetail(item)">详情</span>
+        <span class="button" @click="modal(true, item, 400)">查看</span>
         <span v-if="item.other.status==='已拒绝'" class="button ask" @click="toAsk(item)"></span>
-        <span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>
+        <!--<span v-if="item.other.status==='已同意'" class="button" @click="downloadPdf(item.other.url, item.uuid)">查看</span>-->
       </block>
       <block v-if="selectNavIndex===1">
-        <span :class="{show: !openArr[index], hide: openArr[index]}" class="button" @click="tipDetail(item)">详情</span>
+        <span :class="{show: !openArr[index], hide: openArr[index]}" class="button" @click="modal(true, item, 468)">查看</span>
         <block :openKey="index" v-if="openArr[index] && item.other.status==='申请中'">
           <span class="button" @click="consent(item)">同意</span>
           <span class="button" @click="refuse(item)">拒绝</span>
@@ -28,6 +28,73 @@
   </p>
   <vue-tab-bar v-if="isMy" @fetchIndex="clickIndexNav"  :selectNavIndex="selectNavIndex" :navList="navList" :needButton="needButton"  :type="type"></vue-tab-bar>
   <alert :isPassword="true" :tips="tips" :placeholder='placeholder' :hidden="isShow"  @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert>
+  <!--弹框详情-->
+  <div class="modal" @click="modal(false, null, 0)" :class="{showModal: isShowModal}"></div>
+  <div class="con" :style="{
+        'height': (height + 'px;')}">
+    <div class="conBlock">
+      <div class="line">
+        <span class="explain">品种名称</span>
+        <span class="details">{{checkDetailsDrug.name || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产批号</span>
+        <span class="details">{{checkDetails.batch || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">包装规格</span>
+        <span class="details">{{checkDetailsDrug.package || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">剂型</span>
+        <span class="details">{{checkDetailsDrug.all_dosage || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">材质</span>
+        <span class="details">{{checkDetailsDrug.drug_material || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产企业</span>
+        <span class="details">{{checkDetailsDrug.production_enterprise || '--'}}</span>
+      </div>
+      <block v-if="checkDetails.user_name !== undefined">
+        <div class="line">
+          <span class="explain">索取企业</span>
+          <span class="details">{{checkDetails.sender || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">联系人</span>
+          <span class="details">{{checkDetails.user_name || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">联系电话</span>
+          <span class="details">{{checkDetails.phone || '--'}}</span>
+        </div>
+      </block>
+      <block v-else>
+        <div class="line">
+          <span class="explain">供应企业</span>
+          <span class="details">{{checkDetails.receiver || '--'}}</span>
+        </div>
+      </block>
+      <div class="line">
+        <span class="explain">报告日期</span>
+        <span class="details">{{checkDetails.report_date || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">生产日期</span>
+        <span class="details">{{checkDetails.product_date || '--'}}</span>
+      </div>
+      <div class="line">
+        <span class="explain">有效期至</span>
+        <span class="details">{{checkDetails.validity || '--'}}</span>
+      </div>
+      <span class="close" @click="modal(false, null, 0)">&times;</span>
+      <block v-if="selectNavIndex===0">
+        <span v-if="checkDetailsOther.status==='已同意'" @click="downloadPdf(checkDetailsOther.url, checkDetails.uuid)" class="btn">查看PDF文件</span>
+      </block>
+    </div>
+  </div>
 </div>
 </template>
 <script>
@@ -69,6 +136,11 @@
         downloaded: {},
         navList: [],
         dataLists: [],
+        isShowModal: false, // 弹窗显示状态
+        checkDetails: {},
+        checkDetailsDrug: {},
+        checkDetailsOther: {},
+        height: 0,
         myStatus: {
           '已拒绝': 'red_bg',
           '已处理': 'red_bg',
@@ -101,6 +173,11 @@
     },
     onLoad (options) {
       // this.tip = options.tip
+      this.checkDetails = {}
+      this.checkDetailsDrug = {}
+      this.checkDetailsOther = {}
+      this.isShowModal = false
+      this.height = 0
       this.type = wx.getStorageSync('type')
       let my = this.type !== '生产企业'
       let client = this.type === '生产企业' || this.type === '商业公司'
@@ -197,6 +274,20 @@
       }
     },
     methods: {
+      modal (flag, details, height) {
+        this.isShowModal = flag
+        this.height = height
+        if (details) {
+          this.checkDetails = details
+          this.checkDetailsDrug = details.drug
+          this.checkDetailsOther = details.other
+          if (this.selectNavIndex === 0) {
+            if (this.checkDetailsOther.status === '已同意') {
+              this.height = 490
+            }
+          }
+        }
+      },
       cancelShow (msg) { // 签章密码取消
         this.isShow = msg
         this.reason = ''
@@ -309,6 +400,7 @@
         })
       },
       downloadPdf: throttle(function (url, id) { // 查看pdf
+        console.log(url)
         var self = this
         if (self.downloaded[id]) {
           self.openPdf(self.downloaded[id])
@@ -521,6 +613,87 @@
     span.back {
       background: #1E9EFF url(../../images/cancel.png) no-repeat center center;
       background-size: 30rpx 30rpx;
+    }
+    /* 弹框详情*/
+    .modal{
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      background: #000;
+      bottom: 0;
+      opacity: 0;
+      display: none;
+      z-index:-1;
+      /*transition: opacity 1000ms;*/
+    }
+    .showModal{
+      opacity: 0.4;
+      z-index:1001;
+      display: block;
+    }
+    .con{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      overflow: hidden;
+      transition: height 500ms;
+      background: #fff;
+      z-index:1002;
+      border-radius: 6*$unit 6*$unit 0 0;
+    }
+    .conBlock{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 25*$unit;
+      .close{
+        position: absolute;
+        top: 12*$unit;
+        right: 17*$unit;
+        color: #3E3A39FF;
+        font-size: 20px;
+        width: 30*$unit;
+        text-align: right;
+      }
+      .btn{
+        width:134*$unit;
+        height:40*$unit;
+        background:rgba(30,158,255,1);
+        border-radius:2px;
+        font-size: 15px;
+        line-height: 40*$unit;
+        text-align: center;
+        color: #FFFFFFFF;
+        margin-top: 40*$unit;
+        border-radius: 4*$unit;
+      }
+      .line{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14*$unit;
+        width: 100%;
+        &:first-child{
+          margin-top: 50*$unit;
+        }
+        .explain{
+          font-size: 12px;
+          color: #A5A5A5FF;
+          margin-left: 24rpx;
+          width: 140*$unit;
+        }
+        .details{
+          color: #3E3A39FF;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-right: 24rpx;
+        }
+      }
     }
   }
 </style>

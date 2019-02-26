@@ -13,10 +13,13 @@
           <search-list :details="initDetails(item)"></search-list>
           <div class="btns">
             <div class="flex flexrow" v-if="item.btnStatus">
-              <button class="btn_com" @click="tipDetail(item)">详情</button>
-              <button class="btn_com" v-if="item.other.status === '已获取' && item.other.status !== '索取中'" @click="downloadPdf(item.other.url, item.uuid)">查看</button>
+              <button class="btn_com" @click="modal(true, item, 400)">详情</button>
+              <!--<button class="btn_com" v-if="item.other.status === '已获取' && item.other.status !== '索取中'" @click="downloadPdf(item.other.url, item.uuid)">查看</button>-->
               <button class="btn_com" @click="askfor(index, item.uuid)" v-if="item.other.status === '未共享' && item.other.status !== '索取中'">索取</button>
-              <button class="btn_com more_operate" @click="showOperateBtns(index)" v-if="item.other.status === '已共享' && item.other.status !== '索取中'"></button>
+              <!--<button class="btn_com more_operate" @click="showOperateBtns(index)" v-if="item.other.status === '已共享' && item.other.status !== '索取中'"></button>-->
+              <block v-if="item.other.status === '已共享' && item.other.status !== '索取中'">
+                <button class="btn_com" @click="gain(index, item.uuid)">获取</button>
+              </block>
             </div>
             <div class="flex flexrow operation" v-if="!item.btnStatus">
               <button class="btn_com" @click="downloadPdf(item.other.url, item.uuid)">查看</button>
@@ -29,6 +32,55 @@
       <p class="text-footer" v-if="!more">
         暂无更多数据
       </p>
+    </div>
+    <!--弹框详情-->
+    <div class="modal" @click="modal(false, null, 0)" :class="{showModal: isShowModal}"></div>
+    <div class="con" :style="{
+        'height': (height + 'px;')}">
+      <div class="conBlock">
+        <div class="line">
+          <span class="explain">品种名称</span>
+          <span class="details">{{checkDetailsDrug.name || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">生产批号</span>
+          <span class="details">{{checkDetails.batch || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">包装规格</span>
+          <span class="details">{{checkDetailsDrug.package || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">剂型</span>
+          <span class="details">{{checkDetailsDrug.all_dosage || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">材质</span>
+          <span class="details">{{checkDetailsDrug.drug_material || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">生产企业</span>
+          <span class="details">{{checkDetailsDrug.production_enterprise || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">供应企业</span>
+          <span class="details">{{checkDetails.enterprise_name || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">报告日期</span>
+          <span class="details">{{checkDetails.report_date || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">生产日期</span>
+          <span class="details">{{checkDetails.product_date || '--'}}</span>
+        </div>
+        <div class="line">
+          <span class="explain">有效期至</span>
+          <span class="details">{{checkDetails.validity || '--'}}</span>
+        </div>
+        <span class="close" @click="modal(false, null, 0)">&times;</span>
+        <span v-if="(checkDetailsOther.status === '已获取' || checkDetailsOther.status === '已共享') && checkDetailsOther.status !== '索取中'" @click="downloadPdf(checkDetailsOther.url, checkDetails.uuid)" class="btn">查看PDF文件</span>
+      </div>
     </div>
   </div>
 </template>
@@ -59,6 +111,11 @@
         reg_number: '',
         next: '',
         butsStatus: [],
+        isShowModal: false, // 弹窗显示状态
+        height: 0,
+        checkDetails: {},
+        checkDetailsDrug: {},
+        checkDetailsOther: {},
         downloaded: {},
         statements: [
           {
@@ -79,6 +136,18 @@
       }
     },
     methods: {
+      modal (flag, details, height) {
+        this.isShowModal = flag
+        this.height = height
+        if (details) {
+          this.checkDetails = details
+          this.checkDetailsDrug = details.drug
+          this.checkDetailsOther = details.other
+        }
+        if ((this.checkDetailsOther.status === '已获取' || this.checkDetailsOther.status === '已共享') && this.checkDetailsOther.status !== '索取中' && this.height !== 0) {
+          this.height = 480
+        }
+      },
       childSearch (res) {
         this.name = res.name
         this.batch = res.batch
@@ -323,12 +392,18 @@
       this.reg_number = ''
       this.next = ''
       this.percent = 0
+      this.isShowModal = false
+      this.height = 0
+      this.checkDetails = {}
+      this.checkDetailsDrug = {}
+      this.checkDetailsOther = {}
     }
   }
 </script>
 <style lang="scss" scope>
   @import url(../../common/base.scss);
   .drugSearch{
+    $unit: 2rpx;
     .loading{
       font-size: 14px;
       padding: 20px 0;
@@ -336,6 +411,88 @@
       button{
         border: none;
         background: #fff;
+      }
+    }
+    /* 弹框详情*/
+
+    .modal{
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      background: #000;
+      bottom: 0;
+      opacity: 0;
+      display: none;
+      z-index:-1;
+      /*transition: opacity 1000ms;*/
+    }
+    .showModal{
+      opacity: 0.4;
+      z-index:1001;
+      display: block;
+    }
+    .con{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      overflow: hidden;
+      transition: height 500ms;
+      background: #fff;
+      z-index:1002;
+      border-radius: 6*$unit 6*$unit 0 0;
+    }
+    .conBlock{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 25*$unit;
+      .close{
+        position: absolute;
+        top: 12*$unit;
+        right: 17*$unit;
+        color: #3E3A39FF;
+        font-size: 20px;
+        width: 30*$unit;
+        text-align: right;
+      }
+      .btn{
+        width:134*$unit;
+        height:40*$unit;
+        background:rgba(30,158,255,1);
+        border-radius:2px;
+        font-size: 15px;
+        line-height: 40*$unit;
+        text-align: center;
+        color: #FFFFFFFF;
+        margin-top: 40*$unit;
+        border-radius: 4*$unit;
+      }
+      .line{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14*$unit;
+        width: 100%;
+        &:first-child{
+          margin-top: 50*$unit;
+        }
+        .explain{
+          font-size: 12px;
+          color: #A5A5A5FF;
+          margin-left: 24rpx;
+          width: 140*$unit;
+        }
+        .details{
+          color: #3E3A39FF;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-right: 24rpx;
+        }
       }
     }
   }
