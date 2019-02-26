@@ -140,7 +140,7 @@ export default {
   text-align: center;
   font-size: 30rpx;
   background: url(../images/back-home.png) center no-repeat;
-  background-size: 28rpx 26rpx;
+  background-size: 34rpx 32rpx;
   /*padding-left: 18rpx;*/
   /*padding-right: 18rpx;*/
 }
@@ -149,7 +149,7 @@ export default {
   flex-grow: 1;
   height: 100%;
   background: url(../images/icon-fanhui.png) center no-repeat;
-  background-size: 16rpx 26rpx;
+  background-size: 18rpx 32rpx;
   /*padding-left: 20rpx;*/
   /*padding-right: 20rpx;*/
 }
