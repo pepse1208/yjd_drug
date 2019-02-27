@@ -1,6 +1,6 @@
 <template>
   <div class="step-list list-shadow">
-    <div class="item flex li-style" :class="{'flex flexrow': showBtns}" @click="!showBtns && (showCode ? stepOne(item.uuid, item.name) : showModal(item.drug.uuid, index))" v-for="(item, key, index) in lists" :key="key">
+    <div class="item flex li-style" :class="{'flex flexrow': showBtns}" @click="!showBtns && (showCode ? stepOne(item.uuid, item.name) : showModal(item.drug ? item.drug.uuid : ''))" v-for="(item, key) in lists" :key="key">
       <div class="details" :class="{'ellipsis': showBtns}">
         <div class="enterprise ellipsis">
           <span>{{item.drug ? item.drug.name : item.name}}</span>
@@ -75,11 +75,10 @@ export default {
         })
       }
     },
-    showModal (uuid, index) {
+    showModal (uuid) {
       $store.state.sendStepTwoDrugId = uuid
-      $store.state.sendStepTwoDrugIndex = index
       if (this.$parent.getDrugData) {
-        this.$parent.getDrugData({index})
+        this.$parent.getDrugData({})
       }
       this.$emit('controlModal', {showModalStatus: true, height: 300})
     },

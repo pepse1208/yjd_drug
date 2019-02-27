@@ -1,9 +1,9 @@
 <template>
   <div :class="showModalStatus ? '_toTop _show': '_toTop'">
-    <div class="_commodity_screen" @click="clickHide" v-if="showModalStatus"></div>
-    <div class="_commodity_attr_box" v-if="showModalStatus" :style="'height:'+height+'px;'">
+    <div class="_commodity_screen" @click="clickHide" v-if="showModalStatus"  @touchmove.stop="scrollLock()"></div>
+    <div class="_commodity_attr_box" v-if="showModalStatus" :style="'height:'+height+'px;'" @touchmove.stop="scrollLock()">
       <div class="cancel" @click="clickHide"></div>
-      <div class="list" v-if="show">
+      <scroll-view class="list" v-if="show" id="_commodity" @scrolltolower="getDrugData" scroll-y="true">
         <block v-for="(item, index) in lists" :key="index">
           <div class="li-style flex flexrow" @click="checkDrug({uuid: item.uuid, isSelect: item.is_select})">
             <div>
@@ -19,7 +19,8 @@
             <span class="select-icon" :class="{'selected': item.is_select}"></span>
           </div>
         </block>
-      </div>
+        <div id="bottomElem" style="height:1px;opacity:0;"></div>
+      </scroll-view>
       <div class="submit flex" @click="complete" v-if="show">
         <span>确&emsp;定</span>
       </div>
@@ -103,6 +104,11 @@ export default {
     checkDrug ({uuid, isSelect}) {
       this.selectDrug({uuid, isSelect})
       this.$forceUpdate()
+    },
+    scrollLock () {},
+    getDrugData () {
+      let nextUrl = this.$parent.drugNextUrl
+      this.$parent.getDrugData({nextUrl})
     },
     ...mapActions({
       selectDrug: 'selectDrug',
@@ -204,10 +210,10 @@ export default {
   height: 160rpx;
   justify-content: center;
   span {
-    width: 182rpx;
+    // width: 182rpx;
     height: 80rpx;
     line-height: 80rpx;
-    // padding: 0 48rpx;
+    padding: 0 48rpx;
     border-radius: 4rpx;
     background: #1e9eff;
     color: #fff;

@@ -120,3 +120,7 @@ button:after {
 .li-style:last-child {
   border-bottom: 0;
 }
+/* 遮罩后，滚动穿透，未解决 */
+.hidden {
+  overflow: hidden;
+}

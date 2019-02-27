@@ -213,21 +213,10 @@ export default {
     }
   },
   submit (state) {
-    console.log(1)
     let drugId = state.sendStepTwoDrugId
-    console.log(2)
-    console.log(drugId)
-    console.log(state.sendStepTwoListData)
     state.sendStepTwoListData[drugId].count = Object.keys(state.selectObj[drugId]).length
-    console.log(3)
-    console.log(state.sendStepTwoListData)
     state.sendStepTwoListData[drugId].files = JSON.parse(JSON.stringify(state.sendStepTwoDrugData))
-    console.log(4)
-    console.log(state.sendStepTwoListData)
-    console.log(state.searchObj)
     state.searchObj[drugId].count = Object.keys(state.selectObj[drugId]).length
-    console.log(5)
-    console.log(state.searchObj)
   },
   initSelectedDrug (state) {
     let selectObj = state.selectObj

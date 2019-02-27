@@ -152,6 +152,24 @@
         } else {
           // console.log('用户按了拒绝按钮')
         }
+      },
+      getClientHeight () {
+        // 获取系统信息
+        wx.getSystemInfo({
+          success: function (res) {
+            // 获取可使用窗口宽度
+            let clientHeight = res.windowHeight
+            // 获取可使用窗口高度
+            let clientWidth = res.windowWidth
+            // 算出比例
+            let ratio = 750 / clientWidth
+            // 算出高度(单位rpx)
+            let height = clientHeight * ratio
+            // 设置高度
+            $store.state.clientHeight = height
+            console.log('$store.state.clientHeight: ' + $store.state.clientHeight)
+          }
+        })
       }
       // jump (url, flag) {
       //   getStorageOpenid(url, flag)
@@ -165,6 +183,7 @@
       // } else {
       //   this.lists = this.all
       // }
+      this.getClientHeight()
     }
   }
 </script>

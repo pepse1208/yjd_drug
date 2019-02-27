@@ -9,5 +9,6 @@ export default {
   selectObj: {}, // 发送药检单选中的药检单
   selectedList: {}, // 发送药检单选中的药检单
   receiver: '',
-  drugReports: []
+  drugReports: [],
+  clientHeight: 0
 }

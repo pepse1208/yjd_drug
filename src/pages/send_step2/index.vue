@@ -43,6 +43,7 @@ export default {
     return {
       listNextUrl: '',
       drugNextUrl: '',
+      drugIndex: 0,
       drugs: [],
       lists: [],
       more: true,
@@ -88,7 +89,7 @@ export default {
         })
       }
     },
-    async getDrugData ({nextUrl, index}) {
+    async getDrugData ({nextUrl}) {
       wx.stopPullDownRefresh()
       var self = this
       let uuid = $store.state.sendStepTwoDrugId
@@ -127,7 +128,6 @@ export default {
     },
     recvData (data) {
       this.initSendStepTwoListData(data.results)
-      console.log(data)
       if (data.count === 0) {
         this.more = false
       } else {
@@ -182,8 +182,10 @@ export default {
   },
   onPullDownRefresh () {
     // 下拉刷新
-    if (!this.loading) {
+    if (!this.loading && !this.showModalStatus) {
       this.getListData()
+    } else {
+      wx.stopPullDownRefresh()
     }
   },
   onReachBottom () {
