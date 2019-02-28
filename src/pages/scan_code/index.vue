@@ -192,10 +192,10 @@ export default {
     }, 300)
   },
   beforeMount () {
-    // this.uuid = this.$root.$mp.query.scene
-    this.uuid = '7c0b15dd-bff9-4b1f-8366-ae34970bd704'
-    // this.isLogin = wx.getStorageSync('isLogin')
-    this.isLogin = true
+    this.uuid = this.$root.$mp.query.scene
+    // this.uuid = '7c0b15dd-bff9-4b1f-8366-ae34970bd704'
+    this.isLogin = wx.getStorageSync('isLogin')
+    // this.isLogin = true
     this.getData()
   }
 }

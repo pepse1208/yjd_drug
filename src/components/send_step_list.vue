@@ -88,9 +88,6 @@ export default {
     deleteDrug (key) {
       this.$parent.deleteDrug({key})
     }
-  },
-  updated () {
-    console.log('updated')
   }
 }
 </script>

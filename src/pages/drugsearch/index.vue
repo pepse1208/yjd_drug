@@ -261,15 +261,13 @@
         this.lists[index].btnStatus = true
       },
       openPdf (url) {
-        console.log(typeof url)
-        console.log(url)
         const self = this
         wx.openDocument({
           filePath: url,
           success: function (res) {
             self.percent = 0
-            console.log(self.percent)
-            console.log('打开文档成功')
+            // console.log(self.percent)
+            // console.log('打开文档成功')
           }
         })
       },
@@ -277,10 +275,10 @@
         id = id.replace(/-/ig, '')
         var self = this
         if (self.downloaded[id]) {
-          console.log('直接打开')
+          // console.log('直接打开')
           self.openPdf(self.downloaded[id])
         } else {
-          console.log('下载')
+          // console.log('下载')
           var path = url
           if (!url.includes('https://')) {
             path = config.host + url

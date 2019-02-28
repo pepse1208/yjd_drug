@@ -19,12 +19,11 @@
             <span class="select-icon" :class="{'selected': item.is_select}"></span>
           </div>
         </block>
-        <div id="bottomElem" style="height:1px;opacity:0;"></div>
       </scroll-view>
       <div class="submit flex" @click="complete" v-if="show">
         <span>确&emsp;定</span>
       </div>
-      <div class="detail-list list" v-if="!show">
+      <scroll-view class="detail-list list" v-if="!show" scroll-y="true">
         <div class="line">
           <span class="title">品种名称：</span>
           <span class="det">{{details.drug.name || '--'}}</span>
@@ -73,8 +72,8 @@
           <span class="title">有效期至</span>
           <span class="det">{{details.validity || '--'}}</span>
         </div>
-      </div>
-      <div class="submit flex" @click="complete" v-if="!show">
+      </scroll-view>
+      <div class="submit flex" @click="downloadPdf" v-if="!show">
         <span>查看PDF文件</span>
       </div>
     </div>
@@ -82,11 +81,14 @@
 </template>
 <script>
 import {mapActions} from 'vuex'
+import config from '../config.js'
+import {throttle} from '../utils/index.js'
 export default {
   data () {
     return {
       show: true,
-      details: []
+      details: [],
+      downloaded: {}
     }
   },
   props: ['showModalStatus', 'height', 'lists', 'fatherPage'],
@@ -110,6 +112,39 @@ export default {
       let nextUrl = this.$parent.drugNextUrl
       this.$parent.getDrugData({nextUrl})
     },
+    openPdf (url) {
+      wx.openDocument({
+        filePath: url,
+        success: function (res) {
+          // console.log('打开文档成功')
+        }
+      })
+    },
+    downloadPdf: throttle(function () { // 查看pdf
+      console.log(this.details)
+      var self = this
+      let url = this.details.file
+      let uuid = this.details.uuid
+      if (self.downloaded[uuid]) {
+        self.openPdf(self.downloaded[uuid])
+      } else {
+        var path = url
+        if (!url.includes('https://')) {
+          path = config.host + url
+        }
+        wx.showLoading({title: '加载中'})
+        wx.downloadFile({
+          url: path,
+          success: function (res) {
+            const filePath = res.tempFilePath
+            // 避免发送方修改文件后，没及时更新
+            self.downloaded[uuid] = filePath
+            wx.hideLoading()
+            self.openPdf(filePath)
+          }
+        })
+      }
+    }, 2000),
     ...mapActions({
       selectDrug: 'selectDrug',
       submit: 'submit'
@@ -122,10 +157,6 @@ export default {
       this.show = true
     }
     this.details = this.lists[this.$parent.key]
-  },
-  beforeMount () {
-    console.log(this.lists)
-    console.log(this.details)
   }
 }
 </script>
@@ -155,7 +186,7 @@ export default {
     background: #fff;
     border-top-left-radius: 16rpx;
     border-top-right-radius: 16rpx;
-    transition: all .5s linear;
+    transition: all .3s linear;
   }
 }
 
@@ -223,6 +254,7 @@ export default {
 }
 .detail-list {
   padding: 0 32rpx;
+  box-sizing: border-box;
 }
 .line {
   display: flex;

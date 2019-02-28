@@ -94,8 +94,6 @@
       this.backName = this.$root.$mp.query.name
       this.uuid = this.$root.$mp.query.uuid
       this.redirect_url = this.$root.$mp.query.redirect_url
-      console.log(this.uuid)
-      console.log(this.redirect_url)
     },
     methods: {
       async randomModified  () { // 将判断是否修改密码存入缓存

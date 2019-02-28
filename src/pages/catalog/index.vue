@@ -96,7 +96,6 @@
         var resultData = await get({
           url: '/api/users/detail/'
         })
-        console.log(resultData.data)
         if (!resultData) return
         if (resultData.statusCode >= 400) {
           wx.showToast({
@@ -118,7 +117,6 @@
         }
       },
       jump (url) {
-        console.log(url)
         wx.navigateTo({
           url
         })
@@ -167,7 +165,6 @@
             let height = clientHeight * ratio
             // 设置高度
             $store.state.clientHeight = height
-            console.log('$store.state.clientHeight: ' + $store.state.clientHeight)
           }
         })
       }

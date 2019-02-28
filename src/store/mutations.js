@@ -46,15 +46,7 @@ export default {
       state.checkDetailData.push(obj)
     }
   },
-  /**
-   * 这里设置一个统一的方法,大部分用的vuex都是简单的改变一些状态,不需要写过多的mutations
-   * 使用方法 例:
-   * this.$store.update({"cityName":"北京"})
-   *
-   *  config需要传入对象
-   * @param {*} state
-   * @param {*Object} config
-   */
+  // 初始化模块页显示的模块
   initSideBar (state, data) {
     state.sidebar.length = 0
     let lists = []
@@ -161,6 +153,7 @@ export default {
       state[item] = config[item]
     })
   },
+  // 将获取到的数据，存储在sendStepTwoListData中，初始化searchObj以显示给用户
   initSendStepTwoListData (state, data) {
     let len = data.length
     for (let i = 0; i < len; i++) {
@@ -172,6 +165,8 @@ export default {
         chooseNum: 0,
         files: {}
       }
+      // 如果 sendStepTwoListData 中有该药品数据，则将 sendStepTwoListData 中的数据克隆给 searchObj
+      // 否则将obj初始化克隆给 sendStepTwoListData 和 searchObj
       if (state.sendStepTwoListData[uuid] !== undefined) {
         state.searchObj[uuid] = JSON.parse(JSON.stringify(state.sendStepTwoListData[uuid]))
       } else {
@@ -181,9 +176,13 @@ export default {
     }
   },
   initSendStepTwoDrugData (state, {data}) {
+    console.log(state.sendStepTwoListData)
+    // 从sendStepTwoListData中获取数据
     let uuid = state.sendStepTwoDrugId
     let fileObj = state.sendStepTwoListData[uuid].files
     state.sendStepTwoDrugData = {}
+    // 如果 sendStepTwoListData 中有数据，直接将其中的数据克隆给 sendStepTwoDrugData
+    // 否则将 请求到的数据一一克隆给 sendStepTwoDrugData
     if (Object.keys(fileObj).length > 0) {
       state.sendStepTwoDrugData = JSON.parse(JSON.stringify(fileObj))
       return
@@ -195,14 +194,19 @@ export default {
       state.sendStepTwoDrugData[data[i].uuid] = JSON.parse(JSON.stringify(obj))
     }
   },
+  // 选择药检单
   selectDrug (state, {uuid, isSelect}) {
     let obj = state.sendStepTwoDrugData
     let selectObj = state.selectObj
     let subObj = obj[uuid]
     let drugId = state.sendStepTwoDrugId
+    // 如果 selectObj 中没有该药品的对象，则创建对象
     if (!selectObj[drugId]) {
       selectObj[drugId] = {}
     }
+    // 判断操作是勾选还是取消
+    // 取消：将 selectObj 的 该药品下的药检单uuid删除，并将is_select的值置为false
+    // 勾选：在 selectObj 的 该药品中添加药检单uuid，并将is_select的值置为true，添加amount属性
     if (isSelect) {
       subObj.is_select = false
       delete selectObj[drugId][uuid]
@@ -213,11 +217,15 @@ export default {
     }
   },
   submit (state) {
+    // 将 selectObj 的 该药品下药检单的数量赋给 sendStepTwoListData及searchObj 的该药品
+    // 将 sendStepTwoDrugData 的 该药品下药检单克隆给 sendStepTwoListData
     let drugId = state.sendStepTwoDrugId
-    state.sendStepTwoListData[drugId].count = Object.keys(state.selectObj[drugId]).length
+    let count = Object.keys(state.selectObj[drugId]).length
+    state.sendStepTwoListData[drugId].count = count
     state.sendStepTwoListData[drugId].files = JSON.parse(JSON.stringify(state.sendStepTwoDrugData))
-    state.searchObj[drugId].count = Object.keys(state.selectObj[drugId]).length
+    state.searchObj[drugId].count = count
   },
+  // 将selectObj选中的药检单克隆给selectedlist
   initSelectedDrug (state) {
     let selectObj = state.selectObj
     let selectedList = state.selectedList

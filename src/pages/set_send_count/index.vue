@@ -120,8 +120,6 @@ export default {
               wx.reLaunch({
                 url: '/pages/send_record/main'
               })
-            } else if (res.cancel) {
-              console.log('用户点击取消')
             }
           }
         })

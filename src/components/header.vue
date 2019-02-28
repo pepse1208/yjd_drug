@@ -51,7 +51,7 @@
       richScan () {
         wx.scanCode({
           success (res) {
-            console.log(res)
+            // console.log(res)
             // {
             //   charSet: "UTF-8",
             //   errMsg: "scanCode:ok",
