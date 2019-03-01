@@ -39,4 +39,7 @@
   }
 </script>
 <style lang='scss'>
+._search {
+  margin-top: 10rpx;
+}
 </style>

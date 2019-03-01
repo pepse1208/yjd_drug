@@ -602,7 +602,7 @@
       div.active{
         color: #1E9EFF;
         i{
-          border-bottom: 2px solid #1E9EFFFF;
+          border-bottom: 2px solid #1E9EFF;
         }
       }
     }

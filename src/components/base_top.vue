@@ -123,7 +123,7 @@
   }
   ._top.fixed {
     position: fixed;
-    top: 60px;
+    top: 65px;
     left: 0;
     z-index: 1000;
   }

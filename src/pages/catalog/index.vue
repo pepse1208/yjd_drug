@@ -15,7 +15,9 @@
       <p class="module">{{item.title}}</p>
       <div class="list flex">
         <div class="item flex" v-for="(subItem, subIndex) in item.list" :key="subIndex" @click="jump(subItem.url)">
-          <span class="icon" :style="'background-position:'+ subItem.position"></span>
+          <span class="icon">
+            <img :src="subItem.img" :style="'width:'+subItem.width + ';height:'+subItem.height+ ';'"/>
+          </span>
           <p class="text">{{subItem.title}}</p>
         </div>
       </div>
@@ -215,10 +217,12 @@
     display: inline-block;
     width: 32px;
     height: 30px;
-    margin-bottom: 24rpx;
-    background: url(../../images/catalog_icon.png) no-repeat 0 0;
-    background-size: 32px;
-    // border: 1rpx solid red;
+    margin-bottom: 30rpx;
+    text-align: center;
+    img {
+      height: 100%;
+      width: 20px;
+    }
   }
   .text {}
 }

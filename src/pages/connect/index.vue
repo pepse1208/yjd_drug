@@ -203,7 +203,7 @@
       line-height: 30rpx;
       font-size: 30rpx;
       margin-bottom: 12*$unit;
-      color: #3E3A39FF;
+      color: #3E3A39;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -212,7 +212,7 @@
       height: 24rpx;
       line-height: 24rpx;
       font-size: 24rpx;
-      color: #A5A5A5FF;
+      color: #A5A5A5;
       margin-bottom: 12*$unit;
       &:last-child{
         margin-bottom: 0;

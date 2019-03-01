@@ -487,7 +487,7 @@
         position: absolute;
         top: 12*$unit;
         right: 17*$unit;
-        color: #3E3A39FF;
+        color: #3E3A39;
         font-size: 20px;
         width: 30*$unit;
         text-align: right;
@@ -500,7 +500,7 @@
         font-size: 15px;
         line-height: 40*$unit;
         text-align: center;
-        color: #FFFFFFFF;
+        color: #FFFFFF;
         margin-top: 40*$unit;
         border-radius: 4*$unit;
       }
