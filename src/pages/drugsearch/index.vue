@@ -6,8 +6,8 @@
     </div>
     <progress :percent="percent" stroke-width="4" backgroundColor="#fff"/>
     <div>
-      <drug-head @childSearch="childSearch"></drug-head>
       <statements :lists="statements"></statements>
+      <drug-head @childSearch="childSearch"></drug-head>
       <block v-for="(item, index) in lists" :key="index">
         <div :class="{'overflow': !item.btnStatus, 'flex flexrow borderBottomEEE': true}">
           <search-list :details="initDetails(item)"></search-list>

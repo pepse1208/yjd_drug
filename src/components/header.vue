@@ -103,7 +103,7 @@
 </script>
 <style lang="scss" scope>
   .header{
-    margin-top: 10rpx;
+    margin-top: -10rpx;
     /*margin-bottom: 30rpx;*/
     font-size: 12px;
     .nav {

@@ -4,8 +4,8 @@
       <navigation-bar :back="true"></navigation-bar>
       <base-top>企业通讯录</base-top>
     </div>
-    <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入企业全称"' :searchName="'enterprise_name'">查&emsp;询</search-input>
     <statements  :lists="stateList"></statements>
+    <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入企业全称"' :searchName="'enterprise_name'">查&emsp;询</search-input>
     <div class="_container mart">
       <block v-for="(item, index) in lists" :key="index">
         <div class="druglist" @click="edit(item)">

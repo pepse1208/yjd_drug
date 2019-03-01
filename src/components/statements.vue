@@ -1,19 +1,14 @@
 <template>
   <div>
     <div class="statements" id="statements">
+    </div>
+    <div class="statements fixed">
       <span class="declare">状态说明 :</span>
       <div class="item" :key="index" v-for="(item, index) in lists">
         <i class="gray_bg dot" :class="item.color" ></i>
         <span>{{item.text}}</span>
       </div>
-    </div>
-    <div class="statements fixed" v-if="isFixed">
-      <span class="declare">状态说明 :</span>
-      <div class="item" :key="index" v-for="(item, index) in lists">
-        <i class="gray_bg dot" :class="item.color" ></i>
-        <span>{{item.text}}</span>
       </div>
-    </div>
   </div>
 </template>
 <script>
@@ -55,8 +50,8 @@
     $unit: 2rpx;
     display: flex;
     width: 100%;
-    height: 88rpx;
-    line-height: 88rpx;
+    height: 60rpx;
+    line-height: 60rpx;
     // border-bottom: 1px solid #EEEEEE;
     background: #fff;
     font-size: 12*$unit;
