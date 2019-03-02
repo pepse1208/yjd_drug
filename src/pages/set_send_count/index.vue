@@ -167,6 +167,14 @@ export default {
   beforeMount () {
     this.selectedDrug = $store.state.selectedList
     this.drugSign = wx.getStorageSync('DrugSign')
+  },
+  onUnload: function () {
+    this.selectedDrug = {}
+    this.drugReportsObj = {}
+    this.uuid = ''
+    this.drugSign = false
+    this.isShow = false
+    this.reason = ''
   }
 }
 </script>

@@ -218,7 +218,7 @@ export default {
   // 将selectObj选中的药检单克隆给selectedlist
   initSelectedDrug (state) {
     let selectObj = state.selectObj
-    let selectedList = state.selectedList
+    let selectedList = state.selectedList = {}
     for (let i in selectObj) {
       Object.assign(selectedList, selectObj[i])
     }

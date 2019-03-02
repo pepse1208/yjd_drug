@@ -149,6 +149,19 @@ export default {
     },
     toSetSendCount () {
       this.initSelectedDrug()
+      if (Object.keys($store.state.selectedList).length === 0) {
+        wx.showToast({
+          title: '请先选择药检单，再操作下一步',
+          icon: 'none',
+          duration: 4000,
+          success () {
+            // wx.reLaunch({
+            //   url: '/pages/send_record/main'
+            // })
+          }
+        })
+        return
+      }
       wx.navigateTo({
         url: '/pages/set_send_count/main'
       })
