@@ -1,7 +1,9 @@
 <template>
 <div class="root">
-  <navigation-bar :back="false"></navigation-bar>
-  <base-top>首页</base-top>
+  <div class="page-top">
+    <navigation-bar :back="false"></navigation-bar>
+    <base-top>首页</base-top>
+  </div>
   <div class="catalog flex">
     <!-- <block  v-for="(item, index) in lists" :key="index">
       <div class="item" @click="jump(item.url, item.isMustLogin)">
@@ -192,6 +194,7 @@
   left: 0;
   width: 100%;
   align-items: flex-start;
+  overflow-x: hidden;
   > div {
     width: 100%;
   }

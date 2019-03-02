@@ -37,6 +37,9 @@ export default {
     }
   },
   beforeMount () {
+    // this.getData()
+  },
+  onShow () {
     this.getData()
   },
   methods: {
