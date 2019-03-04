@@ -25,7 +25,6 @@ export default {
   },
   beforeMount () {
     this.uuid = this.$root.$mp.query.uuid
-    console.log(this.uuid)
     this.getData()
   },
   methods: {

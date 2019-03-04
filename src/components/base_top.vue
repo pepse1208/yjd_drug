@@ -123,12 +123,12 @@
   }
   ._top.fixed {
     position: fixed;
-    top: 60px;
+    top: 64px;
     left: 0;
     z-index: 1000;
   }
   .shadow ._top:first-child {
-    box-shadow:0px 6px 20px 0px rgba(212,219,224,0.3);
+    // box-shadow:0px 6px 20px 0px rgba(212,219,224,0.3);
   }
   ._top:last-child {
     background: transparent;

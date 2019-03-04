@@ -1,7 +1,9 @@
 <template>
   <div class="step1">
-    <navigation-bar :back="true"></navigation-bar>
-    <base-top>发送药检单</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>发送药检单</base-top>
+    </div>
     <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入企业全称"' :searchName="'name'">查&emsp;询</search-input>
     <div>
       <div class="list">

@@ -25,6 +25,7 @@ page {
   padding: 20rpx 0;
   font-size: 24rpx;
   text-align: center;
+  color:#a5a5a5;
 }
 .orange {
   color: #ffd20d;
@@ -48,7 +49,7 @@ page {
   background: #ffd20d !important;
 }
 .orange2_bg {
-  background: #FF821DFF !important;
+  background: #FF821D !important;
 }
 .red_bg {
   background: #E71F10 !important;
@@ -119,4 +120,8 @@ button:after {
 }
 .li-style:last-child {
   border-bottom: 0;
+}
+/* 遮罩后，滚动穿透，未解决 */
+.hidden {
+  overflow: hidden;
 }

@@ -280,7 +280,7 @@
         this.reason = ''
       },
       alertConfirm (msg) { // 签章密码确定
-        this.password = msg.resaon
+        this.password = msg.reason
         if (this.password) {
           this.isShow = false
           this.consentReq(this.uuid)
@@ -602,7 +602,7 @@
       div.active{
         color: #1E9EFF;
         i{
-          border-bottom: 2px solid #1E9EFFFF;
+          border-bottom: 2px solid #1E9EFF;
         }
       }
     }

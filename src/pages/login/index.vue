@@ -34,7 +34,9 @@
         type: '', // 公司类型
         logUrl: config.host + '/api/users/wxlogin/',
         // logUrl: config.wqhost + '/user/api/druglist_wxlogin/',
-        sessionidUrl: config.wqhost + '/system/api/changelog/'
+        sessionidUrl: config.wqhost + '/system/api/changelog/',
+        uuid: '',
+        redirect_url: ''
       }
     },
     onLoad (options) {
@@ -79,8 +81,8 @@
     onShow () {
       this.userName = '' // 清空输入框的内容
       this.pwd = ''
-      this.userName = '67444758@tianzhu.com' // 清空输入框的内容
-      this.pwd = '67444758'
+      // this.userName = '67444758@tianzhu.com' // 清空输入框的内容
+      // this.pwd = '67444758'
       var vm = this
       wx.login({
         success (res) {
@@ -90,6 +92,8 @@
     },
     mounted () {
       this.backName = this.$root.$mp.query.name
+      this.uuid = this.$root.$mp.query.uuid
+      this.redirect_url = this.$root.$mp.query.redirect_url
     },
     methods: {
       async randomModified  () { // 将判断是否修改密码存入缓存
@@ -122,6 +126,9 @@
               this.url = '/pages/' + this.pageName + '/main'
             } else {
               this.url = '/pages/catalog/main'
+            }
+            if (this.redirect_url) {
+              this.url = '/pages/' + this.redirect_url + '/main?scene=' + this.uuid
             }
             var vm = this
             wx.redirectTo({

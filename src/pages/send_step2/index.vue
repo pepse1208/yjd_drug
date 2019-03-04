@@ -1,7 +1,9 @@
 <template>
   <div class="step2">
-    <navigation-bar :back="true"></navigation-bar>
-    <base-top>选择药检单</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>选择药检单</base-top>
+    </div>
     <search-input :url="listUrl" @renderData="recvData" :placeholder='"请输入品种名称"' searchName="drug_name">查&emsp;询</search-input>
     <div class="list">
       <send-step-list fatherPage="send_step2" :lists="lists"  @controlModal="controlModal"></send-step-list>
@@ -41,6 +43,7 @@ export default {
     return {
       listNextUrl: '',
       drugNextUrl: '',
+      drugIndex: 0,
       drugs: [],
       lists: [],
       more: true,
@@ -86,7 +89,7 @@ export default {
         })
       }
     },
-    async getDrugData ({nextUrl, index}) {
+    async getDrugData ({nextUrl}) {
       wx.stopPullDownRefresh()
       var self = this
       let uuid = $store.state.sendStepTwoDrugId
@@ -125,7 +128,6 @@ export default {
     },
     recvData (data) {
       this.initSendStepTwoListData(data.results)
-      console.log(data)
       if (data.count === 0) {
         this.more = false
       } else {
@@ -147,6 +149,19 @@ export default {
     },
     toSetSendCount () {
       this.initSelectedDrug()
+      if (Object.keys($store.state.selectedList).length === 0) {
+        wx.showToast({
+          title: '请先选择药检单，再操作下一步',
+          icon: 'none',
+          duration: 4000,
+          success () {
+            // wx.reLaunch({
+            //   url: '/pages/send_record/main'
+            // })
+          }
+        })
+        return
+      }
       wx.navigateTo({
         url: '/pages/set_send_count/main'
       })
@@ -180,8 +195,10 @@ export default {
   },
   onPullDownRefresh () {
     // 下拉刷新
-    if (!this.loading) {
+    if (!this.loading && !this.showModalStatus) {
       this.getListData()
+    } else {
+      wx.stopPullDownRefresh()
     }
   },
   onReachBottom () {

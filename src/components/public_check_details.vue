@@ -85,7 +85,7 @@
               wx.hideLoading()
               setTimeout(function () {
                 self.openPdf(filePath)
-              }, 700)
+              }, 300)
             }
           })
           downloadTask.onProgressUpdate((res) => {
@@ -161,7 +161,7 @@
         font-size: 15px;
         line-height: 40*$unit;
         text-align: center;
-        color: #FFFFFFFF;
+        color: #FFFFFF;
         margin-top: 20*$unit;
         border-radius: 4*$unit;
       }
@@ -176,10 +176,10 @@
         }
         .explain{
           font-size: 12px;
-          color: #A5A5A5FF;
+          color: #A5A5A5;
         }
         .details{
-          color: #3E3A39FF;
+          color: #3E3A39;
           width: 280*$unit;
           overflow: hidden;
           text-overflow: ellipsis;

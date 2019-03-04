@@ -1,21 +1,23 @@
 <template>
   <div class="managelist">
-    <div class="item" :class="{ isflex: item.batch}" @click="item.package && jumpDetail({drug: item.drug, id: item.id})"  :key="index" v-for="(item, index) in lists">
-      <div class="intro">
-        <p class="title flex flexrow">
-          <!-- <span class="bold sub_title" v-if="item.name">品种名称：</span> -->
-          <span class="sub_title" v-if="item.batch">生产批号：</span>
-          <span class="ellipsis1" :class="{bold: item.name}">{{item.name || item.batch}}</span>
-        </p>
-        <p class="company flex flexrow" :class="{ bg: item.package }">
-          <span class="sub" v-if="item.package">包装规格：</span>
-          <span class="sub" v-if="item.sender">{{isShow ? '供应企业：' : '报告日期：'}}</span>
-          <span class="ellipsis2">{{item.package || item.sender.name || (item.report_date ? item.report_date : '--')}}</span>
-        </p>
-      </div>
-      <div  v-if="item.sender">
-        <!--<span class="button" @click="downloadPdf(item.file, item.uuid)">查看</span>-->
-        <span class="button" @click="modalShow(true, item, 300)">查看</span>
+    <div>
+      <div class="item" :class="{ isflex: item.batch}" @click="item.package && jumpDetail({drug: item.drug, id: item.id})"  :key="index" v-for="(item, index) in lists">
+        <div class="intro">
+          <p class="title flex flexrow">
+            <!-- <span class="bold sub_title" v-if="item.name">品种名称：</span> -->
+            <span class="sub_title" v-if="item.batch">生产批号：</span>
+            <span class="ellipsis1" :class="{bold: item.name}">{{item.name || item.batch}}</span>
+          </p>
+          <p class="company flex flexrow" :class="{ bg: item.package }">
+            <span class="sub" v-if="item.package">包装规格：</span>
+            <span class="sub" v-if="item.sender">{{isShow ? '供应企业：' : '报告日期：'}}</span>
+            <span class="ellipsis2">{{item.package || item.sender.name || (item.report_date ? item.report_date : '--')}}</span>
+          </p>
+        </div>
+        <div  v-if="item.sender">
+          <!--<span class="button" @click="downloadPdf(item.file, item.uuid)">查看</span>-->
+          <span class="button" @click="modalShow(true, item, 300)">查看</span>
+        </div>
       </div>
     </div>
     <!--弹框组件详情-->
@@ -213,10 +215,7 @@
         }
       }
     }
-    .item:last-child{
-      border-bottom: 0px;
-    }
-    .item{
+    .item {
       box-sizing: border-box;
       padding-top: 12*$unit;
       width: 100%;
@@ -267,6 +266,9 @@
         box-shadow:0px 7px 16px 0px rgba(121,197,255,0.5);
         margin-left: 15*$unit;
       }
+    }
+    .item:last-child {
+      border-bottom: 0;
     }
   }
 </style>

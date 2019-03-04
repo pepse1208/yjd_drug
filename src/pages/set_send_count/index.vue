@@ -1,7 +1,9 @@
 <template>
   <div class="selected-list">
-    <navigation-bar :back="true"></navigation-bar>
-    <base-top>设置发货数量</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>设置发货数量</base-top>
+    </div>
     <div class="step-list list-shadow">
       <div class="item flex li-style flexrow" v-for="(item, key) in selectedDrug" :key="key">
         <div class="details">
@@ -118,8 +120,6 @@ export default {
               wx.reLaunch({
                 url: '/pages/send_record/main'
               })
-            } else if (res.cancel) {
-              console.log('用户点击取消')
             }
           }
         })
@@ -162,37 +162,19 @@ export default {
         })
       }
       this.signatureCode(password)
-      console.log(password)
-      // let password = $('.get-password').val().trim()
-      // url: '/api/drugReport/send/'+uuid+'/',
-      // type: 'PUT',
-      // data: {
-      //     password : password
-      // },
-      // window.location.href = "/pages/send/recordlist/"
     }
   },
   beforeMount () {
     this.selectedDrug = $store.state.selectedList
     this.drugSign = wx.getStorageSync('DrugSign')
   },
-  mounted () {
-    console.log('start')
-    console.log('receiver')
-    console.log($store.state.receiver)
-    console.log('sendStepTwoListData')
-    console.log($store.state.sendStepTwoListData)
-    console.log('sendStepTwoDrugData')
-    console.log($store.state.sendStepTwoDrugData)
-    console.log('sendStepTwoDrugId')
-    console.log($store.state.sendStepTwoDrugId)
-    console.log('searchObj')
-    console.log($store.state.searchObj)
-    console.log('selectObj')
-    console.log($store.state.selectObj)
-    console.log('selectedList')
-    console.log($store.state.selectedList)
-    console.log('end')
+  onUnload: function () {
+    this.selectedDrug = {}
+    this.drugReportsObj = {}
+    this.uuid = ''
+    this.drugSign = false
+    this.isShow = false
+    this.reason = ''
   }
 }
 </script>

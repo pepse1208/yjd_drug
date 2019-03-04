@@ -1,7 +1,9 @@
 <template>
   <div class="selected-list">
-    <navigation-bar :back="true"></navigation-bar>
-    <base-top>已选药检单</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>已选药检单</base-top>
+    </div>
     <div class="list">
       <send-step-list :fatherPage="fatherPage" :lists="lists"  @controlModal="controlModal"></send-step-list>
     </div>

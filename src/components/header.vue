@@ -49,13 +49,29 @@
     },
     methods: {
       richScan () {
-        // wx.scanCode({
-        //   success () {
-        wx.showToast({
-          title: '此功能暂未开放',
-          icon: 'none'
+        wx.scanCode({
+          success (res) {
+            // console.log(res)
+            // {
+            //   charSet: "UTF-8",
+            //   errMsg: "scanCode:ok",
+            //   path: "pages/login/main?scene=40b97c6a2f3c46a7a87b5788a7b9edb0",
+            //   rawData: "bG0zMG01eixATUtALzQmTzModTctTjMzYzQ2YTdhODdiNTc4OGE3YjllZGIw",
+            //   result: "http://lm30m5z,@MK@/4&O3(u7-N33c46a7a87b5788a7b9edb0",
+            //   scanType: "WX_CODE"
+            // }
+            let uuid = /scene=\w[^&]*/.exec(res.path)[0].replace('scene=', '')
+            wx.navigateTo({
+              url: '/pages/scan_code/main?scene=' + uuid
+            })
+          },
+          fail () {
+            console.log('扫码失败')
+          }
         })
-        //   }
+        // wx.showToast({
+        //   title: '此功能暂未开放',
+        //   icon: 'none'
         // })
       },
       search () {
@@ -87,7 +103,7 @@
 </script>
 <style lang="scss" scope>
   .header{
-    margin-top: 10rpx;
+    margin-top: -10rpx;
     /*margin-bottom: 30rpx;*/
     font-size: 12px;
     .nav {

@@ -1,7 +1,9 @@
 <template>
   <div class="applylist">
-    <navigation-bar :back="true"></navigation-bar>
-    <base-top>待签章列表</base-top>
+    <div class="page-top">
+      <navigation-bar :back="true"></navigation-bar>
+      <base-top>待签章列表</base-top>
+    </div>
     <search-input :url="searchUrl" @renderData="recvData" :placeholder='"请输入企业全称"' :searchName="'enterprise_name'">查&emsp;询</search-input>
     <div class="list">
       <send-apply-list :lists="lists"></send-apply-list>
@@ -35,6 +37,9 @@ export default {
     }
   },
   beforeMount () {
+    // this.getData()
+  },
+  onShow () {
     this.getData()
   },
   methods: {

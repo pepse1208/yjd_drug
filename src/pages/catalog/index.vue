@@ -1,7 +1,9 @@
 <template>
 <div class="root">
-  <navigation-bar :back="false"></navigation-bar>
-  <base-top>首页</base-top>
+  <div class="page-top">
+    <navigation-bar :back="false"></navigation-bar>
+    <base-top>首页</base-top>
+  </div>
   <div class="catalog flex">
     <!-- <block  v-for="(item, index) in lists" :key="index">
       <div class="item" @click="jump(item.url, item.isMustLogin)">
@@ -15,7 +17,9 @@
       <p class="module">{{item.title}}</p>
       <div class="list flex">
         <div class="item flex" v-for="(subItem, subIndex) in item.list" :key="subIndex" @click="jump(subItem.url)">
-          <span class="icon" :style="'background-position:'+ subItem.position"></span>
+          <span class="icon">
+            <img :src="subItem.img" :style="'width:'+subItem.width + ';height:'+subItem.height+ ';'"/>
+          </span>
           <p class="text">{{subItem.title}}</p>
         </div>
       </div>
@@ -96,7 +100,6 @@
         var resultData = await get({
           url: '/api/users/detail/'
         })
-        console.log(resultData.data)
         if (!resultData) return
         if (resultData.statusCode >= 400) {
           wx.showToast({
@@ -118,7 +121,6 @@
         }
       },
       jump (url) {
-        console.log(url)
         wx.navigateTo({
           url
         })
@@ -152,6 +154,23 @@
         } else {
           // console.log('用户按了拒绝按钮')
         }
+      },
+      getClientHeight () {
+        // 获取系统信息
+        wx.getSystemInfo({
+          success: function (res) {
+            // 获取可使用窗口宽度
+            let clientHeight = res.windowHeight
+            // 获取可使用窗口高度
+            let clientWidth = res.windowWidth
+            // 算出比例
+            let ratio = 750 / clientWidth
+            // 算出高度(单位rpx)
+            let height = clientHeight * ratio
+            // 设置高度
+            $store.state.clientHeight = height
+          }
+        })
       }
       // jump (url, flag) {
       //   getStorageOpenid(url, flag)
@@ -165,6 +184,7 @@
       // } else {
       //   this.lists = this.all
       // }
+      this.getClientHeight()
     }
   }
 </script>
@@ -174,6 +194,7 @@
   left: 0;
   width: 100%;
   align-items: flex-start;
+  overflow-x: hidden;
   > div {
     width: 100%;
   }
@@ -199,10 +220,12 @@
     display: inline-block;
     width: 32px;
     height: 30px;
-    margin-bottom: 24rpx;
-    background: url(../../images/catalog_icon.png) no-repeat 0 0;
-    background-size: 32px;
-    // border: 1rpx solid red;
+    margin-bottom: 30rpx;
+    text-align: center;
+    img {
+      height: 100%;
+      width: 20px;
+    }
   }
   .text {}
 }

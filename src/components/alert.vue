@@ -2,10 +2,11 @@
   <view class='_toast-box' v-if="hidden">
     <view class='_toastbg' @click="$emit('cancelShow', false)"></view>
     <view class='_showToast'>
-      <view class='_toast-title'>
-        <text>{{tips}}</text>
-      </view>
+      
       <view class='_toast-main'>
+        <view class='_toast-title'>
+          <text>{{tips}}</text>
+        </view>
         <view class='_toast-input'>
           <input :placeholder="placeholder" v-if="isPassword" type="password" maxlength="6" bindinput='_setValue' data-name='_stuEidtName' v-model="reason" :reason="reason"/>
           <input :placeholder="placeholder" v-if="!isPassword" bindinput='_setValue' data-name='_stuEidtName' v-model="reason" :reason="reason"/>
@@ -65,22 +66,25 @@
     z-index: 20000;
 }
 ._toast-title {
-    padding-left: 5%;
-    background-color: #2196f3;
-    color: white;
+    padding-left: 32rpx;
+    background-color: white;
+    color: #3e3a39;
     padding-top: 2vh;
     padding-bottom: 2vh;
-    border-top-right-radius: 16rpx;
-    border-top-left-radius: 16rpx;
+    text-align:left;
 }
 ._toast-main {
     padding: 2vh;
     background-color: white;
     text-align: center;
+    border-top-right-radius: 16rpx;
+    border-top-left-radius: 16rpx;
+    padding-top: 16rpx;
+    padding-bottom: 48rpx;
 }
 ._toast-input {
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 32rpx;
+    margin-right: 32rpx;
     border: 1px solid #ddd;
     padding-left: 2vh;
     padding-right: 2vh;

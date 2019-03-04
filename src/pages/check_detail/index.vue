@@ -67,7 +67,7 @@
       </div>
       <div class="cancel_send" v-if="status === '对方已取消'">发送方已取消文件发送</div>
       <div class="submit">
-        <button @click="submit()" v-if="status === '待查收'">完成</button>
+        <button @click="submit()" v-if="status === '待查收'">完&emsp;成</button>
       </div>
       <!-- <alert-input v-if="isShow" :tips="tips" :placeholder='placeholder'></alert-input> -->
       <alert-input :tips="tips" :placeholder='placeholder' :hidden="isShow" :reason="reason" @cancelShow="cancelShow" @alertConfirm="alertConfirm"></alert-input>
