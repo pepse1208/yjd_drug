@@ -61,7 +61,7 @@ export default {
       // if (receiver === uuid) {
       //   receiver = ''
       // } else {
-      // $store.state.receiver = uuid
+      $store.state.receiver = uuid
       $store.state.sendStepTwoListData = {}
       $store.state.sendStepTwoDrugData = {}
       $store.state.sendStepTwoDrugId = ''
