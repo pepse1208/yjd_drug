@@ -44,8 +44,8 @@ export default {
       listNextUrl: '',
       drugNextUrl: '',
       drugIndex: 0,
-      drugs: [],
-      lists: [],
+      drugs: {},
+      lists: {},
       more: true,
       text: '暂无数据',
       noMoreData: 'no_datas',
@@ -210,9 +210,12 @@ export default {
   onUnload: function () {
     this.more = true
     this.listNextUrl = ''
-    this.drugs = []
+    this.drugNextUrl = ''
+    this.drugs = {}
+    this.lists = {}
     this.text = '暂无数据'
     this.noMoreData = 'no_datas'
+    this.showModalStatus = false
   }
 }
 </script>

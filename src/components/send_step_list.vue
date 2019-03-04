@@ -57,18 +57,18 @@ export default {
   },
   methods: {
     stepOne (uuid, name) {
-      let receiver = $store.state.receiver
-      if (receiver === uuid) {
-        receiver = ''
-      } else {
-        $store.state.receiver = uuid
-        $store.state.sendStepTwoListData = {}
-        $store.state.sendStepTwoDrugData = {}
-        $store.state.sendStepTwoDrugId = ''
-        $store.state.searchObj = {}
-        $store.state.selectObj = {}
-        $store.state.selectedList = {}
-      }
+      // let receiver = $store.state.receiver
+      // if (receiver === uuid) {
+      //   receiver = ''
+      // } else {
+      // $store.state.receiver = uuid
+      $store.state.sendStepTwoListData = {}
+      $store.state.sendStepTwoDrugData = {}
+      $store.state.sendStepTwoDrugId = ''
+      $store.state.searchObj = {}
+      $store.state.selectObj = {}
+      $store.state.selectedList = {}
+      // }
       if (this.fatherPage === 'send_step1') {
         wx.navigateTo({
           url: '/pages/send_step2/main'
