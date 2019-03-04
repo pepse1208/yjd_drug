@@ -166,7 +166,7 @@ export default {
     }
   },
   initSendStepTwoDrugData (state, {data}) {
-    console.log(state.sendStepTwoListData)
+    // console.log(state.sendStepTwoListData)
     // 从sendStepTwoListData中获取数据
     let uuid = state.sendStepTwoDrugId
     let fileObj = state.sendStepTwoListData[uuid].files

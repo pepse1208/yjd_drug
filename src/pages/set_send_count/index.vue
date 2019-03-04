@@ -175,6 +175,10 @@ export default {
     this.drugSign = false
     this.isShow = false
     this.reason = ''
+  },
+  onPullDownRefresh () {
+    // 下拉刷新
+    wx.stopPullDownRefresh()
   }
 }
 </script>

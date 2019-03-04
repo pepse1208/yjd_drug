@@ -7,11 +7,11 @@
         <block v-for="(item, index) in lists" :key="index">
           <div class="li-style flex flexrow" @click="checkDrug({uuid: item.uuid, isSelect: item.is_select})">
             <div>
-              <div class="batch">
+              <div class="batch ellipsis">
                 <span>生产批号：</span>
                 <span>{{item.batch}}</span>
               </div>
-              <div class="report-date">
+              <div class="report-date ellipsis">
                 <span>报告日期：</span>
                 <span>{{item.report_date || '--'}}</span>
               </div>
@@ -29,47 +29,47 @@
           <span class="det">{{details.drug.name || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">批准文号</span>
+          <span class="title">批准文号：</span>
           <span class="det">{{details.drug.reg_number || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">包装规格</span>
+          <span class="title">包装规格：</span>
           <span class="det">{{details.drug.package || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">剂型</span>
+          <span class="title">剂型：</span>
           <span class="det">{{details.drug.all_dosage || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">材质</span>
+          <span class="title">材质：</span>
           <span class="det">{{details.drug.drug_material || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">生产企业</span>
+          <span class="title">生产企业：</span>
           <span class="det">{{details.drug.production_enterprise || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">生产批号</span>
+          <span class="title">生产批号：</span>
           <span class="det">{{details.batch || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">报告日期</span>
+          <span class="title">报告日期：</span>
           <span class="det">{{details.report_date || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">报告编号</span>
+          <span class="title">报告编号：</span>
           <span class="det">{{details.code || '--'}}</span>
         </div>
         <div v-if="details.sender.name" class="line">
-          <span class="title">供应企业</span>
+          <span class="title">供应企业：</span>
           <span class="det">{{details.sender.name || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">生产日期</span>
+          <span class="title">生产日期：</span>
           <span class="det">{{details.product_date || '--'}}</span>
         </div>
         <div class="line">
-          <span class="title">有效期至</span>
+          <span class="title">有效期至：</span>
           <span class="det">{{details.validity || '--'}}</span>
         </div>
       </scroll-view>
@@ -220,10 +220,12 @@ export default {
   .batch {
     font-size:30rpx;
     margin-bottom: 10rpx;
+    width: 600rpx;
   }
   .report-date {
     font-size:24rpx;
     color:#A5A5A5;
+    width: 600rpx;
   }
   .select-icon {
     width: 32rpx;
@@ -267,6 +269,10 @@ export default {
   }
   .det {
     color: #3E3A39;
+    width: 550rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>
