@@ -261,6 +261,7 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
+  z-index: 100;
   width: 100%;
   padding: 0 32rpx 0 56rpx;
   font-size: 24rpx;
