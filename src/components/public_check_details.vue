@@ -148,7 +148,7 @@
         position: absolute;
         top: 12*$unit;
         right: 17*$unit;
-        color: #3E3A39FF;
+        color: #3E3A39;
         font-size: 20px;
         width: 30*$unit;
         text-align: right;

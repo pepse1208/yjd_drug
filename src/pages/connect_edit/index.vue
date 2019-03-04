@@ -434,7 +434,7 @@
         line-height: 28*$unit;
         text-align: center;
         border-radius:4*$unit;
-        background: #1E9EFFFF;
+        background: #1E9EFF;
         color: #fff;
         font-size: 12px;
         margin-right: 16*$unit;
@@ -442,7 +442,7 @@
       }
       .del{
         background: #fff;
-        color: #E71F10FF;
+        color: #E71F10;
       }
     }
     .direction{
