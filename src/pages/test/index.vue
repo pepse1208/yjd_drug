@@ -24,10 +24,12 @@
     <div class="con">详细内容</div>
     <div class="btn">其他操作</div>
   </div>
+  <div @click="sendData">发送数据</div>
 </div>
 </template>·
 <script>
   import Alert from '@/components/alert'
+  import {post} from '../../utils.js'
 
   export default {
     components: {
@@ -56,6 +58,23 @@
       this.pickerStart = today
     },
     methods: {
+      async sendData (item) { // 拒绝请求
+        var url = '/api/management/createNews/'
+        var resultData = await post({
+          url,
+          data: {
+            category: 0,
+            title: '测试标题',
+            type: '',
+            content: '测试内容'
+          }
+        })
+        if (resultData) {
+          if (resultData.data.code >= 400) {
+          } else if (resultData.data.code >= 200 && resultData.data.code < 300) {
+          }
+        }
+      },
       close () {
         this.isShowDel = false
         this.height = 0
