@@ -197,6 +197,10 @@ export default {
     this.isLogin = wx.getStorageSync('isLogin')
     // this.isLogin = true
     this.getData()
+  },
+  onPullDownRefresh () {
+    // 下拉刷新
+    wx.stopPullDownRefresh()
   }
 }
 </script>
