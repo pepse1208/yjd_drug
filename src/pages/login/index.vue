@@ -81,8 +81,8 @@
     onShow () {
       this.userName = '' // 清空输入框的内容
       this.pwd = ''
-      // this.userName = '67444758@tianzhu.com' // 清空输入框的内容
-      // this.pwd = '67444758'
+      // this.userName = 'testsc2@qq.com' // 清空输入框的内容
+      // this.pwd = '123456'
       var vm = this
       wx.login({
         success (res) {

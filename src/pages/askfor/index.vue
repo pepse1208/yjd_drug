@@ -209,6 +209,7 @@
       ]
     },
     onShow () {
+      // this.$forceUpdate()
     },
     mounted () {
       this.isMy = this.$root.$mp.query.isMy
@@ -237,22 +238,22 @@
         this.req = 'receive'
         this.lists[0].text = '待处理'
       }
-      this.navList = [
-        {
-          pagePath: '/pages/index/main',
-          iconPath: require('../../images/upload_black.png'),
-          selectedIconPath: require('../../images/upload_blue.png'),
-          text: '我的索取记录',
-          isShow: true
-        },
-        {
-          pagePath: '/pages/index/main',
-          iconPath: require('../../images/recv_black.png'),
-          selectedIconPath: require('../../images/recv_blue.png'),
-          text: '客户索取记录',
-          isShow: true
-        }
-      ]
+      // this.navList = [
+      //   {
+      //     pagePath: '/pages/index/main',
+      //     iconPath: require('../../images/upload_black.png'),
+      //     selectedIconPath: require('../../images/upload_blue.png'),
+      //     text: '我的索取记录',
+      //     isShow: true
+      //   },
+      //   {
+      //     pagePath: '/pages/index/main',
+      //     iconPath: require('../../images/recv_black.png'),
+      //     selectedIconPath: require('../../images/recv_blue.png'),
+      //     text: '客户索取记录',
+      //     isShow: true
+      //   }
+      // ]
       this.getList()
     },
     onPullDownRefresh () {

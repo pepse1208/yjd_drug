@@ -83,6 +83,7 @@ export default {
       this.$emit('controlModal', {showModalStatus: true, height: 300})
     },
     showDrugDetail (key) {
+      // console.log('key: ' + key)
       this.$parent.showDrugDetail({key})
     },
     deleteDrug (key) {

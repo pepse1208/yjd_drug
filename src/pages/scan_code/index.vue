@@ -201,6 +201,13 @@ export default {
   onPullDownRefresh () {
     // 下拉刷新
     wx.stopPullDownRefresh()
+  },
+  onUnload: function () {
+    this.uuid = ''
+    this.drugDetails = {}
+    this.isLogin = false
+    this.downloaded = {}
+    this.percent = 0
   }
 }
 </script>

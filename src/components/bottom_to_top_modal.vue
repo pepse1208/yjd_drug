@@ -87,7 +87,7 @@ export default {
   data () {
     return {
       show: true,
-      details: [],
+      details: {drug: {}, sender: {}},
       downloaded: {}
     }
   },
@@ -157,6 +157,11 @@ export default {
       this.show = true
     }
     this.details = this.lists[this.$parent.key]
+  },
+  onUnload: function () {
+    this.show = true
+    this.details = {drug: {}, sender: {}}
+    this.downloaded = {}
   }
 }
 </script>
@@ -273,6 +278,7 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: right;
   }
 }
 </style>

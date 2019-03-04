@@ -28,7 +28,7 @@ export default {
   },
   data () {
     return {
-      lists: [],
+      lists: {},
       drugsDetails: {},
       showModalStatus: false,
       height: 0,
@@ -51,6 +51,7 @@ export default {
     showDrugDetail ({key}) {
       let self = this
       self.key = key
+      // console.log(self.key)
       self.showModalStatus = true
       setTimeout(function () { self.height = 300 }, 300)
     },
@@ -86,6 +87,13 @@ export default {
   onPullDownRefresh () {
     // 下拉刷新
     wx.stopPullDownRefresh()
+  },
+  onUnload: function () {
+    this.drugsDetails = {}
+    this.showModalStatus = false
+    this.height = 0
+    this.more = true
+    this.key = ''
   }
 }
 </script>

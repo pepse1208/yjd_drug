@@ -5,7 +5,8 @@
         <li class="item" 
             v-for="(item, index) in navList"
             @click="selectNavItem(index, item.pagePath)"
-            :key="index">
+            :key="index"
+            v-if="item.isShow">
           <p class="item-images">
             <img :src="selectNavIndex === index ? item.selectedIconPath : item.iconPath" alt="iconPath">
           </p>
