@@ -84,7 +84,8 @@ export default {
     },
     showDrugDetail (key) {
       // console.log('key: ' + key)
-      this.$parent.showDrugDetail({key})
+      $store.state.key = key
+      this.$parent.showDrugDetail()
     },
     deleteDrug (key) {
       this.$parent.deleteDrug({key})

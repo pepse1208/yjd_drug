@@ -190,7 +190,10 @@ export default {
       return false
     }
   },
-  beforeMount () {
+  // beforeMount () {
+  //   this.getListData()
+  // },
+  onShow () {
     this.getListData()
   },
   onPullDownRefresh () {
@@ -200,6 +203,7 @@ export default {
     } else {
       wx.stopPullDownRefresh()
     }
+    // this.$forceUpdate()
   },
   onReachBottom () {
     // 上啦触底

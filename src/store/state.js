@@ -10,5 +10,6 @@ export default {
   selectedList: {}, // 已选药检单
   receiver: '',
   drugReports: [],
-  clientHeight: 0
+  clientHeight: 0,
+  key: ''
 }

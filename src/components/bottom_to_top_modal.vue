@@ -84,6 +84,7 @@
 import {mapActions} from 'vuex'
 import config from '../config.js'
 import {throttle} from '../utils/index.js'
+import $store from '../store/index'
 export default {
   data () {
     return {
@@ -158,12 +159,13 @@ export default {
     })
   },
   updated () {
+    let key = $store.state.key
     if (this.fatherPage === 'selected_list') {
       this.show = false
     } else {
       this.show = true
     }
-    this.details = this.lists[this.$parent.key]
+    this.details = this.lists[key]
   },
   onUnload: function () {
     this.show = true

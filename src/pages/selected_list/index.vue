@@ -48,9 +48,9 @@ export default {
       self.showModalStatus = data.showModalStatus
       setTimeout(function () { self.height = data.height }, 300)
     },
-    showDrugDetail ({key}) {
+    showDrugDetail () {
       let self = this
-      self.key = key
+      self.key = $store.state.key
       // console.log(self.key)
       self.showModalStatus = true
       setTimeout(function () { self.height = 300 }, 300)
@@ -76,9 +76,13 @@ export default {
       } else {
         this.more = true
       }
+      // this.$forceUpdate()
     }
   },
-  beforeMount () {
+  // beforeMount () {
+  //   this.updateData()
+  // },
+  onShow () {
     this.updateData()
   },
   updated () {
@@ -87,6 +91,7 @@ export default {
   onPullDownRefresh () {
     // 下拉刷新
     wx.stopPullDownRefresh()
+    // this.updateData()
   },
   onUnload: function () {
     this.drugsDetails = {}

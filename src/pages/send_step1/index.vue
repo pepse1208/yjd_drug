@@ -96,7 +96,10 @@ export default {
       return false
     }
   },
-  beforeMount () {
+  // beforeMount () {
+  //   this.getData()
+  // },
+  onShow () {
     this.getData()
   },
   onPullDownRefresh () {
