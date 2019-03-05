@@ -61,7 +61,7 @@ export default {
       // }
     },
     navigateBackHome () {
-      wx.navigateTo({url: '/pages/catalog/main'})
+      wx.reLaunch({url: '/pages/catalog/main'})
     },
     /**
      * 切换导航栏显示
