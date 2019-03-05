@@ -1,7 +1,7 @@
 <template>
   <div class="step-list list-shadow">
     <div class="item flex li-style" :class="{'flex flexrow': showBtns}" @click="!showBtns && (showCode ? stepOne(item.uuid, item.name) : showModal(item.drug ? item.drug.uuid : ''))" v-for="(item, key) in lists" :key="key">
-      <div class="details" :class="{'ellipsis': showBtns}">
+      <div class="details" :class="{'ellipsis1': showBtns}">
         <div class="enterprise ellipsis">
           <span>{{item.drug ? item.drug.name : item.name}}</span>
         </div>
@@ -26,10 +26,10 @@
           </div>
         </div>
       </div>
-      <div v-if="showBtns" class="btns flex flexrow">
+      <!-- <div v-if="showBtns" class="btns flex flexrow">
         <span class="drug-detail blue_bg" @click="showDrugDetail(key)">查看</span>
         <span class="delete red_bg" @click="deleteDrug(key)">删除</span>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -141,6 +141,11 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.ellipsis1 {
+  .ellipsis {
+    width: 100% !important;
+  }
 }
 .btns {
   width: 220rpx;

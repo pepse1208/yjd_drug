@@ -213,6 +213,7 @@
                       }
                     })
                   } else if (pageName === 'choose') {
+                    console.log('test', vm.drug)
                     wx.navigateTo({
                       url: '/pages/druglist/main?drug=' + vm.drug + '&isBack=true&is_upload=true',
                       success () {

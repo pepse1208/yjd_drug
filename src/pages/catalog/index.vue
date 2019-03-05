@@ -64,6 +64,7 @@
   import BaseTop from '@/components/base_top'
   import NavigationBar from '@/components/navigationBar'
   import $store from '../../store/index'
+  import {changePwd} from '../../utils/tochangepwd.js'
   export default {
     data () {
       return {
@@ -91,6 +92,7 @@
         }
       })
       this.randomModified()
+      changePwd('send_record')
     },
     onUnload: function () { // 如果页面被卸载时被执行
       this.lists = []

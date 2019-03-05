@@ -144,7 +144,13 @@ export default {
     toSelectedList () {
       this.initSelectedDrug()
       wx.navigateTo({
-        url: '/pages/selected_list/main'
+        url: '/pages/selected_list/main',
+        success () {
+          console.log('跳转成功')
+        },
+        fail () {
+          console.log('跳转失败')
+        }
       })
     },
     toSetSendCount () {
@@ -163,7 +169,13 @@ export default {
         return
       }
       wx.navigateTo({
-        url: '/pages/set_send_count/main'
+        url: '/pages/set_send_count/main',
+        success () {
+          console.log('跳转成功')
+        },
+        fail () {
+          console.log('跳转失败')
+        }
       })
     },
     hideModal (bool) {

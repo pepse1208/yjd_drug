@@ -27,27 +27,27 @@
       <scroll-view class="detail-list list" v-if="!show" scroll-y="true">
         <div class="line">
           <span class="title">品种名称：</span>
-          <span class="det">{{details.drug.name || '--'}}</span>
+          <span class="det">{{details.drug ? details.drug.name : '--'}}</span>
         </div>
         <div class="line">
           <span class="title">批准文号：</span>
-          <span class="det">{{details.drug.reg_number || '--'}}</span>
+          <span class="det">{{details.drug ? details.drug.reg_number : '--'}}</span>
         </div>
         <div class="line">
           <span class="title">包装规格：</span>
-          <span class="det">{{details.drug.package || '--'}}</span>
+          <span class="det">{{details.drug ? details.drug.package : '--'}}</span>
         </div>
         <div class="line">
           <span class="title">剂型：</span>
-          <span class="det">{{details.drug.all_dosage || '--'}}</span>
+          <span class="det">{{details.drug ? details.drug.all_dosage : '--'}}</span>
         </div>
         <div class="line">
           <span class="title">材质：</span>
-          <span class="det">{{details.drug.drug_material || '--'}}</span>
+          <span class="det">{{details.drug ? details.drug.drug_material : '--'}}</span>
         </div>
         <div class="line">
           <span class="title">生产企业：</span>
-          <span class="det">{{details.drug.production_enterprise || '--'}}</span>
+          <span class="det">{{details.drug ? details.drug.production_enterprise : '--'}}</span>
         </div>
         <div class="line">
           <span class="title">生产批号：</span>

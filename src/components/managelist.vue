@@ -113,13 +113,20 @@
         var url = '/pages/' + vm.message + '/main?drug=' + uuid + '&is_upload=' + this.isUpload
         if (vm.router) {
           url += '&router=' + vm.router
+          wx.redirectTo({
+            url,
+            success () {
+              // console.log(uuid)
+            }
+          })
+        } else {
+          wx.navigateTo({
+            url,
+            success () {
+              // console.log(uuid)
+            }
+          })
         }
-        wx.navigateTo({
-          url,
-          success () {
-            // console.log(uuid)
-          }
-        })
       },
       tipDetail (item) { // 弹窗显示详情
         var code = item.code || '--'
