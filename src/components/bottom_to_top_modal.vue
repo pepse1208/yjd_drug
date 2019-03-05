@@ -1,5 +1,6 @@
 <template>
   <div :class="showModalStatus ? '_toTop _show': '_toTop'">
+    <progress :percent="percent" class="_progress" stroke-width="4" backgroundColor="#fff"/>
     <div class="_commodity_screen" @click="clickHide" v-if="showModalStatus"  @touchmove.stop="scrollLock()"></div>
     <div class="_commodity_attr_box" v-if="showModalStatus" :style="'height:'+height+'px;'" @touchmove.stop="scrollLock()">
       <div class="cancel" @click="clickHide"></div>
@@ -88,6 +89,7 @@ export default {
     return {
       show: true,
       details: {drug: {}, sender: {}},
+      percent: 0,
       downloaded: {}
     }
   },
@@ -113,10 +115,12 @@ export default {
       this.$parent.getDrugData({nextUrl})
     },
     openPdf (url) {
+      const self = this
       wx.openDocument({
         filePath: url,
         success: function (res) {
           // console.log('打开文档成功')
+          self.percent = 0
         }
       })
     },
@@ -133,7 +137,7 @@ export default {
           path = config.host + url
         }
         wx.showLoading({title: '加载中'})
-        wx.downloadFile({
+        const downloadTask = wx.downloadFile({
           url: path,
           success: function (res) {
             const filePath = res.tempFilePath
@@ -142,6 +146,9 @@ export default {
             wx.hideLoading()
             self.openPdf(filePath)
           }
+        })
+        downloadTask.onProgressUpdate((res) => {
+          self.percent = res.progress
         })
       }
     }, 2000),
@@ -169,6 +176,14 @@ export default {
 ._toTop {
   height: 0;
   overflow: hidden;
+  ._progress {
+    position:fixed;
+    background:red;
+    top:120rpx;
+    left:0;
+    width:100%;
+    z-index:2000;
+  }
   ._commodity_screen {
     width: 100%;
     height: 100%;
@@ -177,7 +192,7 @@ export default {
     left: 0;
     background: #000;
     opacity: 0.4;
-    z-index: 10000;
+    z-index: 1000;
     color: #fff;
     display: none;
   }
@@ -281,4 +296,5 @@ export default {
     text-align: right;
   }
 }
+
 </style>
